@@ -14,12 +14,11 @@ class ProductController extends Controller
      */
     public function index($category = 'category')
     {
-        $cart = session()->get('cart', []);
         $products = Product::whereHas('magasin', function ($query) {
             $query->where('status', 'active');
         })->where('actual_quantity', '>', '0')->latest()->paginate(12);
 
-        return view('frontend.pages.product_view', compact('products', 'category', 'cart'));
+        return view('frontend.pages.product_view', compact('products', 'category'));
     }
 
     /**
@@ -43,8 +42,6 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-
-        $cart = session()->get('cart', []);
         $product = Product::whereHas('magasin', function ($query) {
             $query->where('status', 'active');
         })->with('magasin')->findorFail($id);
@@ -53,7 +50,7 @@ class ProductController extends Controller
             $query->where('status', '!=', 'blocked');
         })->with(['user:id,name,profilePicture', 'images:id,review_id,path'])->latest()->paginate(3);
 
-        return view('frontend.pages.product_details', compact('product', 'reviews', 'cart'));
+        return view('frontend.pages.product_details', compact('product', 'reviews'));
     }
 
     /**

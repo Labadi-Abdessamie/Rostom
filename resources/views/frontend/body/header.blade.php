@@ -37,8 +37,13 @@
                         </div>
                         <ul class="wsus__icon_area">
                             @if (Auth::check())
-                                <li><a href="{{ route('frontend.wishlist') }}"><i
-                                            class="fal fa-heart"></i><span>1</span></a></li>
+                                <li><a href="{{ route('frontend.wishlist') }}"><i class="fal fa-heart"></i>
+                                        @if (session()->has('wishlist'))
+                                            <span>{{ count(session('wishlist', [])) }}</span>
+                                        @else
+                                            <span>0</span>
+                                        @endif
+                                    </a></li>
                             @else
                                 <li><a href="{{ route('login') }}"><i class="fal fa-heart"></i><span>05</span></a></li>
                             @endif
@@ -48,7 +53,7 @@
                                     @if (session()->has('compare'))
                                         <span>{{ count(session('compare', [])) }}</span>
                                     @else
-                                        <span>00</span>
+                                        <span>0</span>
                                     @endif
                                 </a></li>
                             @if (Auth::check())

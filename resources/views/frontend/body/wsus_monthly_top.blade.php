@@ -61,7 +61,7 @@
                                         <p class="wsus__rating">
                                             @if ($monthlyProduct->rate_average != 0)
                                                 @for ($i = 1; $i <= $monthlyProduct->rate_average; $i++)
-                                                    <i class="far fa-star"></i>
+                                                    <i class="fas fa-star"></i>
                                                 @endfor
                                                 @if ($monthlyProduct->rate_average != floor($monthlyProduct->rate_average))
                                                     <i class="fas fa-star-half-alt"></i>

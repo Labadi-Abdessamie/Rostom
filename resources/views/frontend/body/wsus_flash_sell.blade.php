@@ -34,9 +34,13 @@
                                     class="img-fluid w-100 img_2" />
                             </a>
                             <ul class="wsus__single_pro_icon">
-                                <li><a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"><i
-                                            class="far fa-eye"></i></a></li>
-                                <li><a href="#"><i class="far fa-heart"></i></a></li>
+                                @if (false)
+                                    <li><a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"><i
+                                                class="far fa-eye"></i></a></li>
+                                @endif
+                                <li class="cursor-pointer">
+                                    @livewire('add-to-wishlist', ['product' => $sliderProduct], key($sliderProduct->id))
+                                </li>
                                 <li class="cursor-pointer">
                                     @livewire('add-to-compare', ['productId' => $sliderProduct->id])
                                     <!-- <a href="#"><i class="far fa-random"></i></a> -->
@@ -48,7 +52,7 @@
                                 <p class="wsus__pro_rating">
                                     @if ($sliderProduct->rate_average != 0)
                                         @for ($i = 1; $i <= $sliderProduct->rate_average; $i++)
-                                            <i class="far fa-star"></i>
+                                            <i class="fas fa-star"></i>
                                         @endfor
                                         @if ($sliderProduct->rate_average != floor($sliderProduct->rate_average))
                                             <i class="fas fa-star-half-alt"></i>
@@ -81,38 +85,3 @@
     <!--============================
         FLASH SELL END
     ==============================-->
-    {{--
-    <script>
-        $(function() {
-            $('.addItem').on('submit', function(e) {
-                e.preventDefault();
-                /* let error = $('#error');
-                error.addClass('d-none');*/
-                var csrfToken = $('meta[name="csrf-token"]').attr('content');
-                $.ajax({
-                    type: 'POST',
-                    url: $(this).attr('action'),
-                    data: $(this).serialize() + '&_token=' + csrfToken
-                }).then(function(res) {
-
-
-                    /*
-                    let data = JSON.parse(res);
-                    if (data.error) {
-                        error.removeClass('d-none').html(data.error);
-                        return;
-                    }
-                    localStorage.setItem('token', data.token);
-                    if (document.referrer) {
-                        location.href = document.referrer;
-                    } else {
-                        location.href = "../index.php";
-                    }
-                    */
-                }).fail(function(res) {
-                    //error.removeClass('d-none').html("Server Error");
-                });
-            });
-        });
-    </script>
---}}

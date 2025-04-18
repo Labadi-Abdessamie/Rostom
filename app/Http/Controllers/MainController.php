@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Product;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
 class MainController extends Controller
@@ -84,17 +84,31 @@ class MainController extends Controller
         //! Banners Selection
 
 
-
-        $cart = session()->get('cart', []);
-
         return view('frontend.index', compact(
             'sliderProducts',
             'secondSliderProducts',
             'monthlyProducts',
             'regularProducts',
             'randomProducts',
-            'categoryProducts',
-            'cart'
+            'categoryProducts'
         ));
+    }
+
+    public function cart()
+    {
+        $user = Auth::user();
+        if ($user) {
+            return view('frontend.pages.cart_view');
+        } else {
+            return redirect()->route('login');
+        }
+    }
+    public function compare()
+    {
+        return view('frontend.pages.compare');
+    }
+    public function wishlist()
+    {
+        return view('frontend.pages.wishlist');
     }
 }

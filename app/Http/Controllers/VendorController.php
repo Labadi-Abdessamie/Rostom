@@ -15,10 +15,9 @@ class VendorController extends Controller
      */
     public function index()
     {
-        $cart = session()->get('cart', []);
         $vendors = Magasin::where('status', 'active')->inRandomOrder()->paginate(12);
 
-        return view('frontend.pages.vendor', compact('vendors', 'cart'));
+        return view('frontend.pages.vendor', compact('vendors'));
     }
 
     /**
@@ -42,11 +41,10 @@ class VendorController extends Controller
      */
     public function show(string $id)
     {
-        $cart = session()->get('cart', []);
         $vendor = Magasin::findorFail($id);
         if ($vendor->status === 'active') {
             $products = $vendor->products()->paginate(12);
-            return view('frontend.pages.vendor_details', compact('vendor', 'products', 'cart'));
+            return view('frontend.pages.vendor_details', compact('vendor', 'products'));
         } elseif ($vendor->status === 'inactive') {
             return "this magasin is inactive for now";
         } elseif ($vendor->status === 'blocked') {

@@ -6,7 +6,7 @@
             @foreach ($cart as $key => $item)
                 <li>
                     <div class="wsus__cart_img">
-                        <a href="{{ route('frontend.cart.remove_item', ['id' => $key]) }}"><img
+                        <a href="{{ route('frontend.product_details', ['id' => $key]) }}"><img
                                 src="{{ asset('frontend/images/tab_2.jpg') }}" alt="product" class="img-fluid w-100"></a>
                         <a wire:click="DeleteFromCart({{ $key }})" class="wsis__del_icon cursor-pointer">
                             <i class="fas fa-minus-circle"></i>

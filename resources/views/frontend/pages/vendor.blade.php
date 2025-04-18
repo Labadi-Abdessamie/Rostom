@@ -6,8 +6,8 @@
 
 @section('content')
     <!--============================
-                                                                                                                                                                BREADCRUMB START
-                                                                                                                                                            ==============================-->
+                                                                                                                                                                        BREADCRUMB START
+                                                                                                                                                                    ==============================-->
     <section id="wsus__breadcrumb">
         <div class="wsus_breadcrumb_overlay">
             <div class="container">
@@ -16,7 +16,7 @@
                         <h4>vendors</h4>
                         <ul>
                             <li><a href="{{ route('frontend.index') }}">home</a></li>
-                            <li><a>vendors</a></li>
+                            <li><a href>vendors</a></li>
                         </ul>
                     </div>
                 </div>
@@ -24,12 +24,12 @@
         </div>
     </section>
     <!--============================
-                                     BREADCRUMB END
-                                     ==============================-->
+                                             BREADCRUMB END
+                                             ==============================-->
 
     <!--============================
-                                    VENDORS START
-                                ==============================-->
+                                            VENDORS START
+                                        ==============================-->
     <section id="wsus__product_page" class="wsus__vendors">
         <div class="container">
             <div class="row">
@@ -173,6 +173,6 @@
         </div>
     </section>
     <!--============================
-                                        VENDORS END
-                                        ==============================-->
+                                                VENDORS END
+                                                ==============================-->
 @endsection

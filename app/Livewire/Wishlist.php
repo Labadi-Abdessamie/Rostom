@@ -6,30 +6,35 @@ use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
-class Compare extends Component
+class Wishlist extends Component
 {
-    protected $listeners = ['Notification' => 'refreshCompare'];
-    public $items;
+    protected $listeners = ['Notification' => 'refreshWishlist'];
+    public $wishlist;
 
     public function mount()
     {
-        $this->items = session()->get('compare', []);
+        $this->wishlist = session()->get('wishlist', []);
     }
 
-    public function refreshCompare()
+    public function refreshWishlist()
     {
-        $this->items = session()->get('compare', []);
+        $this->wishlist = session()->get('wishlist', []);
     }
 
-    public function DeleteFromCompare($productId)
+    public function DeleteFromWishlist($productId)
     {
-        $compare = session()->get('compare', []);
-        if ($compare != []) {
-            if (isset($compare[$productId])) {
-                unset($compare[$productId]);
-                session()->put('compare', $compare);
-                $this->dispatch('Notification', product: ['name' => 'Product'], message: 'Removed From compare');
+        $user = Auth::user();
+        if ($user) {
+            $wishlist = session()->get('wishlist', []);
+            if ($wishlist != []) {
+                if (isset($wishlist[$productId])) {
+                    unset($wishlist[$productId]);
+                    session()->put('wishlist', $wishlist);
+                    $this->dispatch('Notification', product: ['name' => 'Product'], message: 'Removed From wishlist');
+                }
             }
+        } else {
+            return redirect()->route('login');
         }
     }
 
@@ -64,9 +69,18 @@ class Compare extends Component
             return redirect()->route('login');
         }
     }
-
+    public function ClearWishlist()
+    {
+        $user = Auth::user();
+        if ($user) {
+            session()->put('wishlist', []);
+            $this->dispatch('Notification', product: ['name' => 'Wishlist'], message: 'Cleared');
+        } else {
+            return redirect()->route('login');
+        }
+    }
     public function render()
     {
-        return view('livewire.compare');
+        return view('livewire.wishlist');
     }
 }

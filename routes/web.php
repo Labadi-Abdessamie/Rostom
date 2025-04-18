@@ -43,6 +43,11 @@ Route::group(['prefix' => '', 'as' => 'frontend.'], function () {
     Route::get('product-details/{id}', [ProductController::class, 'show'])->name('product_details');
 
 
+    Route::get('cart', [MainController::class, 'cart'])->name('cart');
+    Route::get('wishlist', [MainController::class, 'wishlist'])->name('wishlist');
+    Route::get('compare', [MainController::class, 'compare'])->name('compare');
+
+
     //Route::get('flash-Sale', [MainController::class, 'flashSale'])->name('flash_sale');
     //Route::get('daily-deals', [MainController::class, 'dailyDeals'])->name('daily_deals');
     //Route::get('track-order', [MainController::class, 'trackOrder'])->name('track_order');
@@ -51,20 +56,12 @@ Route::group(['prefix' => '', 'as' => 'frontend.'], function () {
     //Route::get('blog-details', [MainController::class, 'blogDetails'])->name('blog_details');
 
     Route::get('contact', [MainController::class, 'contact'])->name('contact');
-    Route::get('wishlist', [MainController::class, 'wishlist'])->name('wishlist');
-    Route::get('compare', [CompareController::class, 'index'])->name('compare');
 
     Route::get('check-out', [MainController::class, 'checkOut'])->name('check_out');
     //Route::get('user-login', [MainController::class, 'login'])->name('login');
     Route::get('forget-password', [MainController::class, 'forgetPassword'])->name('forget_password');
 });
 
-Route::group(['prefix' => 'cart', 'as' => 'frontend.'], function () {
-    Route::get('cart', [CartController::class, 'index'])->name('cart');
-    Route::post('clearCart', [CartController::class, 'clearCart'])->name('cart.clear');
-    Route::post('remove-item/{id}', [CartController::class, 'removeItem'])->name('cart.remove_item');
-    Route::post('add-item/{id}', [CartController::class, 'addItem'])->name('cart.add_item');
-});
 
 
 route::middleware(['auth'])->group(function () {

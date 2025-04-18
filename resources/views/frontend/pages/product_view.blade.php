@@ -6,8 +6,8 @@
 
 @section('content')
     <!--============================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    BREADCRUMB START
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ==============================-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    BREADCRUMB START
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ==============================-->
     <section id="wsus__breadcrumb">
         <div class="wsus_breadcrumb_overlay">
             <div class="container">
@@ -16,7 +16,7 @@
                         <h4>products</h4>
                         <ul>
                             <li><a href="{{ route('frontend.index') }}">home</a></li>
-                            <li><a href="#">product</a></li>
+                            <li><a href>products</a></li>
                         </ul>
                     </div>
                 </div>
@@ -24,12 +24,12 @@
         </div>
     </section>
     <!--============================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    BREADCRUMB END
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ==============================-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    BREADCRUMB END
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ==============================-->
 
     <!--============================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    PRODUCT PAGE START
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ==============================-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    PRODUCT PAGE START
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ==============================-->
     <section id="wsus__product_page">
         <div class="container">
             <div class="row">
@@ -420,6 +420,6 @@
         </div>
     </section>
     <!--============================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    PRODUCT PAGE END
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ==============================--
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    PRODUCT PAGE END
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ==============================--
 @endsection

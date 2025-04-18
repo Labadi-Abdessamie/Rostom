@@ -24,7 +24,7 @@
                                 <p class="wsus__rating">
                                     @if ($secondSliderProduct->rate_average != 0)
                                         @for ($i = 1; $i <= $secondSliderProduct->rate_average; $i++)
-                                            <i class="far fa-star"></i>
+                                            <i class="fas fa-star"></i>
                                         @endfor
                                         @if ($secondSliderProduct->rate_average != floor($secondSliderProduct->rate_average))
                                             <i class="fas fa-star-half-alt"></i>
@@ -63,7 +63,9 @@
                                         --}}
 
                                     </li>
-                                    <li><a href="#"><i class="far fa-heart"></i></a></li>
+                                    <li class="cursor-pointer">
+                                        @livewire('add-to-wishlist', ['product' => $secondSliderProduct], key($secondSliderProduct->id))
+                                    </li>
                                     <li class="cursor-pointer">
                                         @livewire('add-to-compare', ['productId' => $secondSliderProduct->id])
                                     </li>
@@ -116,9 +118,13 @@
                                         class="img-fluid w-100 img_2" />
                                 </a>
                                 <ul class="wsus__single_pro_icon">
-                                    <li><a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"><i
-                                                class="far fa-eye"></i></a></li>
-                                    <li><a href="#"><i class="far fa-heart"></i></a></li>
+                                    @if (false)
+                                        <li><a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"><i
+                                                    class="far fa-eye"></i></a></li>
+                                    @endif
+                                    <li class="cursor-pointer">
+                                        @livewire('add-to-wishlist', ['product' => $regularProduct], key($regularProduct->id))
+                                    </li>
                                     <li class="cursor-pointer">
                                         @livewire('add-to-compare', ['productId' => $regularProduct->id])
                                     </li>
@@ -126,11 +132,20 @@
                                 <div class="wsus__product_details">
                                     <a class="wsus__category" href="#">{{ $regularProduct->category->name }}</a>
                                     <p class="wsus__pro_rating">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star-half-alt"></i>
+                                        @if ($secondSliderProduct->rate_average != 0)
+                                            @for ($i = 1; $i <= $secondSliderProduct->rate_average; $i++)
+                                                <i class="fas fa-star"></i>
+                                            @endfor
+                                            @if ($secondSliderProduct->rate_average != floor($secondSliderProduct->rate_average))
+                                                <i class="fas fa-star-half-alt"></i>
+                                            @endif
+                                        @else
+                                            <i class="far fa-star"></i>
+                                            <i class="far fa-star"></i>
+                                            <i class="far fa-star"></i>
+                                            <i class="far fa-star"></i>
+                                            <i class="far fa-star"></i>
+                                        @endif
                                         <span>({{ $regularProduct->reviews->count() }} Review)</span>
                                     </p>
                                     <a class="wsus__pro_name"
@@ -220,7 +235,7 @@
                                     <p class="wsus__rating">
                                         @if ($randomProduct->rate_average != 0)
                                             @for ($i = 1; $i <= $randomProduct->rate_average; $i++)
-                                                <i class="far fa-star"></i>
+                                                <i class="fas fa-star"></i>
                                             @endfor
                                             @if ($randomProduct->rate_average != floor($randomProduct->rate_average))
                                                 <i class="fas fa-star-half-alt"></i>
