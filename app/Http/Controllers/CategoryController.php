@@ -10,7 +10,8 @@ class CategoryController extends Controller
 {
     public function get()
     {
-        return session()->get('cart', []);
+        return session()->get('compare', []);
+
         /*
         $categories = Category::WhereNull('parentId')->where('status', 'active')->with([
             'childrens' => function ($query) {

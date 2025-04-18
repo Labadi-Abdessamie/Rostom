@@ -19,7 +19,7 @@ class Notification extends Component
     {
         if ($message == "Added To cart") {
             $this->productName = $product['name'];
-        } else if ($message == "Error Adding To cart") {
+        } else {
             $this->productName = null;
         }
         $this->message = $message;

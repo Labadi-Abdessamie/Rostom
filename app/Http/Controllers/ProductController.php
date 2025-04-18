@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Review;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -46,9 +47,13 @@ class ProductController extends Controller
         $cart = session()->get('cart', []);
         $product = Product::whereHas('magasin', function ($query) {
             $query->where('status', 'active');
-        })->findorFail($id);
+        })->with('magasin')->findorFail($id);
 
-        return view('frontend.pages.product_details', compact('product', 'cart'));
+        $reviews = Review::where('product_id', $id)->whereHas('user', function ($query) {
+            $query->where('status', '!=', 'blocked');
+        })->with(['user:id,name,profilePicture', 'images:id,review_id,path'])->latest()->paginate(3);
+
+        return view('frontend.pages.product_details', compact('product', 'reviews', 'cart'));
     }
 
     /**

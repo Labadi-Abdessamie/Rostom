@@ -52,23 +52,5 @@ class AddToCart extends Component
         } else {
             return redirect()->route('login');
         }
-        /*
-        $cart = session()->get('cart', []);
-
-        if (isset($cart[$this->product->id])) {
-            $cart[$this->product->id]['quantity'] += $this->quantity;
-        } else {
-            $cart[$this->product->id] = [
-                "name" => $this->product->name,
-                "price" => $this->product->price,
-                "quantity" => $this->quantity,
-                "image" => $this->product->image
-            ];
-        }
-
-        session()->put('cart', $cart);
-        $this->emit('cartUpdated');
-        $this->quantity = 1; // Reset quantity after adding
-        */
     }
 }

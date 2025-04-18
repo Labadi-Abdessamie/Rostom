@@ -1,12 +1,14 @@
+{{--
+
 @extends('frontend.master')
 
 @section('title')
-    ATLAS MALL || Product Compare
+ATLAS MALL || Product Compare
 @endsection
 
 @section('content')
-    <!--============================
-        BREADCRUMB START
+<!--============================
+    BREADCRUMB START
     ==============================-->
     <section id="wsus__breadcrumb">
         <div class="wsus_breadcrumb_overlay">
@@ -25,13 +27,13 @@
         </div>
     </section>
     <!--============================
-        BREADCRUMB END
-    ==============================-->
+            BREADCRUMB END
+        ==============================-->
 
 
     <!--==========================
-        COMPARE START
-    ===========================-->
+            COMPARE START
+        ===========================-->
     <section id="wsus__compare">
         <div class="container">
             <div class="row">
@@ -44,14 +46,15 @@
                                         <td class="wsus__compare_img">
                                             <p>Product details</p>
                                         </td>
-                                        <td class="wsus__compare_img"><img src="{{asset('frontend/images/blazer_2.jpg')}}" alt="product"
+                                        <td class="wsus__compare_img"><img src="{{ asset('frontend/images/blazer_2.jpg') }}"
+                                                alt="product" class="img-fluid w-100">
+                                        </td>
+                                        <td class="wsus__compare_img"><img
+                                                src="{{ asset('frontend/images/headphone_1.jpg') }}" alt="product"
                                                 class="img-fluid w-100">
                                         </td>
-                                        <td class="wsus__compare_img"><img src="{{asset('frontend/images/headphone_1.jpg')}}" alt="product"
-                                                class="img-fluid w-100">
-                                        </td>
-                                        <td class="wsus__compare_img"><img src="{{asset('frontend/images/kids_1.jpg')}}" alt="product"
-                                                class="img-fluid w-100">
+                                        <td class="wsus__compare_img"><img src="{{ asset('frontend/images/kids_1.jpg') }}"
+                                                alt="product" class="img-fluid w-100">
                                         </td>
                                     </tr>
                                     <tr class="d-flex">
@@ -217,6 +220,48 @@
         </div>
     </section>
     <!--==========================
-        COMPARE END
-    ===========================-->
+            COMPARE END
+        ===========================-->
+@endsection
+                    --}}
+
+@extends('frontend.master')
+
+@section('title')
+    ATLAS MALL || Product Compare
+@endsection
+
+@section('content')
+    <section id="wsus__breadcrumb">
+        <div class="wsus_breadcrumb_overlay">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <h4>compare</h4>
+                        <ul>
+                            <li><a href="{{ route('frontend.index') }}">home</a></li>
+                            <li><a href="{{ route('frontend.products') }}">product</a></li>
+                            <li><a>compare</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="wsus__compare">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="wsus__compare_list">
+                        <div class="table-responsive">
+                            <table class="table">
+                                @livewire('compare')
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 @endsection

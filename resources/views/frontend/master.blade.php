@@ -59,6 +59,7 @@
     @include('frontend.body.footer')
     <!-- Footer End -->
 
+    @stack('scripts')
     <!--jquery library js-->
     <script src="{{ asset('frontend/js/jquery-3.6.0.min.js') }}"></script>
     <!--bootstrap js-->

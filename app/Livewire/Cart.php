@@ -9,86 +9,53 @@ use Livewire\Component;
 
 class Cart extends Component
 {
-    public $message;
-    public $actionType;
-    public $item_Id;
 
-    public function mount($item_Id, $actionType)
+    protected $listeners = ['Notification' => 'refreshCart'];
+    public $cart;
+    public $type;
+
+    public function mount($type)
     {
-        $this->actionType = $actionType;
-        $this->item_Id = $item_Id;
+        $this->type = $type;
+        $this->cart = session()->get('cart', []);
     }
-    public function render()
+
+    public function refreshCart()
     {
-        return view('livewire.cart');
+        $this->cart = session()->get('cart', []);
     }
-    public function addItem($item_Id)
+
+    public function DeleteFromCart($productId)
     {
-
-        return view('frontend.pages.cart_view');
-
         $user = Auth::user();
         if ($user) {
-            $product = Product::findOrFail($item_Id);
-            if ($product->magasin->status == 'active') {
-                $cart = session()->get('cart', []);
-                if (isset($cart[$item_Id])) {
-                    $cart[$item_Id]['quantity']++;
-                } else {
-                    $cart[$item_Id] = [
-                        'id' => null,
-                        'quantity' => 1,
-                        'product' => [
-                            'image' => $product->principalImage,
-                            'name' => $product->name,
-                            'actual_quantity' => $product->actual_quantity,
-                            'price' => $product->price,
-                        ]
-                    ];
+            $cart = session()->get('cart', []);
+            if ($cart != []) {
+                if (isset($cart[$productId])) {
+                    unset($cart[$productId]);
+                    session()->put('cart', $cart);
+                    $this->dispatch('Notification', product: ['name' => 'Product'], message: 'Removed From cart');
                 }
-                session()->put('cart', $cart);
-                return redirect()->back()->with('success', 'Added');
-            } else {
-                return redirect()->back()->with('error', 'This product is unavailable.');
             }
-            /*
-                $user = Auth::user();
-                if ($user) {
-                    $cart = $user->bags->where('type', 'cart')->first();
-                    if ($cart) {
-                        if ($cart->bagItems->contains('Item_Id', $product_id)) {
-                            $existItem = $cart->bagItems->where('product_id', $product_id)->first();
-                            $existItem->quantity += 1;
-                            $existItem->save();
-                        } else {
-                            BagItem::create([
-                                'bag_id' => $cart->id,
-                                'product_id' => $product_id,
-                            ]);
-                        }
-                        return redirect()->back()->with('alert', 'Product Added to Your Cart');
-                    } else {
-                        return "ERROR : 500";
-                    }
-                } else {
-                    return redirect()->route('login');
-                }
-                    */
-            /*
-        }
-*/
         } else {
             return redirect()->route('login');
         }
     }
-
-
-    public function removeItem($item_id)
+    public function ClearCart()
     {
-        $cart = session()->get('cart', []);
-        if ($cart != []) {
-            unset($cart[$item_id]);
-            session()->put('cart', $cart);
+        $user = Auth::user();
+        if ($user) {
+            session()->put('cart', []);
+            $this->dispatch('Notification', product: ['name' => 'Cart'], message: 'Cleared');
+        } else {
+            return redirect()->route('login');
         }
+    }
+    public function render()
+    {
+        if ($this->type == "mini") {
+            return view('livewire.mini-cart');
+        }
+        return view('livewire.cart');
     }
 }

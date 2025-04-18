@@ -4,9 +4,11 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\CompareController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\VendorController;
 use App\Models\Product;
 use App\Models\User;
@@ -50,7 +52,7 @@ Route::group(['prefix' => '', 'as' => 'frontend.'], function () {
 
     Route::get('contact', [MainController::class, 'contact'])->name('contact');
     Route::get('wishlist', [MainController::class, 'wishlist'])->name('wishlist');
-    Route::get('compare', [MainController::class, 'compare'])->name('compare');
+    Route::get('compare', [CompareController::class, 'index'])->name('compare');
 
     Route::get('check-out', [MainController::class, 'checkOut'])->name('check_out');
     //Route::get('user-login', [MainController::class, 'login'])->name('login');
@@ -62,6 +64,15 @@ Route::group(['prefix' => 'cart', 'as' => 'frontend.'], function () {
     Route::post('clearCart', [CartController::class, 'clearCart'])->name('cart.clear');
     Route::post('remove-item/{id}', [CartController::class, 'removeItem'])->name('cart.remove_item');
     Route::post('add-item/{id}', [CartController::class, 'addItem'])->name('cart.add_item');
+});
+
+
+route::middleware(['auth'])->group(function () {
+    Route::group(['prefix' => 'review', 'as' => 'frontend.review.'], function () {
+        Route::post('add', [ReviewController::class, 'store'])->name('add');
+        //Route::post('remove-item/{id}', [CartController::class, 'removeItem'])->name('cart.remove_item');
+        //Route::post('add-item/{id}', [CartController::class, 'addItem'])->name('cart.add_item');
+    });
 });
 
 //Client route

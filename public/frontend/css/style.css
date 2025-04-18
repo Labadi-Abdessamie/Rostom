@@ -9470,3 +9470,12 @@ a:not([href]):not([class]):hover {
 .cursor-pointer {
     cursor: pointer;
 }
+
+.star-rating .fa-star {
+    cursor: pointer;
+    color: #ccc;
+}
+
+.star-rating .fa-star.selected {
+    color: gold;
+}

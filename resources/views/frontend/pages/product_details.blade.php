@@ -59,8 +59,8 @@
 
 
     <!--============================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                BREADCRUMB START
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ==============================-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    BREADCRUMB START
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ==============================-->
     <section id="wsus__breadcrumb">
         <div class="wsus_breadcrumb_overlay">
             <div class="container">
@@ -78,13 +78,13 @@
         </div>
     </section>
     <!--============================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                BREADCRUMB END
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ==============================-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    BREADCRUMB END
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ==============================-->
 
 
     <!--============================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                PRODUCT DETAILS START
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ==============================-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    PRODUCT DETAILS START
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ==============================-->
     <section id="wsus__product_details">
         <div class="container">
             <div class="wsus__details_bg">
@@ -152,7 +152,7 @@
                             <p class="review">
                                 @if ($product->rate_average != 0)
                                     @for ($i = 1; $i <= $product->rate_average; $i++)
-                                        <i class="far fa-star"></i>
+                                        <i class="fas fa-star "></i>
                                     @endfor
                                     @if ($product->rate_average != floor($product->rate_average))
                                         <i class="fas fa-star-half-alt"></i>
@@ -167,9 +167,9 @@
                                 <span>({{ $product->rate_count }} review)</span>
                             </p>
                             <!-- <p class="description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        neque
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        sint obcaecati asperiores dolor cumque. ad voluptate dolores reprehenderit hic adipisci
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        Similique eaque illum.</p> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            neque
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            sint obcaecati asperiores dolor cumque. ad voluptate dolores reprehenderit hic adipisci
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            Similique eaque illum.</p> -->
                             @if (false)
                                 <div class="wsus_pro_hot_deals">
                                     <h5>offer ending time : </h5>
@@ -214,23 +214,24 @@
                                         max="100" value="1" />
                                 </form>
 
-
-                                <script>
-                                    let numberInput = document.getElementById('number_input');
-                                    numberInput.addEventListener('input', function() {
-                                        let totalPrice = document.getElementById('product_total_price');
-                                        let quantity = numberInput = document.getElementById('number_input').value;
-                                        let price = document.getElementById('product_price').innerText;
-                                        let priceValue = parseFloat(price);
-                                        let quantityValue;
-                                        if (numberInput >= 0) {
-                                            quantityValue = parseInt(numberInput) || 1;
-                                        } else {
-                                            quantityValue = 1;
-                                        }
-                                        totalPrice.innerText = (priceValue * quantityValue).toFixed(2);
-                                    });
-                                </script>
+                                @push('scripts')
+                                    <script>
+                                        let numberInput = document.getElementById('number_input');
+                                        numberInput.addEventListener('input', function() {
+                                            let totalPrice = document.getElementById('product_total_price');
+                                            let quantity = numberInput = document.getElementById('number_input').value;
+                                            let price = document.getElementById('product_price').innerText;
+                                            let priceValue = parseFloat(price);
+                                            let quantityValue;
+                                            if (numberInput >= 0) {
+                                                quantityValue = parseInt(numberInput) || 1;
+                                            } else {
+                                                quantityValue = 1;
+                                            }
+                                            totalPrice.innerText = (priceValue * quantityValue).toFixed(2);
+                                        });
+                                    </script>
+                                @endpush
 
                                 <h3>DZ
                                     <span id="product_total_price">
@@ -348,11 +349,13 @@
                                         data-bs-target="#pills-home22" type="button" role="tab"
                                         aria-controls="pills-home" aria-selected="true">Description</button>
                                 </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="pills-profile-tab7" data-bs-toggle="pill"
-                                        data-bs-target="#pills-profile22" type="button" role="tab"
-                                        aria-controls="pills-profile" aria-selected="false">Information</button>
-                                </li>
+                                @if (false)
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="pills-profile-tab7" data-bs-toggle="pill"
+                                            data-bs-target="#pills-profile22" type="button" role="tab"
+                                            aria-controls="pills-profile" aria-selected="false">Information</button>
+                                    </li>
+                                @endif
                                 <li class="nav-item" role="presentation">
                                     <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill"
                                         data-bs-target="#pills-contact" type="button" role="tab"
@@ -384,118 +387,71 @@
                                         <div class="col-xl-12">
                                             <div class="wsus__description_area">
                                                 <h1>Heading</h1>
-                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatum
-                                                    sapiente aliquam ut neque voluptatibus inventore odit nesciunt.
-                                                    Nobis quas saepe repellat repudiandae qui sint? Delectus dignissimos
-                                                    maiores fuga doloremque magni, ratione provident exercitationem
-                                                    aliquam tempore velit facere autem magnam, architecto inventore
-                                                    recusandae dolorum, illo sequi officiis dolore! Unde enim,
-                                                    exercitationem. Lorem ipsum</p>
-                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatum
-                                                    sapiente aliquam ut neque voluptatibus inventore odit nesciunt.
-                                                    Nobis quas saepe repellat repudiandae qui sint? Delectus dignissimos
-                                                    maiores fuga doloremque magni, ratione provident exercitationem
-                                                    aliquam tempore velit facere autem magnam, architecto inventore
-                                                    recusandae dolorum, illo sequi officiis dolore! Unde enim,
-                                                    exercitationem. Lorem ipsum</p>
-                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatum
-                                                    sapiente aliquam ut neque voluptatibus inventore odit nesciunt.
-                                                    Nobis quas saepe repellat repudiandae qui sint? Delectus dignissimos
-                                                    maiores fuga doloremque magni, ratione provident exercitationem
-                                                    aliquam tempore velit facere autem magnam, architecto inventore
-                                                    recusandae dolorum, illo sequi officiis dolore! Unde enim,
-                                                    exercitationem. Lorem ipsum</p>
-                                                <ul>
-                                                    <li>Consectetur adipisicing elit. Voluptatum sapiente aliquam ut
-                                                        neque voluptatibus inventore odit nesciunt. Nobis quas saepe
-                                                        repellat</li>
-                                                    <li>Delectus dignissimos maiores fuga doloremque magni, ratione
-                                                        provident exercitationem aliquam tempore velit facere autem
-                                                        magnam</li>
-                                                    <li>velit facere autem magnam, architecto inventore recusandae
-                                                        dolorum, illo sequi officiis dolore! Unde enim</li>
-                                                    <li>Repudiandae qui sint? Delectus dignissimos maiores fuga
-                                                        doloremque magni, ratione provident exercitationem aliquam
-                                                        tempore velit facere autem</li>
-                                                    <li>Ipsum dolor sit amet, consectetur adipisicing elit. Voluptatum
-                                                        sapiente aliquam ut neque voluptatibus inventore odit nesciunt.
-                                                        Nobis quas saepe repella</li>
-                                                </ul>
-                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatum
-                                                    sapiente aliquam ut neque voluptatibus inventore odit nesciunt.
-                                                    Nobis quas saepe repellat repudiandae qui sint? Delectus dignissimos
-                                                    maiores fuga doloremque magni, ratione provident exercitationem
-                                                    aliquam tempore velit facere autem magnam, architecto inventore
-                                                    recusandae dolorum, illo sequi officiis dolore! Unde enim,
-                                                    exercitationem. Lorem ipsum</p>
-                                                <h4>Heading 5</h4>
-                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatum
-                                                    sapiente aliquam ut neque voluptatibus inventore odit nesciunt.
-                                                    Nobis quas saepe repellat repudiandae qui sint? Delectus dignissimos
-                                                    maiores fuga doloremque magni, ratione provident exercitationem
-                                                    aliquam tempore velit facere autem magnam, architecto inventore
-                                                    recusandae dolorum, illo sequi officiis dolore! Unde enim,
-                                                    exercitationem. Lorem ipsum</p>
+                                                <p>{{ $product->long_description }}</p>
                                             </div>
                                         </div>
+                                        @if (false)
+                                            <div class="row">
+                                                <div class="col-xl-4 col-md-4">
+                                                    <div class="description_single">
+                                                        <h6><span>1</span> Free Shipping & Return</h6>
+                                                        <p>We offer free shipping for products on orders above 50$ and
+                                                            offer
+                                                            free delivery for all orders in US.</p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-4 col-md-4">
+                                                    <div class="description_single">
+                                                        <h6><span>2</span> Free and Easy Returns</h6>
+                                                        <p>We guarantee our products and you could get back all of your
+                                                            money anytime you want in 30 days.</p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-4 col-md-4">
+                                                    <div class="description_single">
+                                                        <h6><span>3</span> Special Financing </h6>
+                                                        <p>Get 20%-50% off items over 50$ for a month or over 250$ for a
+                                                            year with our special credit card.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+                                @if (false)
+                                    {{-- ! information area --}}
+                                    <div class="tab-pane fade" id="pills-profile22" role="tabpanel"
+                                        aria-labelledby="pills-profile-tab7">
                                         <div class="row">
-                                            <div class="col-xl-4 col-md-4">
-                                                <div class="description_single">
-                                                    <h6><span>1</span> Free Shipping & Return</h6>
-                                                    <p>We offer free shipping for products on orders above 50$ and
-                                                        offer
-                                                        free delivery for all orders in US.</p>
+                                            <div class="col-xl-6 col-lg-6 mb-4 mb-lg-0">
+                                                <div class="wsus__pro_det_info">
+                                                    <h4>Additional Information</h4>
+                                                    <p><span>Fabric</span> 100% Cotton</p>
+                                                    <p><span>Materials</span> Yearn</p>
+                                                    <p><span>Packaging</span> 1 pice poly</p>
+                                                    <p><span>Cleaning</span> Washable</p>
+                                                    <p><span>Cash on Delivery</span> yes</p>
+                                                    <p><span>Payment Method</span> Cash / Credit Card</p>
+                                                    <p><span>Other Paymen Method</span> Wire Transfer</p>
+                                                    <p><span>Order Tracking</span> Yes </p>
                                                 </div>
                                             </div>
-                                            <div class="col-xl-4 col-md-4">
-                                                <div class="description_single">
-                                                    <h6><span>2</span> Free and Easy Returns</h6>
-                                                    <p>We guarantee our products and you could get back all of your
-                                                        money anytime you want in 30 days.</p>
-                                                </div>
-                                            </div>
-                                            <div class="col-xl-4 col-md-4">
-                                                <div class="description_single">
-                                                    <h6><span>3</span> Special Financing </h6>
-                                                    <p>Get 20%-50% off items over 50$ for a month or over 250$ for a
-                                                        year with our special credit card.</p>
+                                            <div class="col-xl-6 col-lg-6">
+                                                <div class="wsus__pro_det_info">
+                                                    <h4>Additional Information</h4>
+                                                    <p><span>Fabric</span> 100% Cotton</p>
+                                                    <p><span>Materials</span> Yearn</p>
+                                                    <p><span>Packaging</span> 1 pice poly</p>
+                                                    <p><span>Cleaning</span> Washable</p>
+                                                    <p><span>Cash on Delivery</span> yes</p>
+                                                    <p><span>Payment Method</span> Cash / Credit Card</p>
+                                                    <p><span>Other Paymen Method</span> Wire Transfer</p>
+                                                    <p><span>Order Tracking</span> Yes </p>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                {{-- ! information area --}}
-                                <div class="tab-pane fade" id="pills-profile22" role="tabpanel"
-                                    aria-labelledby="pills-profile-tab7">
-                                    <div class="row">
-                                        <div class="col-xl-6 col-lg-6 mb-4 mb-lg-0">
-                                            <div class="wsus__pro_det_info">
-                                                <h4>Additional Information</h4>
-                                                <p><span>Fabric</span> 100% Cotton</p>
-                                                <p><span>Materials</span> Yearn</p>
-                                                <p><span>Packaging</span> 1 pice poly</p>
-                                                <p><span>Cleaning</span> Washable</p>
-                                                <p><span>Cash on Delivery</span> yes</p>
-                                                <p><span>Payment Method</span> Cash / Credit Card</p>
-                                                <p><span>Other Paymen Method</span> Wire Transfer</p>
-                                                <p><span>Order Tracking</span> Yes </p>
-                                            </div>
-                                        </div>
-                                        <div class="col-xl-6 col-lg-6">
-                                            <div class="wsus__pro_det_info">
-                                                <h4>Additional Information</h4>
-                                                <p><span>Fabric</span> 100% Cotton</p>
-                                                <p><span>Materials</span> Yearn</p>
-                                                <p><span>Packaging</span> 1 pice poly</p>
-                                                <p><span>Cleaning</span> Washable</p>
-                                                <p><span>Cash on Delivery</span> yes</p>
-                                                <p><span>Payment Method</span> Cash / Credit Card</p>
-                                                <p><span>Other Paymen Method</span> Wire Transfer</p>
-                                                <p><span>Order Tracking</span> Yes </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                @endif
                                 {{-- ! Vendor info area --}}
                                 <div class="tab-pane fade" id="pills-contact" role="tabpanel"
                                     aria-labelledby="pills-contact-tab">
@@ -550,155 +506,156 @@
                                             <div class="row">
                                                 <div class="col-xl-8 col-lg-7">
                                                     <div class="wsus__comment_area">
-                                                        <h4>Reviews <span>02</span></h4>
-                                                        <div class="wsus__main_comment">
-                                                            <div class="wsus__comment_img">
-                                                                <img src="{{ asset('frontend/images/client_img_3.jpg') }}"
-                                                                    alt="user" class="img-fluid w-100">
-                                                            </div>
-                                                            <div class="wsus__comment_text reply">
-                                                                <h6>Shopnil mahadi <span>4 <i
-                                                                            class="fas fa-star"></i></span></h6>
-                                                                <span>09 Jul 2021</span>
-                                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing
-                                                                    elit.
-                                                                    Cupiditate sint molestiae eos? Officia, fuga eaque.
-                                                                </p>
-                                                                <ul class="">
-                                                                    <li><img src="{{ asset('frontend/images/headphone_1.jpg') }}"
-                                                                            alt="product" class="img-fluid w-100"></li>
-                                                                    <li><img src="{{ asset('frontend/images/headphone_2.jpg') }}"
-                                                                            alt="product" class="img-fluid w-100"></li>
-                                                                    <li><img src="{{ asset('frontend/images/kids_1.jpg') }}"
-                                                                            alt="product" class="img-fluid w-100"></li>
-                                                                </ul>
-                                                                <a href="#" data-bs-toggle="collapse"
-                                                                    data-bs-target="#flush-collapsetwo">reply</a>
-                                                                <div class="accordion accordion-flush"
-                                                                    id="accordionFlushExample2">
-                                                                    <div class="accordion-item">
-                                                                        <div id="flush-collapsetwo"
-                                                                            class="accordion-collapse collapse"
-                                                                            aria-labelledby="flush-collapsetwo"
-                                                                            data-bs-parent="#accordionFlushExample">
-                                                                            <div class="accordion-body">
-                                                                                <form>
-                                                                                    <div
-                                                                                        class="wsus__riv_edit_single text_area">
-                                                                                        <i class="far fa-edit"></i>
-                                                                                        <textarea cols="3" rows="1" placeholder="Your Text"></textarea>
+                                                        <h4>Reviews <span>
+                                                                @if ($reviews)
+                                                                    {{ $reviews->count() }}
+                                                                @else
+                                                                    0
+                                                                @endif
+                                                            </span></h4>
+                                                        @foreach ($reviews as $review)
+                                                            <div class="wsus__main_comment">
+                                                                <div class="wsus__comment_img">
+                                                                    <img src="{{ asset('frontend/images/' . $review->user->profilePicture) }}"
+                                                                        alt="user" class="img-fluid w-100">
+                                                                </div>
+                                                                <div class="wsus__comment_text reply">
+                                                                    <h6>{{ $review->user->name }}
+                                                                        <span>{{ $review->rate }}<i
+                                                                                class="fas fa-star"></i></span>
+                                                                    </h6>
+                                                                    <span>{{ $review->created_at }}</span>
+                                                                    <p>{{ $review->content }}
+                                                                    </p>
+                                                                    @if ($review->images->count() > 0)
+                                                                        <ul class="">
+                                                                            @foreach ($review->images as $image)
+                                                                                <li><img src="{{ asset('frontend/images/' . $image->path) }}"
+                                                                                        alt="product"
+                                                                                        class="img-fluid w-100">
+                                                                                </li>
+                                                                            @endforeach
+                                                                        </ul>
+                                                                    @endif
+                                                                    @if (false)
+                                                                        <a href="#" data-bs-toggle="collapse"
+                                                                            data-bs-target="#flush-collapsetwo">reply</a>
+                                                                        <div class="accordion accordion-flush"
+                                                                            id="accordionFlushExample2">
+                                                                            <div class="accordion-item">
+                                                                                <div id="flush-collapsetwo"
+                                                                                    class="accordion-collapse collapse"
+                                                                                    aria-labelledby="flush-collapsetwo"
+                                                                                    data-bs-parent="#accordionFlushExample">
+                                                                                    <div class="accordion-body">
+                                                                                        <form>
+                                                                                            <div
+                                                                                                class="wsus__riv_edit_single text_area">
+                                                                                                <i class="far fa-edit"></i>
+                                                                                                <textarea cols="3" rows="1" placeholder="Your Text"></textarea>
+                                                                                            </div>
+                                                                                            <button type="submit"
+                                                                                                class="common_btn">submit</button>
+                                                                                        </form>
                                                                                     </div>
-                                                                                    <button type="submit"
-                                                                                        class="common_btn">submit</button>
-                                                                                </form>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
-                                                                    </div>
+                                                                    @endif
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="wsus__main_comment">
-                                                            <div class="wsus__comment_img">
-                                                                <img src="{{ asset('frontend/images/client_img_1.jpg') }}"
-                                                                    alt="user" class="img-fluid w-100">
-                                                            </div>
-                                                            <div class="wsus__comment_text reply">
-                                                                <h6>Smith jhon <span>5 <i class="fas fa-star"></i></span>
-                                                                </h6>
-                                                                <span>09 Jul 2021</span>
-                                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing
-                                                                    elit.
-                                                                    Cupiditate sint molestiae eos? Officia, fuga eaque.
-                                                                </p>
-                                                                <a href="#" data-bs-toggle="collapse"
-                                                                    data-bs-target="#flush-collapsetwo2">reply</a>
-                                                                <div class="accordion accordion-flush"
-                                                                    id="accordionFlushExample2">
-                                                                    <div class="accordion-item">
-                                                                        <div id="flush-collapsetwo2"
-                                                                            class="accordion-collapse collapse"
-                                                                            aria-labelledby="flush-collapsetwo"
-                                                                            data-bs-parent="#accordionFlushExample">
-                                                                            <div class="accordion-body">
-                                                                                <form>
-                                                                                    <div
-                                                                                        class="wsus__riv_edit_single text_area">
-                                                                                        <i class="far fa-edit"></i>
-                                                                                        <textarea cols="3" rows="1" placeholder="Your Text"></textarea>
-                                                                                    </div>
-                                                                                    <button type="submit"
-                                                                                        class="common_btn">submit</button>
-                                                                                </form>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                        @endforeach
                                                         <div id="pagination">
-                                                            <nav aria-label="Page navigation example">
-                                                                <ul class="pagination">
-                                                                    <li class="page-item">
-                                                                        <a class="page-link" href="#"
-                                                                            aria-label="Previous">
-                                                                            <i class="fas fa-chevron-left"></i>
-                                                                        </a>
-                                                                    </li>
-                                                                    <li class="page-item"><a class="page-link page_active"
-                                                                            href="#">1</a>
-                                                                    </li>
-                                                                    <li class="page-item"><a class="page-link"
-                                                                            href="#">2</a></li>
-                                                                    <li class="page-item"><a class="page-link"
-                                                                            href="#">3</a></li>
-                                                                    <li class="page-item"><a class="page-link"
-                                                                            href="#">4</a></li>
-                                                                    <li class="page-item">
-                                                                        <a class="page-link" href="#"
-                                                                            aria-label="Next">
-                                                                            <i class="fas fa-chevron-right"></i>
-                                                                        </a>
-                                                                    </li>
-                                                                </ul>
-                                                            </nav>
+                                                            {{ $reviews->links() }}
+                                                            @if (false)
+                                                                <nav aria-label="Page navigation example">
+                                                                    <ul class="pagination">
+                                                                        <li class="page-item">
+                                                                            <a class="page-link" href="#"
+                                                                                aria-label="Previous">
+                                                                                <i class="fas fa-chevron-left"></i>
+                                                                            </a>
+                                                                        </li>
+                                                                        <li class="page-item"><a
+                                                                                class="page-link page_active"
+                                                                                href="#">1</a>
+                                                                        </li>
+                                                                        <li class="page-item"><a class="page-link"
+                                                                                href="#">2</a></li>
+                                                                        <li class="page-item"><a class="page-link"
+                                                                                href="#">3</a></li>
+                                                                        <li class="page-item"><a class="page-link"
+                                                                                href="#">4</a></li>
+                                                                        <li class="page-item">
+                                                                            <a class="page-link" href="#"
+                                                                                aria-label="Next">
+                                                                                <i class="fas fa-chevron-right"></i>
+                                                                            </a>
+                                                                        </li>
+                                                                    </ul>
+                                                                </nav>
+                                                            @endif
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-xl-4 col-lg-5 mt-4 mt-lg-0">
                                                     <div class="wsus__post_comment rev_mar" id="sticky_sidebar3">
                                                         <h4>write a Review</h4>
-                                                        <form action="#">
-                                                            <p class="rating">
+                                                        <form action="{{ route('frontend.review.add') }} "
+                                                            method="POST">
+                                                            @csrf
+                                                            <input name="product_id" type="hidden"
+                                                                value="{{ $product->id }}">
+                                                            <p class="star-rating">
                                                                 <span>select your rating : </span>
-                                                                <i class="fas fa-star"></i>
-                                                                <i class="fas fa-star"></i>
-                                                                <i class="fas fa-star"></i>
-                                                                <i class="fas fa-star"></i>
-                                                                <i class="fas fa-star"></i>
+                                                                <i class="fas fa-star selected" data-value="1"></i>
+                                                                <i class="fas fa-star" data-value="2"></i>
+                                                                <i class="fas fa-star" data-value="3"></i>
+                                                                <i class="fas fa-star" data-value="4"></i>
+                                                                <i class="fas fa-star" data-value="5"></i>
                                                             </p>
+                                                            <input name="rating" id="rating-value" type="hidden"
+                                                                value="1">
+                                                            @push('scripts')
+                                                                <script>
+                                                                    const stars = document.querySelectorAll('.star-rating .fa-star');
+                                                                    const ratingInput = document.getElementById('rating-value');
+
+                                                                    stars.forEach(star => {
+                                                                        star.addEventListener('click', function() {
+                                                                            const rating = this.getAttribute('data-value');
+                                                                            ratingInput.value = rating;
+
+                                                                            // Met à jour l’affichage visuel des étoiles sélectionnées
+                                                                            stars.forEach(s => {
+                                                                                s.classList.remove('selected');
+                                                                                if (s.getAttribute('data-value') <= rating) {
+                                                                                    s.classList.add('selected');
+                                                                                }
+                                                                            });
+                                                                        });
+                                                                    });
+                                                                </script>
+                                                            @endpush
                                                             <div class="row">
-                                                                <div class="col-xl-12">
-                                                                    <div class="wsus__single_com">
-                                                                        <input type="text" placeholder="Name">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-xl-12">
-                                                                    <div class="wsus__single_com">
-                                                                        <input type="email" placeholder="Email">
-                                                                    </div>
-                                                                </div>
                                                                 <div class="col-xl-12">
                                                                     <div class="col-xl-12">
                                                                         <div class="wsus__single_com">
-                                                                            <textarea cols="3" rows="3" placeholder="Write your review"></textarea>
+                                                                            <textarea name="content" cols="3" rows="3" placeholder="Write your review"></textarea>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="img_upload">
+                                                            <div class="img_upload cursor-pointer">
                                                                 <div class="gallery">
-                                                                    <a class="cam" href="javascript:void(0)"><span><i
-                                                                                class="fas fa-image"></i></span>
+                                                                    <a class="cam">
+                                                                        <span>
+                                                                            <i class="fas fa-image">
+                                                                                <input name="image" class="d-none"
+                                                                                    type="file"
+                                                                                    accept=".jpg,.jpeg,.png">
+                                                                            </i>
+                                                                        </span>
                                                                     </a>
                                                                 </div>
                                                             </div>
@@ -1020,8 +977,8 @@
         </div>
     </section>
     <!--============================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                PRODUCT DETAILS END
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ==============================-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    PRODUCT DETAILS END
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ==============================-->
 
 
     {{--

@@ -44,15 +44,19 @@
                             @endif
 
 
-                            <li><a href="{{ route('frontend.compare') }}"><i
-                                        class="fal fa-random"></i><span>03</span></a></li>
+                            <li><a href="{{ route('frontend.compare') }}"><i class="fal fa-random"></i>
+                                    @if (session()->has('compare'))
+                                        <span>{{ count(session('compare', [])) }}</span>
+                                    @else
+                                        <span>00</span>
+                                    @endif
+                                </a></li>
                             @if (Auth::check())
                                 <li><a class="wsus__cart_icon cursor-pointer"><i class="fal fa-shopping-bag"></i>
                                         @if (session()->has('cart'))
                                             <span>{{ count(session('cart', [])) }}</span>
                                         @else
                                             <span>0</span>
-                                            {{-- ! wtf this is a huge problem --}}
                                         @endif
                                     </a>
                                 </li>
@@ -66,53 +70,7 @@
             </div>
         </div>
         @auth
-            <div class="wsus__mini_cart">
-                <h4>shopping cart <span class="wsus_close_mini_cart"><i class="far fa-times"></i></span></h4>
-                <ul>
-                    @if ($cart != [])
-                        @php $total = 0 @endphp
-                        @foreach ($cart as $key => $item)
-                            <li>
-                                <div class="wsus__cart_img">
-                                    <a href="{{ route('frontend.cart.remove_item', ['id' => $key]) }}"><img
-                                            src="{{ asset('frontend/images/tab_2.jpg') }}" alt="product"
-                                            class="img-fluid w-100"></a>
-                                    <form action="{{ route('frontend.cart.remove_item', ['id' => $key]) }}" method="POST">
-                                        @csrf
-                                        <button class="btn" type="submit">
-                                            <a class="wsis__del_icon" href=""><i class="fas fa-minus-circle"></i></a>
-                                        </button>
-                                    </form>
-                                </div>
-                                <div class="wsus__cart_text">
-                                    <a class="wsus__cart_title"
-                                        href="{{ route('frontend.product_details', ['id' => $key]) }}">
-                                        {{ $item['product']['name'] }} </a>
-                                    <span> × {{ $item['quantity'] }}</span>
-                                    <p>DZ {{ $item['product']['price'] }}
-                                        @if (false)
-                                            <del>DZ 150</del>
-                                        @endif
-                                    </p>
-                                </div>
-                            </li>
-                            @php $total += $item['product']['price'] * $item['quantity']; @endphp
-                        @endforeach
-                    @else
-                    @endif
-                </ul>
-                <h5>sub total <span>
-                        @if (@empty($cart))
-                            DZ 0
-                        @else
-                            DZ {{ $total }}
-                        @endif
-                    </span></h5>
-                <div class="wsus__minicart_btn_area">
-                    <a class="common_btn" href="{{ route('frontend.cart') }}">view cart</a>
-                    <a class="common_btn" href="{{ route('frontend.check_out') }}">checkout</a>
-                </div>
-            </div>
+            @livewire('cart', ['type' => 'mini'])
         @endauth
     </header>
     <!--============================

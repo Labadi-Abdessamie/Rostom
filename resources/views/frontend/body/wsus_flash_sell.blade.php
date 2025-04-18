@@ -37,7 +37,10 @@
                                 <li><a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"><i
                                             class="far fa-eye"></i></a></li>
                                 <li><a href="#"><i class="far fa-heart"></i></a></li>
-                                <li><a href="#"><i class="far fa-random"></i></a>
+                                <li class="cursor-pointer">
+                                    @livewire('add-to-compare', ['productId' => $sliderProduct->id])
+                                    <!-- <a href="#"><i class="far fa-random"></i></a> -->
+                                </li>
                             </ul>
                             <div class="wsus__product_details">
                                 <a class="wsus__category" href="">{{ $sliderProduct->category->name }}
