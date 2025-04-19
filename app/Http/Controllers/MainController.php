@@ -61,25 +61,28 @@ class MainController extends Controller
             })->inRandomOrder()->limit(12)->get();
         });
 
+
         $timeoutAt = Carbon::now()->addSeconds(3);
+        $categoryProducts = collect();
         do {
 
             $categoryToDisplay = Cache::remember('categoryToDisplay', 43200, function () {
                 return Category::where('status', 'active')->inRandomOrder()->first();
-            });
+            }) ?? null;
 
-            if ($categoryToDisplay->products) {
-                $categoryProducts = Cache::remember('categoryProducts', 43200, function () {
-                    return cache()->get('categoryToDisplay')->products()->whereHas('magasin', function ($query) {
+            if ($categoryToDisplay->products()->exists()) {
+
+                $categoryProducts = Cache::remember('categoryProducts', 43200, function () use ($categoryToDisplay) {
+                    return $categoryToDisplay->products()->whereHas('magasin', function ($query) {
                         $query->where('status', 'active');
                     })->inRandomOrder()->limit(6)->get();
                 });
             }
             if (Carbon::now()->greaterThan($timeoutAt)) {
-                $categoryProducts = null;
+                $categoryProducts = collect();
                 break;
             }
-        } while (count($categoryProducts) == 0);
+        } while ($categoryProducts->isEmpty());
 
         //! Banners Selection
 

@@ -6723,9 +6723,9 @@ footer {
 
 .dashboard_sidebar {
     width: 15%;
-    height: 100vh;
+    height: max-content;
     background: #0b2c3d;
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     z-index: 9;
@@ -6752,7 +6752,8 @@ footer {
     scrollbar-color: #08C #0b172d;
 }
 
-.dashboard_link li a {
+.dashboard_link li a,
+.dashboard_link li button {
     font-size: 15px;
     color: #e8e8e8;
     font-weight: 500;
@@ -6767,16 +6768,20 @@ footer {
     -o-transition: all linear 0.3s ease;
 }
 
-.dashboard_link li:first-child a {
+.dashboard_link li:first-child a,
+.dashboard_link li:first-child button {
     border-top: 1px solid #fffefe24;
 }
 
-.dashboard_link li a i {
+.dashboard_link li a i,
+.dashboard_link li button i {
     margin-right: 10px;
 }
 
 .dashboard_link li a:hover,
-.dashboard_link li a.active {
+.dashboard_link li a.active,
+.dashboard_link li button:hover,
+.dashboard_link li button.active {
     background: #051a25;
 }
 

@@ -6,8 +6,8 @@
 
 @section('content')
     <!--============================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    BREADCRUMB START
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ==============================-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    BREADCRUMB START
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ==============================-->
     <section id="wsus__breadcrumb">
         <div class="wsus_breadcrumb_overlay">
             <div class="container">
@@ -24,12 +24,12 @@
         </div>
     </section>
     <!--============================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    BREADCRUMB END
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ==============================-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    BREADCRUMB END
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ==============================-->
 
     <!--============================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    PRODUCT PAGE START
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ==============================-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    PRODUCT PAGE START
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ==============================-->
     <section id="wsus__product_page">
         <div class="container">
             <div class="row">
@@ -287,11 +287,18 @@
                                                         class="img-fluid w-100 img_2" />
                                                 </a>
                                                 <ul class="wsus__single_pro_icon">
-                                                    <li><a href="#" data-bs-toggle="modal"
-                                                            data-bs-target="#exampleModal"><i class="far fa-eye"></i></a>
+                                                    @if (false)
+                                                        <li><a href="#" data-bs-toggle="modal"
+                                                                data-bs-target="#exampleModal"><i
+                                                                    class="far fa-eye"></i></a>
+                                                        </li>
+                                                    @endif
+                                                    <li class="cursor-pointer">
+                                                        @livewire('add-to-wishlist', ['product' => $product], key($product->id))
                                                     </li>
-                                                    <li><a href="#"><i class="far fa-heart"></i></a></li>
-                                                    <li><a href="#"><i class="far fa-random"></i></a>
+                                                    <li class="cursor-pointer">
+                                                        @livewire('add-to-compare', ['productId' => $product->id])
+                                                    </li>
                                                 </ul>
                                                 <div class="wsus__product_details">
                                                     <a class="wsus__category"
@@ -300,7 +307,7 @@
                                                     <p class="wsus__pro_rating">
                                                         @if ($product->rate_average != 0)
                                                             @for ($i = 1; $i <= $product->rate_average; $i++)
-                                                                <i class="far fa-star"></i>
+                                                                <i class="fas fa-star"></i>
                                                             @endfor
                                                             @if ($product->rate_average != floor($product->rate_average))
                                                                 <i class="fas fa-star-half-alt"></i>
@@ -354,7 +361,7 @@
                                                     <p class="wsus__pro_rating">
                                                         @if ($product->rate_average != 0)
                                                             @for ($i = 1; $i <= $product->rate_average; $i++)
-                                                                <i class="far fa-star"></i>
+                                                                <i class="fas fa-star"></i>
                                                             @endfor
                                                             @if ($product->rate_average != floor($product->rate_average))
                                                                 <i class="fas fa-star-half-alt"></i>
@@ -377,9 +384,12 @@
                                                     <p class="list_description">{{ $product->short_description }}</p>
                                                     <ul class="wsus__single_pro_icon">
                                                         @livewire('add-to-cart', ['product' => $product], key($product->id))
-                                                        {{-- <a class="add_cart" href="#">add to cart</a> --}}
-                                                        <li><a href="#"><i class="far fa-heart"></i></a></li>
-                                                        <li><a href="#"><i class="far fa-random"></i></a>
+                                                        <li class="cursor-pointer ms-2">
+                                                            @livewire('add-to-wishlist', ['product' => $product], key($product->id))
+                                                        </li>
+                                                        <li class="cursor-pointer">
+                                                            @livewire('add-to-compare', ['productId' => $product->id])
+                                                        </li>
                                                     </ul>
                                                 </div>
                                             </div>
@@ -420,6 +430,6 @@
         </div>
     </section>
     <!--============================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    PRODUCT PAGE END
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ==============================--
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    PRODUCT PAGE END
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ==============================--
 @endsection

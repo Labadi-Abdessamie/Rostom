@@ -43,7 +43,6 @@
                                 </li>
                                 <li class="cursor-pointer">
                                     @livewire('add-to-compare', ['productId' => $sliderProduct->id])
-                                    <!-- <a href="#"><i class="far fa-random"></i></a> -->
                                 </li>
                             </ul>
                             <div class="wsus__product_details">
