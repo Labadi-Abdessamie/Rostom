@@ -6,8 +6,8 @@
 
 @section('content')
     <!--============================
-                                                                                                                                                                                                                                BREADCRUMB START
-                                                                                                                                                                                                                            ==============================-->
+                                                                                                                                                                                                                                                                                            BREADCRUMB START
+                                                                                                                                                                                                                                                                                        ==============================-->
     <section id="wsus__breadcrumb">
         <div class="wsus_breadcrumb_overlay">
             <div class="container">
@@ -16,8 +16,8 @@
                         <h4>vendor details</h4>
                         <ul>
                             <li><a href="{{ route('frontend.index') }}">home</a></li>
-                            <li><a href="{{ route('frontend.vendor') }}">vendor</a></li>
-                            <li><a href="#">vendor details</a></li>
+                            <li><a href="{{ route('frontend.vendor') }}">vendors</a></li>
+                            <li><a href>vendor details</a></li>
                         </ul>
                     </div>
                 </div>
@@ -25,8 +25,8 @@
         </div>
     </section>
     <!--============================
-                                                                                                                                                                                                                                BREADCRUMB END
-                                                                                                                                                                                                                            ==============================-->
+                                                                                                                                                                                                                                                                                            BREADCRUMB END
+                                                                                                                                                                                                                                                                                        ==============================-->
 
     {{--
     <!--==========================
@@ -83,8 +83,8 @@
 --}}
 
     <!--============================
-                                                                                                                                                                                                                              VENDORS DETAILA START
-                                                                                                                                                                                                                            ==============================-->
+                                                                                                                                                                                                                                                                                          VENDORS DETAILA START
+                                                                                                                                                                                                                                                                                        ==============================-->
     <section id="wsus__product_page" class="wsus__vendor_details_page">
         <div class="container">
             <div class="row">
@@ -380,11 +380,18 @@
                                                         class="img-fluid w-100 img_2" />
                                                 </a>
                                                 <ul class="wsus__single_pro_icon">
-                                                    <li><a href="#" data-bs-toggle="modal"
-                                                            data-bs-target="#exampleModal"><i class="far fa-eye"></i></a>
+                                                    @if (false)
+                                                        <li><a href="#" data-bs-toggle="modal"
+                                                                data-bs-target="#exampleModal"><i
+                                                                    class="far fa-eye"></i></a>
+                                                        </li>
+                                                    @endif
+                                                    <li class="cursor-pointer">
+                                                        @livewire('add-to-wishlist', ['product' => $product], key($product->id))
                                                     </li>
-                                                    <li><a href="#"><i class="far fa-heart"></i></a></li>
-                                                    <li><a href="#"><i class="far fa-random"></i></a>
+                                                    <li class="cursor-pointer">
+                                                        @livewire('add-to-compare', ['productId' => $product->id])
+                                                    </li>
                                                 </ul>
                                                 <div class="wsus__product_details">
                                                     <a class="wsus__category"
@@ -393,7 +400,7 @@
                                                     <p class="wsus__pro_rating">
                                                         @if ($product->rate_average != 0)
                                                             @for ($i = 1; $i <= $product->rate_average; $i++)
-                                                                <i class="far fa-star"></i>
+                                                                <i class="fas fa-star"></i>
                                                             @endfor
                                                             @if ($product->rate_average != floor($product->rate_average))
                                                                 <i class="fas fa-star-half-alt"></i>
@@ -414,7 +421,7 @@
                                                             <del>$200</del>
                                                         @endif
                                                     </p>
-                                                    <a class="add_cart" href="#">add to cart</a>
+                                                    @livewire('add-to-cart', ['product' => $product->id])
                                                 </div>
                                             </div>
                                         </div>
@@ -446,7 +453,7 @@
                                                     <p class="wsus__pro_rating">
                                                         @if ($product->rate_average != 0)
                                                             @for ($i = 1; $i <= $product->rate_average; $i++)
-                                                                <i class="far fa-star"></i>
+                                                                <i class="fas fa-star"></i>
                                                             @endfor
                                                             @if ($product->rate_average != floor($product->rate_average))
                                                                 <i class="fas fa-star-half-alt"></i>
@@ -469,9 +476,15 @@
                                                     </p>
                                                     <p class="list_description">{{ $product->short_description }}</p>
                                                     <ul class="wsus__single_pro_icon">
-                                                        <li><a class="add_cart" href="#">add to cart</a></li>
-                                                        <li><a href="#"><i class="far fa-heart"></i></a></li>
-                                                        <li><a href="#"><i class="far fa-random"></i></a>
+                                                        <li>
+                                                            @livewire('add-to-cart', ['product' => $product->id])
+                                                        </li>
+                                                        <li class="cursor-pointer ms-2">
+                                                            @livewire('add-to-wishlist', ['product' => $product], key($product->id))
+                                                        </li>
+                                                        <li class="cursor-pointer">
+                                                            @livewire('add-to-compare', ['productId' => $product->id])
+                                                        </li>
                                                     </ul>
                                                 </div>
                                             </div>
@@ -511,6 +524,6 @@
         </div>
     </section>
     <!--============================
-                                                                                                                        VENDORS DETAILA END
-                                                                                                                    ==============================-->
+                                                                                                                                                                                    VENDORS DETAILA END
+                                                                                                                                                                                ==============================-->
 @endsection

@@ -57,6 +57,9 @@ class AuthenticatedSessionController extends Controller
             }
             session(['cart' => $cartItems]);
         }
+        if (Auth::user()->role == 'client') {
+            return redirect()->route('client.dashboard');
+        }
 
         return redirect()->intended(route('dashboard', absolute: false));
     }

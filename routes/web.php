@@ -73,20 +73,21 @@ route::middleware(['auth'])->group(function () {
 });
 
 //Client route
-route::middleware(['auth', 'role:client'])->group(function () {
+route::middleware(['auth', /*'role:client'*/])->group(function () {
     Route::group(['prefix' => 'client', 'as' => 'client.'], function () {
         Route::get('dashboard', [ClientController::class, 'dashboard'])->name('dashboard');
-        //Route::get('chat', [ClientController::class, 'chat'])->name('chat');
         Route::get('orders', [ClientController::class, 'orders'])->name('orders');
-        Route::get('download', [ClientController::class, 'download'])->name('download');
-        //Route::get('invoice', [ClientController::class, 'invoice'])->name('order_invoice');
-        Route::get('reviews', [ClientController::class, 'reviews'])->name('reviews');
         Route::get('wishlist', [ClientController::class, 'wishlist'])->name('wishlist');
+        Route::get('reviews', [ClientController::class, 'reviews'])->name('reviews');
         Route::get('profile', [ClientController::class, 'profile'])->name('profile');
         Route::get('address', [ClientController::class, 'address'])->name('address');
         Route::get('add-address', [ClientController::class, 'addAddress'])->name('add_address');
         Route::post('profile/update', [ClientController::class, 'updateProfile'])->name('update_profile');
         Route::post('profile/update/password', [ClientController::class, 'updatePassword'])->name('update_password');
+
+        //Route::get('invoice', [ClientController::class, 'invoice'])->name('order_invoice');
+        //Route::get('chat', [ClientController::class, 'chat'])->name('chat');
+        //Route::get('downloads', [ClientController::class, 'download'])->name('downloads');
     });
 });
 
