@@ -64,14 +64,6 @@ Route::group(['prefix' => '', 'as' => 'frontend.'], function () {
 
 
 
-route::middleware(['auth'])->group(function () {
-    Route::group(['prefix' => 'review', 'as' => 'frontend.review.'], function () {
-        Route::post('add', [ReviewController::class, 'store'])->name('add');
-        //Route::post('remove-item/{id}', [CartController::class, 'removeItem'])->name('cart.remove_item');
-        //Route::post('add-item/{id}', [CartController::class, 'addItem'])->name('cart.add_item');
-    });
-});
-
 //Client route
 route::middleware(['auth', /*'role:client'*/])->group(function () {
     Route::group(['prefix' => 'client', 'as' => 'client.'], function () {
@@ -89,6 +81,9 @@ route::middleware(['auth', /*'role:client'*/])->group(function () {
         //Route::get('chat', [ClientController::class, 'chat'])->name('chat');
         //Route::get('downloads', [ClientController::class, 'download'])->name('downloads');
     });
+    Route::group(['prefix' => 'review', 'as' => 'frontend.review.'], function () {
+        Route::post('add', [ReviewController::class, 'store'])->name('add');
+    });
 });
 
 //Vendor route
@@ -103,7 +98,7 @@ route::middleware(['auth', 'role:vender'])->group(function () {
 
 //Admin route
 //! Route::get('admin/login', [AdminController::class, 'login'])->name('admin.login');
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth',/*'role:admin'*/])->group(function () {
     Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         Route::get('dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
         Route::post('profile/update', [AdminController::class, 'updateProfile'])->name('update_profile');
@@ -111,13 +106,22 @@ Route::middleware(['auth'])->group(function () {
         Route::get('profile', [AdminController::class, 'profile'])->name('profile');
 
         Route::get('users', [AdminController::class, 'manageUsers'])->name('users');
-        Route::get('users/{id}/edit', [AdminController::class, 'editUser'])->name('edit_user'); 
+        Route::get('new-users', [AdminController::class, 'manageUsers'])->name('new_users');
+        Route::get('users/{id}/edit', [AdminController::class, 'editUser'])->name('edit_user');
         Route::post('users/{id}/update', [AdminController::class, 'updateUser'])->name('update_user');
         Route::delete('delete-user/{id}', [AdminController::class, 'deleteUser'])->name('delete_user');
-        Route::get('products',[AdminController::class,'manageProducts'])->name('products');
-        Route::delete('delete-product/{id}',[AdminController::class,'deleteProduct'])->name('delete_product');
+        Route::get('products', [AdminController::class, 'manageProducts'])->name('products');
+        Route::delete('delete-product/{id}', [AdminController::class, 'deleteProduct'])->name('delete_product');
+
+
+        Route::get('blocked-users', [AdminController::class, 'manageVendors'])->name('blocked_users');
+
+
+        Route::get('vendors', [AdminController::class, 'manageVendors'])->name('vendors');
     });
 });
+
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -149,5 +153,5 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 */
 
-Route::get('/test',[AdminController::class,'dashboard'])->name('test');
+Route::get('/test', [AdminController::class, 'dashboard'])->name('test');
 require __DIR__ . '/auth.php';

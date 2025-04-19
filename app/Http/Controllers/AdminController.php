@@ -22,14 +22,13 @@ class AdminController extends Controller
             ->take(10)
             ->get();
 
-
-        return view('admin.admindashboard', compact('totalClients', 'totalVendors', 'totalProducts','magasins','products','latestOrders'));
+        return view('admin.index', compact('totalClients', 'totalVendors', 'totalProducts', 'magasins', 'products', 'latestOrders'));
     }
 
     public function manageUsers()
     {
         $users = User::all();
-        return view('admin.adminusers', compact('users'));
+        return view('admin.pages.customers', compact('users'));
     }
 
     public function manageVendors()
@@ -49,7 +48,7 @@ class AdminController extends Controller
         $user = User::findOrFail($id);
         return view('admin.edit_user', compact('user')); // ✅ go to dedicated edit form
     }
-    
+
     public function updateUser(Request $request, $id)
     {
         $request->validate([
@@ -58,10 +57,10 @@ class AdminController extends Controller
             'status' => 'required|in:active,inactive,blocked',
             'role' => 'required|in:client,vendor,admin',
         ]);
-    
+
         $user = User::findOrFail($id);
         $user->update($request->only(['name', 'email', 'status', 'role'])); // cleaner
-    
+
         return redirect()->route('admin.users')->with('success', 'User updated successfully.');
     }
     public function deleteUser($id)

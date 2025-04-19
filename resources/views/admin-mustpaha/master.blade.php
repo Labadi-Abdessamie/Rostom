@@ -2,14 +2,11 @@
 <html lang="en">
 
 <head>
-
     <meta charset="utf-8" />
-    <title>Dashboard | UBold - Responsive Admin Dashboard Template</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
-    <meta content="Coderthemes" name="author" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
+    <title>@yield('title')</title>
     <!-- App favicon -->
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}">
 
@@ -18,6 +15,7 @@
     <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/css/app.min.css') }}" rel="stylesheet" type="text/css" id="app-style" />
     <link href="{{ asset('assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
+
     <script src="{{ asset('assets/js/head.js') }}"></script>
 
 </head>
@@ -30,18 +28,18 @@
     <!-- Begin page -->
     <div id="wrapper">
 
+
         @include('admin.nav')
-        @include('admin.sidebar')
+
+        @include('admin.sideadmin')
+
+        @include('admin.rightbaradmin')
+
         @yield('content')
-        @include('admin.footer')
+
 
     </div>
     <!-- END wrapper -->
-
-    @include('admin.rightbar')
-
-
-
 
     <!-- Vendor JS -->
     <script src="{{ asset('assets/js/vendor.min.js') }}"></script>
