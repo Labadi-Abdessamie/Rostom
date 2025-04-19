@@ -102,12 +102,19 @@ route::middleware(['auth', 'role:vender'])->group(function () {
 
 //Admin route
 //! Route::get('admin/login', [AdminController::class, 'login'])->name('admin.login');
-route::middleware(['auth', 'role:admin'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         Route::get('dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
         Route::post('profile/update', [AdminController::class, 'updateProfile'])->name('update_profile');
         Route::post('profile/update/password', [AdminController::class, 'updatePassword'])->name('update_password');
         Route::get('profile', [AdminController::class, 'profile'])->name('profile');
+
+        Route::get('users', [AdminController::class, 'manageUsers'])->name('users');
+        Route::get('users/{id}/edit', [AdminController::class, 'editUser'])->name('edit_user'); 
+        Route::post('users/{id}/update', [AdminController::class, 'updateUser'])->name('update_user');
+        Route::delete('delete-user/{id}', [AdminController::class, 'deleteUser'])->name('delete_user');
+        Route::get('products',[AdminController::class,'manageProducts'])->name('products');
+        Route::delete('delete-product/{id}',[AdminController::class,'deleteProduct'])->name('delete_product');
     });
 });
 
@@ -140,4 +147,6 @@ Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 */
+
+Route::get('/test',[AdminController::class,'dashboard'])->name('test');
 require __DIR__ . '/auth.php';
