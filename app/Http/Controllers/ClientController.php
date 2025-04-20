@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ClientController extends Controller
 {
@@ -15,11 +18,13 @@ class ClientController extends Controller
         return view('client.pages.orders');
     }
     public function wishlist()
-    {
-        return view('client.pages.wishlist');
-    }
+{
+    $wishlist = session()->get('wishlist',[]);
+    return view('client.pages.wishlist', compact('wishlist'));
+}
     public function reviews()
     {
+        $Reviews = session('reviews', []);
         return view('client.pages.reviews');
     }
     public function profile()

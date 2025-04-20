@@ -93,9 +93,9 @@
                                     </div>
                                     <div class="col-6">
                                         <div class="text-end">
-                                            <h3 class="text-dark mt-1"><span data-plugin="counterup">0.58</span>%
+                                            <h3 class="text-dark mt-1"><span data-plugin="counterup">{{$totalVendors}}</span>
                                             </h3>
-                                            <p class="text-muted mb-1 text-truncate">Conversion</p>
+                                            <p class="text-muted mb-1 text-truncate">Total Vendors</p>
                                         </div>
                                     </div>
                                 </div> <!-- end row-->
@@ -114,9 +114,9 @@
                                     </div>
                                     <div class="col-6">
                                         <div class="text-end">
-                                            <h3 class="text-dark mt-1"><span data-plugin="counterup">78.41</span>k
+                                            <h3 class="text-dark mt-1"><span data-plugin="counterup">{{$totalClients}}</span>
                                             </h3>
-                                            <p class="text-muted mb-1 text-truncate">Today's Visits</p>
+                                            <p class="text-muted mb-1 text-truncate">Total Clients</p>
                                         </div>
                                     </div>
                                 </div> <!-- end row-->

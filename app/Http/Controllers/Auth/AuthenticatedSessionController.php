@@ -25,44 +25,73 @@ class AuthenticatedSessionController extends Controller
      * Handle an incoming authentication request.
      */
     public function store(LoginRequest $request): RedirectResponse
-    {
-        $request->validate([
-            'email' => 'required',
-            'password' => 'required'
-        ], [], [], 'login');
-        $request->authenticate();
+{
+    $request->validate([
+        'email' => 'required',
+        'password' => 'required'
+    ], [], [], 'login');
 
-        $request->session()->regenerate();
+    $request->authenticate();
+    $request->session()->regenerate();
 
+  
+    
+
+    // ✅ Redirect according to role
+    if (Auth::user()->role == 'client') {
+        // ✅ Handle Cart
         $cart = Auth::user()->bags->where('type', 'cart')->first();
-        if ($cart) {
-            $cart->load(['bagItems.product']);
-            $cartItems = [];
+    if ($cart) {
+        $cart->load(['bagItems.product']);
+        $cartItems = [];
 
-            foreach ($cart->bagItems as $item) {
-                if ($item->product) {
-                    $cartItems[$item->product->id] = [
-                        'id' => $item->id,
-                        'quantity' => $item->quantity,
-                        'product' => [
-                            'name' => $item->product->name,
-                            'image' => $item->product->principalImage,
-                            'actual_quantity' => $item->product->actual_quantity,
-                            'price' => $item->product->price
-                        ]
-                    ];
-                } else {
-                    $item->delete();
-                }
+        foreach ($cart->bagItems as $item) {
+            if ($item->product) {
+                $cartItems[$item->product->id] = [
+                    'id' => $item->id,
+                    'quantity' => $item->quantity,
+                    'product' => [
+                        'name' => $item->product->name,
+                        'image' => $item->product->principalImage,
+                        'actual_quantity' => $item->product->actual_quantity,
+                        'price' => $item->product->price
+                    ]
+                ];
+            } else {
+                $item->delete();
             }
-            session(['cart' => $cartItems]);
         }
-        if (Auth::user()->role == 'client') {
-            return redirect()->route('client.dashboard');
+        session(['cart' => $cartItems]);
+    }
+
+    // ✅ Handle Wishlist
+    $wishlist = Auth::user()->bags->where('type', 'wishlist')->first();
+    if ($wishlist) {
+        $wishlist->load(['bagItems.product']);
+        $wishlistItems = [];
+
+        foreach ($wishlist->bagItems as $item) {
+            if ($item->product) {
+                $wishlistItems[$item->product->id] = [
+                    'id' => $item->id,
+                    'quantity' => $item->quantity,
+                    'product' => [
+                        'name' => $item->product->name,
+                        'image' => $item->product->principalImage,
+                        'actual_quantity' => $item->product->actual_quantity,
+                        'price' => $item->product->price
+                    ]
+                ];
+            }
         }
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        session(['wishlist' => $wishlistItems]);
     }
+        return redirect()->route('client.dashboard');
+    }
+
+    return redirect()->intended(route('dashboard', absolute: false));
+}
 
     /**
      * Destroy an authenticated session.
