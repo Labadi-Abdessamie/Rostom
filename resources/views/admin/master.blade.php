@@ -13,11 +13,12 @@
     <!-- App favicon -->
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}">
 
-    <link href="{{ asset('assets/libs/flatpickr/flatpickr.min.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ asset('assets/libs/selectize/css/selectize.bootstrap3.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/css/app.min.css') }}" rel="stylesheet" type="text/css" id="app-style" />
     <link href="{{ asset('assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet" type="text/css" />
+    @yield('styles')
+
     <script src="{{ asset('assets/js/head.js') }}"></script>
 
 </head>
@@ -32,27 +33,19 @@
 
         @include('admin.nav')
         @include('admin.sidebar')
-        @yield('content')
-        @include('admin.footer')
-
+        <div class="content-page">
+            @yield('content')
+            @include('admin.footer')
+        </div>
     </div>
     <!-- END wrapper -->
-
     @include('admin.rightbar')
-
-
 
 
     <!-- Vendor JS -->
     <script src="{{ asset('assets/js/vendor.min.js') }}"></script>
 
-    <!-- Plugins JS -->
-    <script src="{{ asset('assets/libs/flatpickr/flatpickr.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/apexcharts/apexcharts.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/selectize/js/standalone/selectize.min.js') }}"></script>
-
-    <!-- Dashboard 1 Init JS -->
-    <script src="{{ asset('assets/js/pages/dashboard-1.init.js') }}"></script>
+    @yield('scripts')
 
     <!-- App JS -->
     <script src="{{ asset('assets/js/app.min.js') }}"></script>

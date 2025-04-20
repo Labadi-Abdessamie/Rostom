@@ -101,23 +101,32 @@ route::middleware(['auth', 'role:vender'])->group(function () {
 Route::middleware(['auth',/*'role:admin'*/])->group(function () {
     Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         Route::get('dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+        /*
         Route::post('profile/update', [AdminController::class, 'updateProfile'])->name('update_profile');
         Route::post('profile/update/password', [AdminController::class, 'updatePassword'])->name('update_password');
         Route::get('profile', [AdminController::class, 'profile'])->name('profile');
+        */
 
-        Route::get('users', [AdminController::class, 'manageUsers'])->name('users');
-        Route::get('new-users', [AdminController::class, 'manageUsers'])->name('new_users');
+        Route::get('customers/{type?}', [AdminController::class, 'customers'])->name('customers');
+
         Route::get('users/{id}/edit', [AdminController::class, 'editUser'])->name('edit_user');
         Route::post('users/{id}/update', [AdminController::class, 'updateUser'])->name('update_user');
         Route::delete('delete-user/{id}', [AdminController::class, 'deleteUser'])->name('delete_user');
-        Route::get('products', [AdminController::class, 'manageProducts'])->name('products');
+
+
+        Route::get('magasins/{filtre?}', [AdminController::class, 'magasins'])->name('magasins');
+        Route::get('vendors/{type?}', [AdminController::class, 'vendors'])->name('vendors');
+
+
+        Route::get('products', [AdminController::class, 'products'])->name('products');
         Route::delete('delete-product/{id}', [AdminController::class, 'deleteProduct'])->name('delete_product');
 
 
-        Route::get('blocked-users', [AdminController::class, 'manageVendors'])->name('blocked_users');
+        Route::get('banners', [AdminController::class, 'banners'])->name('banners');
+        Route::get('add-banner/{id?}', [AdminController::class, 'addBanner'])->name('add_banner');
 
-
-        Route::get('vendors', [AdminController::class, 'manageVendors'])->name('vendors');
+        Route::get('orders', [AdminController::class, 'orders'])->name('orders');
+        Route::get('admins', [AdminController::class, 'admins'])->name('admins');
     });
 });
 

@@ -1,27 +1,5 @@
 @extends('admin.master')
 
-@section('title', 'Admin | Customers')
-
-@section('styles')
-    <link href="{{ asset('assets/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet"
-        type="text/css" />
-    <link href="{{ asset('assets/libs/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css') }}" rel="stylesheet"
-        type="text/css" />
-
-@endsection
-
-@section('scripts')
-    <!-- third party js -->
-    <script src="{{ asset('assets/libs/datatables.net/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/datatables.net-bs5/js/dataTables.bootstrap5.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/jquery-datatables-checkboxes/js/dataTables.checkboxes.min.js') }}"></script>
-    <!-- third party js ends -->
-
-    <!-- Datatables init -->
-    <script src="{{ asset('assets/js/pages/customers.init.js') }}"></script>
-@endsection
 
 @section('content')
     <!-- ============================================================== -->
@@ -37,7 +15,14 @@
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box">
-                        <h4 class="page-title">{{ $title }}</h4>
+                        <div class="page-title-right">
+                            <ol class="breadcrumb m-0">
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">UBold</a></li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Ecommerce</a></li>
+                                <li class="breadcrumb-item active">Sellers</li>
+                            </ol>
+                        </div>
+                        <h4 class="page-title">Sellers</h4>
                     </div>
                 </div>
             </div>
@@ -47,27 +32,26 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            @if (false)
-                                <div class="row mb-2">
-                                    <div class="col-sm-4">
-                                        <a href="javascript:void(0);" class="btn btn-danger mb-2"><i
-                                                class="mdi mdi-plus-circle me-2"></i> Add Customers</a>
-                                    </div>
-                                    <div class="col-sm-8">
-                                        <div class="text-sm-end">
-                                            <button type="button" class="btn btn-success mb-2 me-1"><i
-                                                    class="mdi mdi-cog"></i></button>
-                                            <button type="button" class="btn btn-light mb-2 me-1">Import</button>
-                                            <button type="button" class="btn btn-light mb-2">Export</button>
-                                        </div>
-                                    </div><!-- end col-->
+                            <div class="row justify-content-between mb-2">
+                                <div class="col-auto">
+                                    <form class="search-bar position-relative mb-sm-0 mb-2">
+                                        <input type="text" class="form-control" placeholder="Search...">
+                                        <span class="mdi mdi-magnify"></span>
+                                    </form>
                                 </div>
-                            @endif
+                                <div class="col-md-6">
+                                    <div class="text-md-end">
+                                        <button type="button" class="btn btn-danger waves-effect waves-light mb-2 me-2"><i
+                                                class="mdi mdi-basket me-1"></i> Add Sellers</button>
+                                        <button type="button" class="btn btn-success waves-effect waves-light mb-2 me-1"><i
+                                                class="mdi mdi-cog"></i></button>
+                                    </div>
+                                </div><!-- end col-->
+                            </div>
 
                             <div class="table-responsive">
-                                <table class="table table-centered table-striped dt-responsive nowrap w-100"
-                                    id="products-datatable">
-                                    <thead>
+                                <table class="table table-centered table-nowrap table-borderless table-hover mb-0">
+                                    <thead class="table-light">
                                         <tr>
                                             <th style="width: 20px;">
                                                 <div class="form-check">
@@ -75,13 +59,14 @@
                                                     <label class="form-check-label" for="customCheck1">&nbsp;</label>
                                                 </div>
                                             </th>
-                                            <th>Customer</th>
-                                            <th>Phone</th>
-                                            <th>Balance</th>
-                                            <th>Orders</th>
-                                            <th>Last Order</th>
-                                            <th>Status</th>
-                                            <th style="width: 75px;">Action</th>
+                                            <th>Owner Name</th>
+                                            <th>Store Name</th>
+                                            <th>Ratings</th>
+                                            <th>Products</th>
+                                            <th>Wallet Balance</th>
+                                            <th>Create Date</th>
+                                            <th>Revenue</th>
+                                            <th style="width: 82px;">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -89,27 +74,32 @@
                                             <td>
                                                 <div class="form-check">
                                                     <input type="checkbox" class="form-check-input" id="customCheck2">
-                                                    <label class="form-check-label" for="customCheck2">ABC</label>
+                                                    <label class="form-check-label" for="customCheck2">&nbsp;</label>
                                                 </div>
                                             </td>
                                             <td class="table-user">
-                                                <img src="assets/images/users/user-4.jpg" alt="table-user"
+                                                <img src="assets/images/users/user-2.jpg" alt="table-user"
                                                     class="me-2 rounded-circle">
                                                 <a href="javascript:void(0);" class="text-body fw-semibold">Paul J.
                                                     Friend</a>
                                             </td>
-                                            <td>050 414 8778</td>
                                             <td>
-                                                $12,874.82
+                                                Homovee
                                             </td>
                                             <td>
-                                                43
+                                                <i class="mdi mdi-star text-warning"></i> 4.9
                                             </td>
                                             <td>
-                                                August 05 2019 <small class="text-muted">10:29 PM</small>
+                                                <span class="fw-semibold">128</span>
                                             </td>
                                             <td>
-                                                <span class="badge badge-soft-success">Active</span>
+                                                $128,250
+                                            </td>
+                                            <td>
+                                                07/07/2018
+                                            </td>
+                                            <td>
+                                                $258.26k
                                             </td>
 
                                             <td>
@@ -134,17 +124,22 @@
                                                     Luellen</a>
                                             </td>
                                             <td>
-                                                215-302-3376
+                                                Execucy
                                             </td>
                                             <td>
-                                                $874.25
+                                                <i class="mdi mdi-star text-warning"></i> 3.5
                                             </td>
                                             <td>
-                                                220
+                                                <span class="fw-semibold">09</span>
                                             </td>
-                                            <td>August 04 2019 <small class="text-muted">08:18 AM</small></td>
                                             <td>
-                                                <span class="badge badge-soft-success">Active</span>
+                                                $78,410
+                                            </td>
+                                            <td>
+                                                09/12/2018
+                                            </td>
+                                            <td>
+                                                $152.3k
                                             </td>
 
                                             <td>
@@ -162,23 +157,28 @@
                                                 </div>
                                             </td>
                                             <td class="table-user">
-                                                <img src="assets/images/users/user-3.jpg" alt="table-user"
+                                                <img src="assets/images/users/user-4.jpg" alt="table-user"
                                                     class="me-2 rounded-circle">
                                                 <a href="javascript:void(0);" class="text-body fw-semibold">Kathryn S.
                                                     Collier</a>
                                             </td>
                                             <td>
-                                                828-216-2190
+                                                Epiloo
                                             </td>
                                             <td>
-                                                $125.78
+                                                <i class="mdi mdi-star text-warning"></i> 4.1
                                             </td>
                                             <td>
-                                                841
+                                                <span class="fw-semibold">78</span>
                                             </td>
-                                            <td>November 04 2019 <small class="text-muted">10:29 PM</small></td>
                                             <td>
-                                                <span class="badge badge-soft-danger">Blocked</span>
+                                                $89,458
+                                            </td>
+                                            <td>
+                                                06/30/2018
+                                            </td>
+                                            <td>
+                                                $178.6k
                                             </td>
 
                                             <td>
@@ -202,17 +202,22 @@
                                                     Kauper</a>
                                             </td>
                                             <td>
-                                                (216) 75 612 706
+                                                Uberer
                                             </td>
                                             <td>
-                                                $561.25
+                                                <i class="mdi mdi-star text-warning"></i> 4.9
                                             </td>
                                             <td>
-                                                62
+                                                <span class="fw-semibold">847</span>
                                             </td>
-                                            <td>February 01 2019 <small class="text-muted">07:22 AM</small></td>
                                             <td>
-                                                <span class="badge badge-soft-danger">Blocked</span>
+                                                $258,125
+                                            </td>
+                                            <td>
+                                                09/08/2018
+                                            </td>
+                                            <td>
+                                                $368.2k
                                             </td>
 
                                             <td>
@@ -236,17 +241,22 @@
                                                     Raws</a>
                                             </td>
                                             <td>
-                                                (02) 75 150 655
+                                                Symic
                                             </td>
                                             <td>
-                                                $2147.84
+                                                <i class="mdi mdi-star text-warning"></i> 5.0
                                             </td>
                                             <td>
-                                                09
+                                                <span class="fw-semibold">235</span>
                                             </td>
-                                            <td>February 01 2019 <small class="text-muted">07:22 AM</small></td>
                                             <td>
-                                                <span class="badge badge-soft-success">Active</span>
+                                                $56,210
+                                            </td>
+                                            <td>
+                                                07/15/2018
+                                            </td>
+                                            <td>
+                                                $89.5k
                                             </td>
 
                                             <td>
@@ -270,17 +280,22 @@
                                                     Kelsch</a>
                                             </td>
                                             <td>
-                                                (+15) 73 483 758
+                                                Insulore
                                             </td>
                                             <td>
-                                                $451.28
+                                                <i class="mdi mdi-star text-warning"></i> 4.0
                                             </td>
                                             <td>
-                                                25
+                                                <span class="fw-semibold">485</span>
                                             </td>
-                                            <td>September 07 2019 <small class="text-muted">07:22 AM</small></td>
                                             <td>
-                                                <span class="badge badge-soft-success">Active</span>
+                                                $330,251
+                                            </td>
+                                            <td>
+                                                09/05/2018
+                                            </td>
+                                            <td>
+                                                $597.8k
                                             </td>
 
                                             <td>
@@ -304,17 +319,22 @@
                                                     Gero</a>
                                             </td>
                                             <td>
-                                                078 7173 9261
+                                                Susadmin
                                             </td>
                                             <td>
-                                                $965.20
+                                                <i class="mdi mdi-star text-warning"></i> 4.3
                                             </td>
                                             <td>
-                                                214
+                                                <span class="fw-semibold">38</span>
                                             </td>
-                                            <td>November 14 2019 <small class="text-muted">07:22 AM</small></td>
                                             <td>
-                                                <span class="badge badge-soft-danger">Blocked</span>
+                                                $12,000
+                                            </td>
+                                            <td>
+                                                08/02/2018
+                                            </td>
+                                            <td>
+                                                $29.3k
                                             </td>
 
                                             <td>
@@ -338,17 +358,22 @@
                                                     Roseby</a>
                                             </td>
                                             <td>
-                                                078 6013 3854
+                                                Hyperill
                                             </td>
                                             <td>
-                                                $71584.2
+                                                <i class="mdi mdi-star text-warning"></i> 5.0
                                             </td>
                                             <td>
-                                                365
+                                                <span class="fw-semibold">77</span>
                                             </td>
-                                            <td>February 09 2019 <small class="text-muted">07:22 AM</small></td>
                                             <td>
-                                                <span class="badge badge-soft-success">Active</span>
+                                                $45,216
+                                            </td>
+                                            <td>
+                                                08/23/2018
+                                            </td>
+                                            <td>
+                                                $48.6k
                                             </td>
 
                                             <td>
@@ -372,17 +397,22 @@
                                                     Ciantar</a>
                                             </td>
                                             <td>
-                                                (216) 76 298 896
+                                                Vicedel
                                             </td>
                                             <td>
-                                                $5482.00
+                                                <i class="mdi mdi-star text-danger"></i> 2.7
                                             </td>
                                             <td>
-                                                921
+                                                <span class="fw-semibold">347</span>
                                             </td>
-                                            <td>September 12 2019 <small class="text-muted">07:22 AM</small></td>
                                             <td>
-                                                <span class="badge badge-soft-success">Active</span>
+                                                $7,815
+                                            </td>
+                                            <td>
+                                                05/06/2018
+                                            </td>
+                                            <td>
+                                                $12.1k
                                             </td>
 
                                             <td>
@@ -406,85 +436,22 @@
                                                     Smithies</a>
                                             </td>
                                             <td>
-                                                077 6157 4248
+                                                Circumous
                                             </td>
                                             <td>
-                                                $482.15
+                                                <i class="mdi mdi-star text-warning"></i> 4.9
                                             </td>
                                             <td>
-                                                68
-                                            </td>
-                                            <td>October 09 2019 <small class="text-muted">07:22 AM</small></td>
-                                            <td>
-                                                <span class="badge badge-soft-success">Active</span>
-                                            </td>
-
-                                            <td>
-                                                <a href="javascript:void(0);" class="action-icon"> <i
-                                                        class="mdi mdi-square-edit-outline"></i></a>
-                                                <a href="javascript:void(0);" class="action-icon"> <i
-                                                        class="mdi mdi-delete"></i></a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input" id="customCheck12">
-                                                    <label class="form-check-label" for="customCheck12">&nbsp;</label>
-                                                </div>
-                                            </td>
-                                            <td class="table-user">
-                                                <img src="assets/images/users/user-1.jpg" alt="table-user"
-                                                    class="me-2 rounded-circle">
-                                                <a href="javascript:void(0);" class="text-body fw-semibold">Labeeb
-                                                    Ghali</a>
+                                                <span class="fw-semibold">506</span>
                                             </td>
                                             <td>
-                                                050 414 8778
+                                                $68,143
                                             </td>
                                             <td>
-                                                $7852.3
+                                                04/09/2018
                                             </td>
                                             <td>
-                                                475
-                                            </td>
-                                            <td>October 27 2019 <small class="text-muted">07:22 AM</small></td>
-                                            <td>
-                                                <span class="badge badge-soft-success">Active</span>
-                                            </td>
-
-                                            <td>
-                                                <a href="javascript:void(0);" class="action-icon"> <i
-                                                        class="mdi mdi-square-edit-outline"></i></a>
-                                                <a href="javascript:void(0);" class="action-icon"> <i
-                                                        class="mdi mdi-delete"></i></a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input" id="customCheck13">
-                                                    <label class="form-check-label" for="customCheck13">&nbsp;</label>
-                                                </div>
-                                            </td>
-                                            <td class="table-user">
-                                                <img src="assets/images/users/user-2.jpg" alt="table-user"
-                                                    class="me-2 rounded-circle">
-                                                <a href="javascript:void(0);" class="text-body fw-semibold">Rory
-                                                    Seekamp</a>
-                                            </td>
-                                            <td>
-                                                078 5054 8877
-                                            </td>
-                                            <td>
-                                                $3365.12
-                                            </td>
-                                            <td>
-                                                25
-                                            </td>
-                                            <td>April 21 2019 <small class="text-muted">07:22 AM</small></td>
-                                            <td>
-                                                <span class="badge badge-soft-danger">Blocked</span>
+                                                $78.2k
                                             </td>
 
                                             <td>
@@ -497,6 +464,27 @@
                                     </tbody>
                                 </table>
                             </div>
+
+                            <ul class="pagination pagination-rounded justify-content-end my-2">
+                                <li class="page-item">
+                                    <a class="page-link" href="javascript: void(0);" aria-label="Previous">
+                                        <span aria-hidden="true">«</span>
+                                        <span class="visually-hidden">Previous</span>
+                                    </a>
+                                </li>
+                                <li class="page-item active"><a class="page-link" href="javascript: void(0);">1</a>
+                                </li>
+                                <li class="page-item"><a class="page-link" href="javascript: void(0);">2</a></li>
+                                <li class="page-item"><a class="page-link" href="javascript: void(0);">3</a></li>
+                                <li class="page-item"><a class="page-link" href="javascript: void(0);">4</a></li>
+                                <li class="page-item"><a class="page-link" href="javascript: void(0);">5</a></li>
+                                <li class="page-item">
+                                    <a class="page-link" href="javascript: void(0);" aria-label="Next">
+                                        <span aria-hidden="true">»</span>
+                                        <span class="visually-hidden">Next</span>
+                                    </a>
+                                </li>
+                            </ul>
                         </div> <!-- end card-body-->
                     </div> <!-- end card-->
                 </div> <!-- end col -->

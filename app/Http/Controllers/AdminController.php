@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Product;
 
+use function PHPUnit\Framework\isEmpty;
+
 class AdminController extends Controller
 {
     public function dashboard()
@@ -25,22 +27,72 @@ class AdminController extends Controller
         return view('admin.index', compact('totalClients', 'totalVendors', 'totalProducts', 'magasins', 'products', 'latestOrders'));
     }
 
-    public function manageUsers()
+    public function customers($type = null)
     {
-        $users = User::all();
-        return view('admin.pages.customers', compact('users'));
+        // ! not compelted
+        if (is_null($type)) {
+            $title = "Customers";
+            $users = User::all();
+        } elseif ($type === "new") {
+            $title = "New Customers";
+            $users = User::whereDate('created_at', '>=', now()->subDays(7))->get();
+        } elseif ($type === "blocked") {
+            $title = "Blocked Users";
+            $users = User::where('status', 'blocked')->get();
+        } else {
+            return redirect()->route('admin.users');
+        }
+
+        return view('admin.pages.customers', compact('users', 'title'));
     }
 
-    public function manageVendors()
+    public function magasins($filtre = null)
     {
-        $vendors = User::where('role', 'vendor')->get();
-        return view('admin.vendors.index', compact('vendors'));
+        if (is_null($filtre)) {
+            $Magasins = Magasin::get();
+        } else if ($filtre === "demands") {
+            $Magasins = Magasin::get();
+        } else {
+            return redirect()->route('admin.magasins');
+        }
+        return view('admin.pages.magasins', compact('Magasins'));
     }
 
-    public function manageProducts()
+    public function vendors($type = null)
+    {
+        if (is_null($type)) {
+            $title = "Vendors";
+            $vendors = User::all();
+        } elseif ($type === "blocked") {
+            $title = "Blocked Vendors";
+            $vendors = User::where('status', 'blocked')->get();
+        } else {
+            return redirect()->route('admin.vendors');
+        }
+
+        return view('admin.pages.vendors', compact('vendors', 'title'));
+    }
+
+    public function products()
     {
         $products = Product::all();
-        return view('admin.adminproducts', compact('products'));
+        return view('admin.pages.products', compact('products'));
+    }
+
+    public function banners()
+    {
+        return view('admin.pages.banners', /*compact('')*/);
+    }
+    public function banner() {}
+
+    public function addBanner()
+    {
+        return view('admin.pages.add-banner');
+    }
+
+    public function admins()
+    {
+        return view('admin.pages.admins');
     }
 
     public function editUser($id)

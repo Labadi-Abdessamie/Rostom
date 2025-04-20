@@ -1,33 +1,6 @@
 @extends('admin.master')
 
-@section('title', 'Admin | Customers')
-
-@section('styles')
-    <link href="{{ asset('assets/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet"
-        type="text/css" />
-    <link href="{{ asset('assets/libs/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css') }}" rel="stylesheet"
-        type="text/css" />
-
-@endsection
-
-@section('scripts')
-    <!-- third party js -->
-    <script src="{{ asset('assets/libs/datatables.net/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/datatables.net-bs5/js/dataTables.bootstrap5.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/jquery-datatables-checkboxes/js/dataTables.checkboxes.min.js') }}"></script>
-    <!-- third party js ends -->
-
-    <!-- Datatables init -->
-    <script src="{{ asset('assets/js/pages/customers.init.js') }}"></script>
-@endsection
-
 @section('content')
-    <!-- ============================================================== -->
-    <!-- Start Page Content here -->
-    <!-- ============================================================== -->
-
     <div class="content">
 
         <!-- Start Content-->
@@ -37,36 +10,42 @@
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box">
-                        <h4 class="page-title">{{ $title }}</h4>
+                        <div class="page-title-right">
+                            <ol class="breadcrumb m-0">
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">UBold</a></li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">CRM</a></li>
+                                <li class="breadcrumb-item active">Customers</li>
+                            </ol>
+                        </div>
+                        <h4 class="page-title">Customers</h4>
                     </div>
                 </div>
             </div>
             <!-- end page title -->
 
+
             <div class="row">
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            @if (false)
-                                <div class="row mb-2">
-                                    <div class="col-sm-4">
-                                        <a href="javascript:void(0);" class="btn btn-danger mb-2"><i
-                                                class="mdi mdi-plus-circle me-2"></i> Add Customers</a>
-                                    </div>
-                                    <div class="col-sm-8">
-                                        <div class="text-sm-end">
-                                            <button type="button" class="btn btn-success mb-2 me-1"><i
-                                                    class="mdi mdi-cog"></i></button>
-                                            <button type="button" class="btn btn-light mb-2 me-1">Import</button>
-                                            <button type="button" class="btn btn-light mb-2">Export</button>
-                                        </div>
-                                    </div><!-- end col-->
+                            <div class="row mb-2">
+                                <div class="col-sm-4">
+                                    <button type="button" class="btn btn-danger waves-effect waves-light"
+                                        data-bs-toggle="modal" data-bs-target="#custom-modal"><i
+                                            class="mdi mdi-plus-circle me-1"></i> Add Customers</button>
                                 </div>
-                            @endif
+                                <div class="col-sm-8">
+                                    <div class="text-sm-end mt-2 mt-sm-0">
+                                        <button type="button" class="btn btn-success mb-2 me-1"><i
+                                                class="mdi mdi-cog"></i></button>
+                                        <button type="button" class="btn btn-light mb-2 me-1">Import</button>
+                                        <button type="button" class="btn btn-light mb-2">Export</button>
+                                    </div>
+                                </div><!-- end col-->
+                            </div>
 
                             <div class="table-responsive">
-                                <table class="table table-centered table-striped dt-responsive nowrap w-100"
-                                    id="products-datatable">
+                                <table class="table table-centered table-nowrap table-striped" id="products-datatable">
                                     <thead>
                                         <tr>
                                             <th style="width: 20px;">
@@ -77,11 +56,11 @@
                                             </th>
                                             <th>Customer</th>
                                             <th>Phone</th>
-                                            <th>Balance</th>
-                                            <th>Orders</th>
-                                            <th>Last Order</th>
+                                            <th>Email</th>
+                                            <th>Location</th>
+                                            <th>Create Date</th>
                                             <th>Status</th>
-                                            <th style="width: 75px;">Action</th>
+                                            <th style="width: 85px;">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -89,27 +68,29 @@
                                             <td>
                                                 <div class="form-check">
                                                     <input type="checkbox" class="form-check-input" id="customCheck2">
-                                                    <label class="form-check-label" for="customCheck2">ABC</label>
+                                                    <label class="form-check-label" for="customCheck2">&nbsp;</label>
                                                 </div>
                                             </td>
                                             <td class="table-user">
                                                 <img src="assets/images/users/user-4.jpg" alt="table-user"
                                                     class="me-2 rounded-circle">
-                                                <a href="javascript:void(0);" class="text-body fw-semibold">Paul J.
-                                                    Friend</a>
-                                            </td>
-                                            <td>050 414 8778</td>
-                                            <td>
-                                                $12,874.82
+                                                <a href="javascript:void(0);" class="text-body fw-semibold">Paul
+                                                    J. Friend</a>
                                             </td>
                                             <td>
-                                                43
+                                                937-330-1634
                                             </td>
                                             <td>
-                                                August 05 2019 <small class="text-muted">10:29 PM</small>
+                                                pauljfrnd@jourrapide.com
                                             </td>
                                             <td>
-                                                <span class="badge badge-soft-success">Active</span>
+                                                New York
+                                            </td>
+                                            <td>
+                                                07/07/2018
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-soft-success text-success">Active</span>
                                             </td>
 
                                             <td>
@@ -137,14 +118,16 @@
                                                 215-302-3376
                                             </td>
                                             <td>
-                                                $874.25
+                                                bryuellen@dayrep.com
                                             </td>
                                             <td>
-                                                220
+                                                New York
                                             </td>
-                                            <td>August 04 2019 <small class="text-muted">08:18 AM</small></td>
                                             <td>
-                                                <span class="badge badge-soft-success">Active</span>
+                                                09/12/2018
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-soft-success text-success">Active</span>
                                             </td>
 
                                             <td>
@@ -171,14 +154,16 @@
                                                 828-216-2190
                                             </td>
                                             <td>
-                                                $125.78
+                                                collier@jourrapide.com
                                             </td>
                                             <td>
-                                                841
+                                                Canada
                                             </td>
-                                            <td>November 04 2019 <small class="text-muted">10:29 PM</small></td>
                                             <td>
-                                                <span class="badge badge-soft-danger">Blocked</span>
+                                                06/30/2018
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-soft-danger text-danger">Blocked</span>
                                             </td>
 
                                             <td>
@@ -205,14 +190,16 @@
                                                 (216) 75 612 706
                                             </td>
                                             <td>
-                                                $561.25
+                                                thykauper@rhyta.com
                                             </td>
                                             <td>
-                                                62
+                                                Denmark
                                             </td>
-                                            <td>February 01 2019 <small class="text-muted">07:22 AM</small></td>
                                             <td>
-                                                <span class="badge badge-soft-danger">Blocked</span>
+                                                09/08/2018
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-soft-danger text-danger">Blocked</span>
                                             </td>
 
                                             <td>
@@ -239,14 +226,16 @@
                                                 (02) 75 150 655
                                             </td>
                                             <td>
-                                                $2147.84
+                                                austin@dayrep.com
                                             </td>
                                             <td>
-                                                09
+                                                Germany
                                             </td>
-                                            <td>February 01 2019 <small class="text-muted">07:22 AM</small></td>
                                             <td>
-                                                <span class="badge badge-soft-success">Active</span>
+                                                07/15/2018
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-soft-success text-success">Active</span>
                                             </td>
 
                                             <td>
@@ -273,14 +262,16 @@
                                                 (+15) 73 483 758
                                             </td>
                                             <td>
-                                                $451.28
+                                                annette@email.net
                                             </td>
                                             <td>
-                                                25
+                                                India
                                             </td>
-                                            <td>September 07 2019 <small class="text-muted">07:22 AM</small></td>
                                             <td>
-                                                <span class="badge badge-soft-success">Active</span>
+                                                09/05/2018
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-soft-success text-success">Active</span>
                                             </td>
 
                                             <td>
@@ -307,14 +298,16 @@
                                                 078 7173 9261
                                             </td>
                                             <td>
-                                                $965.20
+                                                jennygero@teleworm.us
                                             </td>
                                             <td>
-                                                214
+                                                Lesotho
                                             </td>
-                                            <td>November 14 2019 <small class="text-muted">07:22 AM</small></td>
                                             <td>
-                                                <span class="badge badge-soft-danger">Blocked</span>
+                                                08/02/2018
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-soft-danger text-danger">Blocked</span>
                                             </td>
 
                                             <td>
@@ -341,14 +334,16 @@
                                                 078 6013 3854
                                             </td>
                                             <td>
-                                                $71584.2
+                                                edwardR@armyspy.com
                                             </td>
                                             <td>
-                                                365
+                                                Monaco
                                             </td>
-                                            <td>February 09 2019 <small class="text-muted">07:22 AM</small></td>
                                             <td>
-                                                <span class="badge badge-soft-success">Active</span>
+                                                08/23/2018
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-soft-success text-success">Active</span>
                                             </td>
 
                                             <td>
@@ -375,14 +370,16 @@
                                                 (216) 76 298 896
                                             </td>
                                             <td>
-                                                $5482.00
+                                                annac@hotmai.us
                                             </td>
                                             <td>
-                                                921
+                                                Philippines
                                             </td>
-                                            <td>September 12 2019 <small class="text-muted">07:22 AM</small></td>
                                             <td>
-                                                <span class="badge badge-soft-success">Active</span>
+                                                05/06/2018
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-soft-success text-success">Active</span>
                                             </td>
 
                                             <td>
@@ -409,14 +406,16 @@
                                                 077 6157 4248
                                             </td>
                                             <td>
-                                                $482.15
+                                                deanes@dayrep.com
                                             </td>
                                             <td>
-                                                68
+                                                Singapore
                                             </td>
-                                            <td>October 09 2019 <small class="text-muted">07:22 AM</small></td>
                                             <td>
-                                                <span class="badge badge-soft-success">Active</span>
+                                                04/09/2018
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-soft-success text-success">Active</span>
                                             </td>
 
                                             <td>
@@ -443,14 +442,16 @@
                                                 050 414 8778
                                             </td>
                                             <td>
-                                                $7852.3
+                                                labebswad@teleworm.us
                                             </td>
                                             <td>
-                                                475
+                                                United Kingdom
                                             </td>
-                                            <td>October 27 2019 <small class="text-muted">07:22 AM</small></td>
                                             <td>
-                                                <span class="badge badge-soft-success">Active</span>
+                                                06/19/2018
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-soft-success text-success">Active</span>
                                             </td>
 
                                             <td>
@@ -477,14 +478,16 @@
                                                 078 5054 8877
                                             </td>
                                             <td>
-                                                $3365.12
+                                                roryamp@dayrep.com
                                             </td>
                                             <td>
-                                                25
+                                                United States
                                             </td>
-                                            <td>April 21 2019 <small class="text-muted">07:22 AM</small></td>
                                             <td>
-                                                <span class="badge badge-soft-danger">Blocked</span>
+                                                03/24/2018
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-soft-danger text-danger">Blocked</span>
                                             </td>
 
                                             <td>
@@ -497,6 +500,31 @@
                                     </tbody>
                                 </table>
                             </div>
+
+                            <ul class="pagination pagination-rounded justify-content-end mb-0">
+                                <li class="page-item">
+                                    <a class="page-link" href="javascript: void(0);" aria-label="Previous">
+                                        <span aria-hidden="true">«</span>
+                                        <span class="visually-hidden">Previous</span>
+                                    </a>
+                                </li>
+                                <li class="page-item active"><a class="page-link" href="javascript: void(0);">1</a></li>
+                                <li class="page-item"><a class="page-link" href="javascript: void(0);">2</a>
+                                </li>
+                                <li class="page-item"><a class="page-link" href="javascript: void(0);">3</a>
+                                </li>
+                                <li class="page-item"><a class="page-link" href="javascript: void(0);">4</a>
+                                </li>
+                                <li class="page-item"><a class="page-link" href="javascript: void(0);">5</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="javascript: void(0);" aria-label="Next">
+                                        <span aria-hidden="true">»</span>
+                                        <span class="visually-hidden">Next</span>
+                                    </a>
+                                </li>
+                            </ul>
+
                         </div> <!-- end card-body-->
                     </div> <!-- end card-->
                 </div> <!-- end col -->
@@ -506,8 +534,5 @@
         </div> <!-- container -->
 
     </div> <!-- content -->
-
-    <!-- ============================================================== -->
-    <!-- End Page content -->
-    <!-- ============================================================== -->
+    @include('admin.modal')
 @endsection
