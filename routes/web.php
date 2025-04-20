@@ -6,6 +6,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CompareController;
 use App\Http\Controllers\MainController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReviewController;
@@ -57,7 +58,6 @@ Route::group(['prefix' => '', 'as' => 'frontend.'], function () {
 
     Route::get('contact', [MainController::class, 'contact'])->name('contact');
 
-    Route::get('check-out', [MainController::class, 'checkOut'])->name('check_out');
     //Route::get('user-login', [MainController::class, 'login'])->name('login');
     Route::get('forget-password', [MainController::class, 'forgetPassword'])->name('forget_password');
 });
@@ -66,6 +66,9 @@ Route::group(['prefix' => '', 'as' => 'frontend.'], function () {
 
 //Client route
 route::middleware(['auth', /*'role:client'*/])->group(function () {
+    Route::get('check-out', [MainController::class, 'checkOut'])->name('frontend.check_out');
+    Route::post('create_order', [OrderController::class, 'store'])->name('create_order');
+
     Route::group(['prefix' => 'client', 'as' => 'client.'], function () {
         Route::get('dashboard', [ClientController::class, 'dashboard'])->name('dashboard');
         Route::get('orders', [ClientController::class, 'orders'])->name('orders');

@@ -3068,6 +3068,35 @@ footer {
     padding: 15px;
 }
 
+.wsus__product_sidebar form {
+    position: relative;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 30px;
+}
+
+.wsus__product_sidebar form input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: 400;
+    color: #353535;
+    border: 1px solid #eee;
+    border-radius: 5px;
+}
+
+.wsus__product_sidebar form button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border: none;
+    border-radius: 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    -ms-border-radius: 0;
+    -o-border-radius: 0;
+}
+
 .wsus__product_sidebar .accordion-button:focus {
     box-shadow: none;
 }

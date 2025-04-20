@@ -107,22 +107,12 @@
                     </li>
                 @endif
                 <li class="menu-title mt-2">Admin Settings</li>
+
                 <li>
-                    <a data-bs-target="#sidebarAuth" data-bs-toggle="collapse" class="cursor-pointer">
+                    <a href="{{ route('admin.admins') }}">
                         <i class="mdi mdi-account-circle-outline"></i>
-                        <span>Admin</span>
-                        <span class="menu-arrow"></span>
+                        <span> Admins </span>
                     </a>
-                    <div class="collapse" id="sidebarAuth">
-                        <ul class="nav-second-level">
-                            <li>
-                                <a href="auth-login.html">List</a>
-                            </li>
-                            <li>
-                                <a href="auth-login-2.html">Create Admin</a>
-                            </li>
-                        </ul>
-                    </div>
                 </li>
             </ul>
         </div>

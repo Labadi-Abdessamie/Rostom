@@ -38,7 +38,10 @@
                                     <button wire:click=ClearCart() class="common_btn">clear cart</button>
                                 </th>
                             </tr>
-                            @php $total = 0 @endphp
+                            @php
+                                $total = 0;
+                                $shipping_free = 100;
+                            @endphp
                             @foreach ($cart as $key => $item)
                                 <tr class="d-flex item">
                                     <td class="wsus__pro_img">
@@ -102,8 +105,8 @@
             <div class="wsus__cart_list_footer_button" id="sticky_sidebar">
                 <h6>total cart</h6>
                 <p>subtotal: <span>DZ {{ $total }}</span></p>
-                <p>delivery: <span>DZ 250.00</span></p>
-                <p class="total"><span>total:</span> <span>DZ {{ $total }}</span></p>
+                <p>delivery: <span>DZ {{ $shipping_free }}.00</span></p>
+                <p class="total"><span>total:</span> <span>DZ {{ $total + $shipping_free }}</span></p>
 
                 @if (false)
                     <p>discount: <span>$10.00</span></p>

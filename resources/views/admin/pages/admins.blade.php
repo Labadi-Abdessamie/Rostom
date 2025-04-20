@@ -534,5 +534,5 @@
         </div> <!-- container -->
 
     </div> <!-- content -->
-    @include('admin.modal')
+    @include('admin.pages.add-admin')
 @endsection

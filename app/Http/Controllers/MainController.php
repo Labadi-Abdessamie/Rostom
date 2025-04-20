@@ -114,4 +114,8 @@ class MainController extends Controller
     {
         return view('frontend.pages.wishlist');
     }
+    public function checkOut()
+    {
+        return view('frontend.pages.check_out');
+    }
 }
