@@ -74,6 +74,8 @@ route::middleware(['auth', /*'role:client'*/])->group(function () {
         Route::get('orders', [ClientController::class, 'orders'])->name('orders');
         Route::get('wishlist', [ClientController::class, 'wishlist'])->name('wishlist');
         Route::get('reviews', [ClientController::class, 'reviews'])->name('reviews');
+        Route::put('reviews/{id}', [ClientController::class, 'updateReview'])->name('review.update');
+        Route::delete('reviews/{id}', [ClientController::class, 'deleteReview'])->name('review.delete');
         Route::get('profile', [ClientController::class, 'profile'])->name('profile');
         Route::get('address', [ClientController::class, 'address'])->name('address');
         Route::get('add-address', [ClientController::class, 'addAddress'])->name('add_address');
