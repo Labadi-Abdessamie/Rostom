@@ -72,6 +72,7 @@ route::middleware(['auth', /*'role:client'*/])->group(function () {
     Route::group(['prefix' => 'client', 'as' => 'client.'], function () {
         Route::get('dashboard', [ClientController::class, 'dashboard'])->name('dashboard');
         Route::get('orders', [ClientController::class, 'orders'])->name('orders');
+        Route::get('orders/{id}', [ClientController::class, 'orderDetails'])->name('order_details');
         Route::get('wishlist', [ClientController::class, 'wishlist'])->name('wishlist');
         Route::get('reviews', [ClientController::class, 'reviews'])->name('reviews');
         Route::put('reviews/{id}', [ClientController::class, 'updateReview'])->name('review.update');

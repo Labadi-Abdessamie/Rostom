@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Models\OrderItem;
 use App\Models\Review;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -17,7 +18,23 @@ class ClientController extends Controller
     }
     public function orders()
     {
-        return view('client.pages.orders');
+        // Get the logged-in user's orders with pagination and related data (addresses, order items)
+        $orders = Auth::user()->orders()
+            ->with(['shippingAddress', 'billingAddress', 'orderItems']) // Eager load relationships
+            ->paginate(10);  // Paginate orders (10 per page)
+
+        return view('client.pages.orders', compact('orders'));
+    }
+    public function orderDetails($orderId)
+    {
+        // Get the specific order by ID and eager load the related data
+        $order = Auth::user()->orders()
+            ->with(['shippingAddress', 'billingAddress'])
+            ->findOrFail($orderId);  // This will throw a 404 if the order is not found
+            $orderItems = OrderItem::where('order_id', $orderId)
+            ->with(['product:id,name,price,principalImage'])
+            ->get();      
+        return view('client.pages.order_invoice', compact('order','orderItems'));
     }
     public function wishlist()
 {
