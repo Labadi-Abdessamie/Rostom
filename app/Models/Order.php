@@ -21,13 +21,13 @@ class Order extends Model
     {
         return $this->belongsTo(User::class);
     }
-    public function billingAddress()
-    {
-        return $this->belongsTo(Address::class);
-    }
     public function shippingAddress()
     {
-        return $this->belongsTo(Address::class);
+        return $this->belongsTo(Address::class, 'shippingAddress_id');
+    }
+    public function billingAddress()
+    {
+        return $this->belongsTo(Address::class, 'billingAddress_id');
     }
     public function orderItems()
     {

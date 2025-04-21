@@ -72,14 +72,22 @@ route::middleware(['auth', /*'role:client'*/])->group(function () {
     Route::group(['prefix' => 'client', 'as' => 'client.'], function () {
         Route::get('dashboard', [ClientController::class, 'dashboard'])->name('dashboard');
         Route::get('orders', [ClientController::class, 'orders'])->name('orders');
+        Route::get('orders/{id}', [ClientController::class, 'orderDetails'])->name('order_details');
         Route::get('wishlist', [ClientController::class, 'wishlist'])->name('wishlist');
         Route::get('reviews', [ClientController::class, 'reviews'])->name('reviews');
         Route::put('reviews/{id}', [ClientController::class, 'updateReview'])->name('review.update');
         Route::delete('reviews/{id}', [ClientController::class, 'deleteReview'])->name('review.delete');
         Route::get('profile', [ClientController::class, 'profile'])->name('profile');
+        Route::put(('profile/update'), [ClientController::class, 'update'])->name('profile.update');
+        //-----------------------------------------//
         Route::get('address', [ClientController::class, 'address'])->name('address');
-        Route::get('add-address', [ClientController::class, 'addAddress'])->name('add_address');
-        Route::post('profile/update', [ClientController::class, 'updateProfile'])->name('update_profile');
+        Route::get('address/{id}/edit', [ClientController::class, 'editAddress'])->name('address.edit');
+        Route::put('address/{id}', [ClientController::class, 'updateAddress'])->name('address.update');
+        Route::delete('address/{id}', [ClientController::class, 'deleteAddress'])->name('address.delete');
+        Route::post('address/store', [ClientController::class, 'storeAddress'])->name('address.store');
+        Route::get('address/add', [ClientController::class, 'addAddress'])->name('address.add');
+        //-----------------------------------------//
+        
         Route::post('profile/update/password', [ClientController::class, 'updatePassword'])->name('update_password');
 
         //Route::get('invoice', [ClientController::class, 'invoice'])->name('order_invoice');

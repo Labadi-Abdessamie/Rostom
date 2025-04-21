@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 
+use App\Models\OrderItem;
 use App\Models\Review;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class ClientController extends Controller
 {
@@ -16,7 +18,23 @@ class ClientController extends Controller
     }
     public function orders()
     {
-        return view('client.pages.orders');
+        // Get the logged-in user's orders with pagination and related data (addresses, order items)
+        $orders = Auth::user()->orders()
+            ->with(['shippingAddress', 'billingAddress', 'orderItems']) // Eager load relationships
+            ->paginate(10);  // Paginate orders (10 per page)
+
+        return view('client.pages.orders', compact('orders'));
+    }
+    public function orderDetails($orderId)
+    {
+        // Get the specific order by ID and eager load the related data
+        $order = Auth::user()->orders()
+            ->with(['shippingAddress', 'billingAddress'])
+            ->findOrFail($orderId);  // This will throw a 404 if the order is not found
+            $orderItems = OrderItem::where('order_id', $orderId)
+            ->with(['product:id,name,price,principalImage'])
+            ->get();      
+        return view('client.pages.order_invoice', compact('order','orderItems'));
     }
     public function wishlist()
 {
@@ -67,18 +85,159 @@ public function deleteReview($id){
 }
     public function profile()
     {
-        return view('client.pages.profile');
+        $user = Auth::user();
+
+        $data = [
+            'name' => $user->name,
+            'email' => $user->email,
+            'phoneNumber' => $user->phoneNumber,
+            'profilePicture' => $user->profile_picture,
+            'bio' => $user->bio,
+            'status' => $user->status,
+        ];
+
+        return view('client.pages.profile', compact('data'));
+    }
+    public function update(){
+        $user = Auth::user();
+        $data = request()->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phoneNumber' => 'nullable|string|max:20',
+            'bio' => 'nullable|string|max:1000',
+            'profilePicture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        if (request()->hasFile('profilePicture')) {
+            $data['profilePicture'] = request()->file('profilePicture')->store('profile_pictures', 'public');
+        }
+
+        $user->update($data);
+
+        return redirect()->back()->with('success', 'Profile updated successfully.');
     }
     public function address()
-    {
-        return view('client.pages.address');
+{
+    // Retrieve the authenticated user
+    $user = Auth::user();
+
+    // Retrieve the addresses associated with the user, ordered by the most recent
+    $addresses = $user->addresses()->latest()->get();
+
+    // Return the 'client.pages.address' view with the addresses data
+    return view('client.pages.address', compact('addresses'));
+}
+public function addAddress()
+{
+    $user = Auth::user();
+
+    // Optional: Check if user already has a principal address
+    $hasPrincipal = $user->addresses()->where('principalAddress', true)->exists();
+
+    return view('client.pages.add_address', [
+        'hasPrincipal' => $hasPrincipal
+    ]);
+}
+public function storeAddress(Request $request)
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'phoneNumber' => 'required|string|max:20',
+        'email' => 'nullable|email|max:255',
+        'type' => 'required|in:billing,shipping', // Only accept allowed enum values
+        'address' => 'required|string|max:255',
+        'principalAddress' => 'nullable|boolean',
+    ]);
+
+    $user = Auth::user();
+
+    
+    if ($request->boolean('principalAddress') && $user->addresses()->where('principalAddress', true)->exists()) {
+        return redirect()->back()->with('error', 'You can only have one principal address.');
     }
-    public function addAddress()
-    {
-        return view('client.pages.add_address');
+
+    $user->addresses()->create([
+        'name' => $request->input('name'),
+        'phoneNumber' => $request->input('phoneNumber'),
+        'email' => $request->input('email'),
+        'type' => $request->input('type'),
+        'address' => $request->input('address'),
+        'principalAddress' => $request->boolean('principalAddress'),
+    ]);
+
+    return redirect()->route('client.address')->with('success', 'Address added successfully.');
+}
+public function editAddress($id)
+{
+    $address = Auth::user()->addresses()->findOrFail($id);
+    return view('client.pages.edit', compact('address'));
+}
+
+// Handle the address update
+public function updateAddress(Request $request, $id)
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'phoneNumber' => 'required|string|max:20',
+        'email' => 'nullable|email|max:255',
+        'type' => 'required|string',
+        'address' => 'required|string|max:255',
+        'principalAddress' => 'nullable|boolean',
+    ]);
+
+    $user = Auth::user();
+    $address = $user->addresses()->findOrFail($id);
+
+    if ($request->has('principalAddress')) {
+        $user->addresses()->where('id', '!=', $id)->update([
+            'principalAddress' => false
+        ]);
     }
-    public function updateProfile() {}
-    public function updatePassword() {}
+
+    $address->update([
+        'name' => $request->name,
+        'phoneNumber' => $request->phoneNumber,
+        'email' => $request->email,
+        'type' => $request->type,
+        'address' => $request->address,
+        'principalAddress' => $request->has('principalAddress'),
+    ]);
+
+    return redirect()->route('client.address')->with('success', 'Address updated successfully.');
+}
+    public function deleteAddress($id){
+        $address = Auth::user()->addresses()->findOrFail($id);
+        $address->delete();
+
+        return back()->with('success', 'Address deleted successfully.');
+    }
+
+
+    public function updatePassword(Request $request)
+{
+    // Get the currently authenticated user
+    $user = Auth::user();
+
+    // Validate the incoming request data
+    $data = $request->validate([
+        'current_password' => 'required|string',  // Ensure the current password is provided
+        'new_password' => 'required|string|min:8|confirmed', // Ensure new password is confirmed
+    ]);
+
+    // Check if the provided current password matches the user's password in the database
+    if (!Hash::check($data['current_password'], $user->password)) {
+        // If not, return an error message
+        return redirect()->back()->with('error', 'Current password is incorrect.');
+    }
+
+    // Update the password only if the current password is correct
+    $user->update([
+        'password' => Hash::make($data['new_password']) // Hash the new password
+    ]);
+
+    // Redirect back with a success message
+    return redirect()->back()->with('success', 'Password updated successfully.');
+}
 
 
     /*
