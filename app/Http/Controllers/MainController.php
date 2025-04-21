@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Address;
 use App\Models\Category;
 use App\Models\Product;
 use Carbon\Carbon;
@@ -116,6 +117,10 @@ class MainController extends Controller
     }
     public function checkOut()
     {
-        return view('frontend.pages.check_out');
+        $user = Auth::user();
+        $addresses =  Address::where('user_id', $user->id)->where('type', 'billing')->get();
+        $principalAddress = Address::where('user_id', $user->id)->where('type', 'billing')->where('principalAddress', true)->first();
+
+        return view('frontend.pages.check_out', compact('addresses', 'principalAddress'));
     }
 }

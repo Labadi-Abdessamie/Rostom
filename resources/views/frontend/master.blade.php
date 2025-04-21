@@ -60,7 +60,6 @@
     @include('frontend.body.footer')
     <!-- Footer End -->
 
-    @stack('scripts')
     <!--jquery library js-->
     <script src="{{ asset('frontend/js/jquery-3.6.0.min.js') }}"></script>
     <!--bootstrap js-->
@@ -99,6 +98,7 @@
     <!--main/custom js-->
     <script src="{{ asset('frontend/js/main.js') }}"></script>
     <!-- <script type="text/javascript" src="{{ asset('adminBackend/js/toastr.min.js') }}"></script> -->
+    @stack('scripts')
     <script>
         @if ($errors->any())
             @foreach ($errors->all() as $error)

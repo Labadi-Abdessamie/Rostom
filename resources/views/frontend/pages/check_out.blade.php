@@ -6,8 +6,8 @@
 
 @section('content')
     <!--============================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                            BREADCRUMB START
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ==============================-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                BREADCRUMB START
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ==============================-->
     <section id="wsus__breadcrumb">
         <div class="wsus_breadcrumb_overlay">
             <div class="container">
@@ -25,13 +25,13 @@
         </div>
     </section>
     <!--============================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                            BREADCRUMB END
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ==============================-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                BREADCRUMB END
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ==============================-->
 
 
     <!--============================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                            CHECK OUT PAGE START
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ==============================-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                CHECK OUT PAGE START
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ==============================-->
     <section id="wsus__cart_view">
         <div class="container">
             <form class="wsus__checkout_form" action="{{ route('create_order') }}" method="POST">
@@ -39,41 +39,84 @@
                 <div class="row">
                     <div class="col-xl-8 col-lg-7">
                         <div class="wsus__check_form">
-                            <h5>Billing Details <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">add
-                                    new address</a></h5>
+                            <h5>Billing Details
+                                @if (false)
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">add new
+                                        address</a>
+                                @endif
+                            </h5>
                             <div class="row">
-                                <div class="col-md-12 col-lg-12 col-xl-12">
-                                    <div class="wsus__check_single_form">
-                                        <input type="text" name="name" placeholder="Name">
+                                @if ($principalAddress)
+                                    <input type="hidden" name="id" value="{{ $principalAddress->id }}">
+                                    <div class="col-md-12 col-lg-12 col-xl-12">
+                                        <div class="wsus__check_single_form">
+                                            <input type="text" name="name" placeholder="Name"
+                                                value="{{ $principalAddress->name }}">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-12 col-lg-12 col-xl-12">
-                                    <div class="wsus__check_single_form">
-                                        <input type="text" name="address" placeholder="Address">
+                                    <div class="col-md-12 col-lg-12 col-xl-12">
+                                        <div class="wsus__check_single_form">
+                                            <input type="text" name="address" placeholder="Address"
+                                                value="{{ $principalAddress->address }}">
+                                        </div>
                                     </div>
-                                </div>
-                                <input type="hidden" name="type" value="billing">
+                                    <div class="col-md-6 col-lg-12 col-xl-6">
+                                        <div class="wsus__check_single_form">
+                                            <input type="text" name="phoneNumber" placeholder="Phone"
+                                                value="{{ $principalAddress->phoneNumber }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-12 col-xl-6">
+                                        <div class="wsus__check_single_form">
+                                            <input type="email" name="email" placeholder="Email"
+                                                value="{{ $principalAddress->email }}">
+                                        </div>
+                                    </div>
 
-                                <div class="col-md-6 col-lg-12 col-xl-6">
                                     <div class="wsus__check_single_form">
-                                        <input type="text" name="phoneNumber" placeholder="Phone *">
+                                        <div class="form-check">
+                                            <input id="principalShippingAddress" class="form-check-input cursor-pointer"
+                                                type="checkbox" name="principalShippingAddress" checked>
+                                            <label class="form-check-label" for="principalShippingAddress">
+                                                Select it as your principal shippping address
+                                            </label>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6 col-lg-12 col-xl-6">
-                                    <div class="wsus__check_single_form">
-                                        <input type="email" name="email" placeholder="Email *">
-                                    </div>
-                                </div>
+                                @else
+                                    <input type="hidden" name="id" value="null">
 
-                                <div class="wsus__check_single_form">
-                                    <div class="form-check">
-                                        <input id="principalShippingAddress" class="form-check-input cursor-pointer"
-                                            type="checkbox" name="principalShippingAddress">
-                                        <label class="form-check-label" for="principalShippingAddress">
-                                            Select it as your principal shippping address
-                                        </label>
+                                    <div class="col-md-12 col-lg-12 col-xl-12">
+                                        <div class="wsus__check_single_form">
+                                            <input type="text" name="name" placeholder="Name">
+                                        </div>
                                     </div>
-                                </div>
+                                    <div class="col-md-12 col-lg-12 col-xl-12">
+                                        <div class="wsus__check_single_form">
+                                            <input type="text" name="address" placeholder="Address">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-12 col-xl-6">
+                                        <div class="wsus__check_single_form">
+                                            <input type="text" name="phoneNumber" placeholder="Phone">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-12 col-xl-6">
+                                        <div class="wsus__check_single_form">
+                                            <input type="email" name="email" placeholder="Email">
+                                        </div>
+                                    </div>
+
+                                    <div class="wsus__check_single_form">
+                                        <div class="form-check">
+                                            <input id="principalShippingAddress" class="form-check-input cursor-pointer"
+                                                type="checkbox" name="principalShippingAddress">
+                                            <label class="form-check-label" for="principalShippingAddress">
+                                                Select it as your principal shippping address
+                                            </label>
+                                        </div>
+                                    </div>
+                                @endif
+
 
                                 @if (false)
                                     <div class="col-md-6 col-lg-12 col-xl-6">
@@ -114,16 +157,17 @@
                                         </div>
                                     </div>
                                 @endif
-                                <div class="col-md-12 col-lg-12 col-xl-12">
+                                <div class="col-md-12
+                                    col-lg-12 col-xl-12">
                                     <div class="accordion checkout_accordian" id="accordionExample">
                                         <div class="accordion-item">
                                             <h2 class="accordion-header" id="headingThree">
                                                 <div class="wsus__check_single_form accordion-button collapsed">
                                                     <div class="form-check">
                                                         <input class="form-check-input cursor-pointer" type="checkbox"
-                                                            value="" id="flexCheckDefault" data-bs-toggle="collapse"
-                                                            data-bs-target="#collapseThree" aria-expanded="false"
-                                                            aria-controls="collapseThree" checked>
+                                                            name="sameAsShippingAd" id="flexCheckDefault"
+                                                            data-bs-toggle="collapse" data-bs-target="#collapseThree"
+                                                            aria-expanded="false" aria-controls="collapseThree" checked>
                                                         <label class="form-check-label" for="flexCheckDefault">
                                                             Same as shipping address
                                                         </label>
@@ -187,19 +231,19 @@
                                 </div>
                             </div>
                             <div class="row">
-                                {{--
                                 @if ($addresses)
-                                    @foreach ($addresses as $address)
+                                    @foreach ($addresses as $key => $address)
                                         <div class="col-xl-6">
                                             <div class="wsus__checkout_single_address">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio"
-                                                        name="flexRadioDefault" id="flexRadioDefault1" checked>
-                                                    <label class="form-check-label" for="flexRadioDefault1">
+                                                    <input class="form-check-input" type="radio" name="radioAddress"
+                                                        id="radioAddress{{ $key }}">
+                                                    <label class="form-check-label" for="radioAddress{{ $key }}">
                                                         Select Address
                                                     </label>
                                                 </div>
                                                 <ul>
+                                                    <li><span>Id :</span> {{ $address->id }}</li>
                                                     <li><span>Name :</span> {{ $address->name }}</li>
                                                     <li><span>Phone :</span> {{ $address->phoneNumber }}</li>
                                                     <li><span>Email :</span> {{ $address->email }}</li>
@@ -209,92 +253,6 @@
                                         </div>
                                     @endforeach
                                 @endif
-                                --}}
-
-                                <div class="col-xl-6">
-                                    <div class="wsus__checkout_single_address">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="flexRadioDefault"
-                                                id="flexRadioDefault1" checked>
-                                            <label class="form-check-label" for="flexRadioDefault1">
-                                                Select Address
-                                            </label>
-                                        </div>
-                                        <ul>
-                                            <li><span>Name :</span> Anik Roy</li>
-                                            <li><span>Phone :</span> +66954581322222</li>
-                                            <li><span>Email :</span> Example@Gmail.Com</li>
-                                            <li><span>Country :</span> Bangladesh</li>
-                                            <li><span>City :</span> Dhaka</li>
-                                            <li><span>Zip Code :</span> 8320</li>
-                                            <li><span>Company :</span> N/A</li>
-                                            <li><span>Address :</span> Bashindhara P/A, Dhaka</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="col-xl-6">
-                                    <div class="wsus__checkout_single_address">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="flexRadioDefault"
-                                                id="flexRadioDefault11">
-                                            <label class="form-check-label" for="flexRadioDefault11">
-                                                Select Address
-                                            </label>
-                                        </div>
-                                        <ul>
-                                            <li><span>Name :</span> Anik Roy</li>
-                                            <li><span>Phone :</span> +66954581322222</li>
-                                            <li><span>Email :</span> Example@Gmail.Com</li>
-                                            <li><span>Country :</span> Bangladesh</li>
-                                            <li><span>City :</span> Dhaka</li>
-                                            <li><span>Zip Code :</span> 8320</li>
-                                            <li><span>Company :</span> N/A</li>
-                                            <li><span>Address :</span> Bashindhara P/A, Dhaka</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="col-xl-6">
-                                    <div class="wsus__checkout_single_address">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="flexRadioDefault"
-                                                id="flexRadioDefault12">
-                                            <label class="form-check-label" for="flexRadioDefault12">
-                                                Select Address
-                                            </label>
-                                        </div>
-                                        <ul>
-                                            <li><span>Name :</span> Anik Roy</li>
-                                            <li><span>Phone :</span> +66954581322222</li>
-                                            <li><span>Email :</span> Example@Gmail.Com</li>
-                                            <li><span>Country :</span> Bangladesh</li>
-                                            <li><span>City :</span> Dhaka</li>
-                                            <li><span>Zip Code :</span> 8320</li>
-                                            <li><span>Company :</span> N/A</li>
-                                            <li><span>Address :</span> Bashindhara P/A, Dhaka</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="col-xl-6">
-                                    <div class="wsus__checkout_single_address">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="flexRadioDefault"
-                                                id="flexRadioDefault13">
-                                            <label class="form-check-label" for="flexRadioDefault13">
-                                                Select Address
-                                            </label>
-                                        </div>
-                                        <ul>
-                                            <li><span>Name :</span> Anik Roy</li>
-                                            <li><span>Phone :</span> +66954581322222</li>
-                                            <li><span>Email :</span> Example@Gmail.Com</li>
-                                            <li><span>Country :</span> Bangladesh</li>
-                                            <li><span>City :</span> Dhaka</li>
-                                            <li><span>Zip Code :</span> 8320</li>
-                                            <li><span>Company :</span> N/A</li>
-                                            <li><span>Address :</span> Bashindhara P/A, Dhaka</li>
-                                        </ul>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -326,7 +284,7 @@
                                     $shipping_fee = 100;
                                 @endphp
                                 @foreach (session()->get('cart', []) as $key => $item)
-                                    @php $total = $item['product']['price'] * $item['quantity']   @endphp
+                                    @php $total += $item['product']['price'] * $item['quantity']   @endphp
                                 @endforeach
                                 <p>subtotal: <span>DZ {{ $total }}</span></p>
                                 <p>shipping fee: <span>DZ {{ $shipping_fee }}.00</span></p>
@@ -337,8 +295,8 @@
                             </div>
                             <div class="terms_area">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value=""
-                                        id="flexCheckChecked3" checked>
+                                    <input class="form-check-input" type="checkbox" id="flexCheckChecked3"
+                                        name="TermsConditions" checked>
                                     <label class="form-check-label" for="flexCheckChecked3">
                                         I have read and agree to the website <a href="#">terms and conditions *</a>
                                     </label>
@@ -352,6 +310,48 @@
         </div>
     </section>
 
+
+    {{--
+        ============================
+            CHECK OUT PAGE END
+        ==============================
+    --}}
+@endsection
+
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+
+            let IdInput = $('input[name="id"]');
+            let NameInput = $('input[name="name"]');
+            let PhoneInput = $('input[name="phoneNumber"]');
+            let EmailInput = $('input[name="email"]');
+            let AddressInput = $('input[name="address"]');
+
+
+            $('input[name="radioAddress"]').on('change', function() {
+                let container = $(this).closest('.wsus__checkout_single_address');
+                let addressList = container.find('ul');
+                let id = addressList.find('li:contains("Id")').text().replace('Id :', '').trim();
+                let name = addressList.find('li:contains("Name")').text().replace('Name :', '').trim();
+                let phone = addressList.find('li:contains("Phone")').text().replace('Phone :', '').trim();
+                let email = addressList.find('li:contains("Email")').text().replace('Email :', '').trim();
+                let address = addressList.find('li:contains("Address")').text().replace('Address :', '')
+                    .trim();
+
+                IdInput.val(id);
+                NameInput.val(name);
+                PhoneInput.val(phone);
+                EmailInput.val(email);
+                AddressInput.val(address);
+            });
+        });
+    </script>
+@endpush
+
+
+@if (false)
+    <!-- after the section -->
     <div class="wsus__popup_address">
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
@@ -359,7 +359,8 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">add new address</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                     </div>
                     <div class="modal-body p-0">
                         <div class="wsus__check_form p-3">
@@ -397,7 +398,4 @@
             </div>
         </div>
     </div>
-    <!--============================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                            CHECK OUT PAGE END
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ==============================-->
-@endsection
+@endif

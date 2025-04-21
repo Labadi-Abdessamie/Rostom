@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
+use App\Models\OrderItem;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Livewire\Livewire;
 
 class OrderController extends Controller
 {
@@ -27,7 +32,52 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'id' => ['required', 'integer'],
+            'name' => ['required', 'string', 'min:3', 'max:50'],
+            'address' => ['required', 'string', 'min:3', 'max:50'],
+            'phoneNumber' => ['required', 'string', 'size:10'],
+            'email' => ['required', 'email'],
+            'details' => ['nullable', 'string', 'max:255'],
+            'TermsConditions' => ['accepted'],
+            //
+            'billingName' => ['nullable', 'string', 'max:50'],
+            'billingAddress' => ['nullable', 'string', 'max:100'],
+            'billingPhoneNumber' => ['nullable', 'string', 'size:10'],
+            'billingEmail' => ['nullable', 'email'],
+        ]);
+        $cart = session()->get('cart', []);
+        if (empty($cart)) {
+            return redirect()->route('frontend.index')->with('message', 'Your cart is empty!');
+        }
+        $orderItems = [];
+        $total = 0;
+        $shipping_fee = 100;
+        $total += $shipping_fee;
+        foreach ($cart as $productId => $item) {
+            $total += $item['quantity'] * $item['product']['price'];
+            $orderItems[$productId] = [
+                'quantity' => $item['quantity']
+            ];
+        }
+        $order = Order::create([
+            'status' => 'pending',
+            'details' => $request->details,
+            'totalAmount' => $total,
+            //'date' => Carbon::now()->addDays(15),
+            'user_id' => Auth::id(),
+            'shippingAddress_id' => $request->id,
+            'billingAddress_id' => $request->billingAddress_id,
+        ]);
+        foreach ($orderItems as $productId => $item) {
+            OrderItem::create([
+                'quantity' => $item['quantity'],
+                'order_id' => $order->id,
+                'product_id' => $productId
+            ]);
+        }
+        session()->put('cart', []);
+        return redirect()->route('frontend.index')->with('message', 'Order placed successfully!');
     }
 
     /**
