@@ -78,8 +78,15 @@ route::middleware(['auth', /*'role:client'*/])->group(function () {
         Route::delete('reviews/{id}', [ClientController::class, 'deleteReview'])->name('review.delete');
         Route::get('profile', [ClientController::class, 'profile'])->name('profile');
         Route::put(('profile/update'), [ClientController::class, 'update'])->name('profile.update');
+        //-----------------------------------------//
         Route::get('address', [ClientController::class, 'address'])->name('address');
+        Route::get('address/{id}/edit', [ClientController::class, 'editAddress'])->name('address.edit');
+        Route::put('address/{id}', [ClientController::class, 'updateAddress'])->name('address.update');
+        Route::delete('address/{id}', [ClientController::class, 'deleteAddress'])->name('address.delete');
+        Route::post('address/store', [ClientController::class, 'storeAddress'])->name('address.store');
         Route::get('address/add', [ClientController::class, 'addAddress'])->name('address.add');
+        //-----------------------------------------//
+        
         Route::post('profile/update/password', [ClientController::class, 'updatePassword'])->name('update_password');
 
         //Route::get('invoice', [ClientController::class, 'invoice'])->name('order_invoice');
