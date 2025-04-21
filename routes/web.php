@@ -77,9 +77,9 @@ route::middleware(['auth', /*'role:client'*/])->group(function () {
         Route::put('reviews/{id}', [ClientController::class, 'updateReview'])->name('review.update');
         Route::delete('reviews/{id}', [ClientController::class, 'deleteReview'])->name('review.delete');
         Route::get('profile', [ClientController::class, 'profile'])->name('profile');
+        Route::put(('profile/update'), [ClientController::class, 'update'])->name('profile.update');
         Route::get('address', [ClientController::class, 'address'])->name('address');
-        Route::get('add-address', [ClientController::class, 'addAddress'])->name('add_address');
-        Route::post('profile/update', [ClientController::class, 'updateProfile'])->name('update_profile');
+        Route::get('address/add', [ClientController::class, 'addAddress'])->name('address.add');
         Route::post('profile/update/password', [ClientController::class, 'updatePassword'])->name('update_password');
 
         //Route::get('invoice', [ClientController::class, 'invoice'])->name('order_invoice');

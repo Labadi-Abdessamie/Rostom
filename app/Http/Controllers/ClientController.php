@@ -7,6 +7,7 @@ use App\Models\Review;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class ClientController extends Controller
 {
@@ -67,18 +68,84 @@ public function deleteReview($id){
 }
     public function profile()
     {
-        return view('client.pages.profile');
+        $user = Auth::user();
+
+        $data = [
+            'name' => $user->name,
+            'email' => $user->email,
+            'phoneNumber' => $user->phoneNumber,
+            'profilePicture' => $user->profile_picture,
+            'bio' => $user->bio,
+            'status' => $user->status,
+        ];
+
+        return view('client.pages.profile', compact('data'));
+    }
+    public function update(){
+        $user = Auth::user();
+        $data = request()->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phoneNumber' => 'nullable|string|max:20',
+            'bio' => 'nullable|string|max:1000',
+            'profilePicture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        if (request()->hasFile('profilePicture')) {
+            $data['profilePicture'] = request()->file('profilePicture')->store('profile_pictures', 'public');
+        }
+
+        $user->update($data);
+
+        return redirect()->back()->with('success', 'Profile updated successfully.');
     }
     public function address()
-    {
-        return view('client.pages.address');
+{
+    // Retrieve the authenticated user
+    $user = Auth::user();
+
+    // Retrieve the addresses associated with the user, ordered by the most recent
+    $addresses = $user->addresses()->latest()->get();
+
+    // Return the 'client.pages.address' view with the addresses data
+    return view('client.pages.address', compact('addresses'));
+}
+public function addAddress()
+{
+    $user = Auth::user();
+
+    // Optional: Check if user already has a principal address
+    $hasPrincipal = $user->addresses()->where('principalAddress', true)->exists();
+
+    return view('client.pages.add_address', [
+        'hasPrincipal' => $hasPrincipal
+    ]);
+}
+    public function updatePassword(Request $request)
+{
+    // Get the currently authenticated user
+    $user = Auth::user();
+
+    // Validate the incoming request data
+    $data = $request->validate([
+        'current_password' => 'required|string',  // Ensure the current password is provided
+        'new_password' => 'required|string|min:8|confirmed', // Ensure new password is confirmed
+    ]);
+
+    // Check if the provided current password matches the user's password in the database
+    if (!Hash::check($data['current_password'], $user->password)) {
+        // If not, return an error message
+        return redirect()->back()->with('error', 'Current password is incorrect.');
     }
-    public function addAddress()
-    {
-        return view('client.pages.add_address');
-    }
-    public function updateProfile() {}
-    public function updatePassword() {}
+
+    // Update the password only if the current password is correct
+    $user->update([
+        'password' => Hash::make($data['new_password']) // Hash the new password
+    ]);
+
+    // Redirect back with a success message
+    return redirect()->back()->with('success', 'Password updated successfully.');
+}
 
 
     /*

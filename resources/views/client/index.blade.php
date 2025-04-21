@@ -51,6 +51,7 @@
                             </a>
                         </div>
                     </div>
+                    @if(false){
                     <div class="row">
                         <div class="col-xl-12">
                             <div class="wsus__message">
@@ -156,6 +157,7 @@
                         </div>
                     </div>
                 </div>
+                @endif
             </div>
         </div>
     </div>
