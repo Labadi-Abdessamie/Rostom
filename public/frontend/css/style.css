@@ -7059,33 +7059,42 @@ footer {
     align-items: center;
 }
 
-.wsus__dashboard_order .package {
-    width: 150px;
-}
-
-.wsus__dashboard_order .price {
-    width: 150px;
-}
-
-.wsus__dashboard_order .p_date {
-    width: 150px;
-}
-
-.wsus__dashboard_order .e_date {
-    width: 150px;
-}
-
-.wsus__dashboard_order .method {
-    width: 166px;
-}
-
-.wsus__dashboard_order .tr_id {
-    width: 330px;
+.wsus__dashboard_order .id {
+    width: 100px;
 }
 
 .wsus__dashboard_order .status {
-    width: 120px;
+    width: 150px;
+}
+
+.wsus__dashboard_order .details {
+    width: 200px;
+}
+
+.wsus__dashboard_order .totalAmount {
+    width: 150px;
+}
+
+.wsus__dashboard_order .paymentMethod {
+    width: 150px;
+}
+
+.wsus__dashboard_order .paymentStatus {
+    width: 150px;
+}
+
+.wsus__dashboard_order .shippingAddress {
+    width: 200px;
     text-align: center;
+}
+
+.wsus__dashboard_order .billingAddress {
+    width: 200px;
+    text-align: center;
+}
+
+.wsus__dashboard_order .actions {
+    width: 100px;
 }
 
 .wsus__dashboard_order .status a {

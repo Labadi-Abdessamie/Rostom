@@ -14,43 +14,40 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>Order ID</th>
-                                    <th>Status</th>
-                                    <th>Details</th>
-                                    <th>Total Amount</th>
-                                    <th>Payment Method</th>
-                                    <th>Payment Status</th>
-                                    <th>Shipping Address</th>
-                                    <th>Billing Address</th>
-                                    <th>Actions</th>
+                                    <th class="id">Order ID</th>
+                                    <th class="status">Status</th>
+                                    <th class="details">Details</th>
+                                    <th class="totalAmount">Total Amount</th>
+                                    <th class="paymentMethod">Payment Method</th>
+                                    <th class="paymentStatus">Payment Status</th>
+                                    <th class="shippingAddress">Shipping Address</th>
+                                    <th class="billingAddress">Billing Address</th>
+                                    <th class="actions">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse ($orders as $order)
                                     <tr>
-                                        <td>{{ $order->id }}</td>
-                                        <td><span class="badge bg-info">{{ ucfirst($order->status) }}</span></td>
-                                        <td>{{ Str::limit($order->details, 30) }}</td>
-                                        <td>{{ number_format($order->totalAmount, 2) }} DZD</td>
-                                        <td>{{ ucfirst($order->paymentMethod) }}</td>
-                                        <td>{{ ucfirst($order->paymentStatus) }}</td>
-                                        <td>
-                                            @if($order->shippingAddress)
-                                                <strong>{{ $order->shippingAddress->name }}</strong><br>
-                                                <small>{{ $order->shippingAddress->address }}</small>
-                                            @else
-                                                <em>No shipping address</em>
-                                            @endif
+                                        <td class="id">{{ $order->id }}</td>
+                                        <td class="status"><span class="badge bg-info">{{ ucfirst($order->status) }}</span>
                                         </td>
-                                        <td>
-                                            @if($order->billingAddress)
-                                                <strong>{{ $order->billingAddress->name }}</strong><br>
-                                                <small>{{ $order->billingAddress->address }}</small>
+                                        <td class="details">{{ Str::limit($order->details, 30) }}</td>
+                                        <td class="totalAmount">{{ number_format($order->totalAmount, 2) }} DZD</td>
+                                        <td class="paymentMethod">{{ ucfirst($order->paymentMethod) }}</td>
+                                        <td class="paymentStatus">{{ ucfirst($order->paymentStatus) }}</td>
+                                        <td class="shippingAddress">
+                                            <strong>{{ $order->shippingAddress->name }}</strong>
+                                            <small>: {{ $order->shippingAddress->address }}</small>
+                                        </td>
+                                        <td class="billingAddress">
+                                            @if ($order->billingAddress)
+                                                <strong>{{ $order->billingAddress->name }}</strong>
+                                                <small>: {{ $order->billingAddress->address }}</small>
                                             @else
                                                 <em>No billing address</em>
                                             @endif
                                         </td>
-                                        <td>
+                                        <td class="actions">
                                             <a href="{{ route('client.order_details', $order->id) }}">View</a>
                                         </td>
                                     </tr>

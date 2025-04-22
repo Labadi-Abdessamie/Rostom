@@ -6,8 +6,8 @@
 
 @section('content')
     <!--============================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                BREADCRUMB START
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ==============================-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            BREADCRUMB START
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ==============================-->
     <section id="wsus__breadcrumb">
         <div class="wsus_breadcrumb_overlay">
             <div class="container">
@@ -25,13 +25,13 @@
         </div>
     </section>
     <!--============================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                BREADCRUMB END
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ==============================-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            BREADCRUMB END
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ==============================-->
 
 
     <!--============================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                CHECK OUT PAGE START
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ==============================-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            CHECK OUT PAGE START
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ==============================-->
     <section id="wsus__cart_view">
         <div class="container">
             <form class="wsus__checkout_form" action="{{ route('create_order') }}" method="POST">
@@ -40,10 +40,10 @@
                     <div class="col-xl-8 col-lg-7">
                         <div class="wsus__check_form">
                             <h5>Billing Details
-                                @if (false)
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">add new
-                                        address</a>
-                                @endif
+                                <a href="{{ route('client.address.add') }}"
+                                    @if (false) data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal" @endif>add
+                                    new address</a>
                             </h5>
                             <div class="row">
                                 @if ($principalAddress)
@@ -51,25 +51,25 @@
                                     <div class="col-md-12 col-lg-12 col-xl-12">
                                         <div class="wsus__check_single_form">
                                             <input type="text" name="name" placeholder="Name"
-                                                value="{{ $principalAddress->name }}">
+                                                value="{{ $principalAddress->name }}" readonly>
                                         </div>
                                     </div>
                                     <div class="col-md-12 col-lg-12 col-xl-12">
                                         <div class="wsus__check_single_form">
                                             <input type="text" name="address" placeholder="Address"
-                                                value="{{ $principalAddress->address }}">
+                                                value="{{ $principalAddress->address }}" readonly>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-12 col-xl-6">
                                         <div class="wsus__check_single_form">
                                             <input type="text" name="phoneNumber" placeholder="Phone"
-                                                value="{{ $principalAddress->phoneNumber }}">
+                                                value="{{ $principalAddress->phoneNumber }}" readonly>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-12 col-xl-6">
                                         <div class="wsus__check_single_form">
                                             <input type="email" name="email" placeholder="Email"
-                                                value="{{ $principalAddress->email }}">
+                                                value="{{ $principalAddress->email }}" readonly>
                                         </div>
                                     </div>
 
@@ -83,26 +83,26 @@
                                         </div>
                                     </div>
                                 @else
-                                    <input type="hidden" name="id" value="null">
+                                    <input type="hidden" name="id" value="">
 
                                     <div class="col-md-12 col-lg-12 col-xl-12">
                                         <div class="wsus__check_single_form">
-                                            <input type="text" name="name" placeholder="Name">
+                                            <input type="text" name="name" placeholder="Name" readonly>
                                         </div>
                                     </div>
                                     <div class="col-md-12 col-lg-12 col-xl-12">
                                         <div class="wsus__check_single_form">
-                                            <input type="text" name="address" placeholder="Address">
+                                            <input type="text" name="address" placeholder="Address" readonly>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-12 col-xl-6">
                                         <div class="wsus__check_single_form">
-                                            <input type="text" name="phoneNumber" placeholder="Phone">
+                                            <input type="text" name="phoneNumber" placeholder="Phone" readonly>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-12 col-xl-6">
                                         <div class="wsus__check_single_form">
-                                            <input type="email" name="email" placeholder="Email">
+                                            <input type="email" name="email" placeholder="Email" readonly>
                                         </div>
                                     </div>
 
@@ -179,6 +179,7 @@
                                                 <div class="accordion-body p-0">
                                                     <div class="wsus__check_form p-0" style="box-shadow: none;">
                                                         <div class="row">
+                                                            <input type="hidden" name="billingId" value="">
                                                             <div class="col-md-12 col-lg-12 col-xl-12">
                                                                 <div class="wsus__check_single_form">
                                                                     <input type="text" name="billingName"
@@ -231,19 +232,46 @@
                                 </div>
                             </div>
                             <div class="row">
-                                @if ($addresses)
-                                    @foreach ($addresses as $key => $address)
+                                <h5 class="mt-5">Shipping Addresses</h5>
+                                @if ($shippingAddresses)
+                                    @foreach ($shippingAddresses as $key => $address)
                                         <div class="col-xl-6">
                                             <div class="wsus__checkout_single_address">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="radioAddress"
-                                                        id="radioAddress{{ $key }}">
-                                                    <label class="form-check-label" for="radioAddress{{ $key }}">
+                                                    <input class="form-check-input" type="radio" name="shippingAddress"
+                                                        id="shippingAddress{{ $key }}"
+                                                        @if ($address->principalAddress) checked @endif>
+                                                    <label class="form-check-label"
+                                                        for="shippingAddress{{ $key }}">
                                                         Select Address
                                                     </label>
                                                 </div>
                                                 <ul>
-                                                    <li><span>Id :</span> {{ $address->id }}</li>
+                                                    <li class="d-none"><span>Id :</span> {{ $address->id }}</li>
+                                                    <li><span>Name :</span> {{ $address->name }}</li>
+                                                    <li><span>Phone :</span> {{ $address->phoneNumber }}</li>
+                                                    <li><span>Email :</span> {{ $address->email }}</li>
+                                                    <li><span>Address :</span> {{ $address->address }}</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endif
+                                <h5 class="mt-5">Billing Addresses</h5>
+                                @if ($billingAddresses)
+                                    @foreach ($billingAddresses as $key => $address)
+                                        <div class="col-xl-6">
+                                            <div class="wsus__checkout_single_address">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="billingAddress"
+                                                        id="billingAddress{{ $key }}">
+                                                    <label class="form-check-label"
+                                                        for="billingAddress{{ $key }}">
+                                                        Select Address
+                                                    </label>
+                                                </div>
+                                                <ul>
+                                                    <li class="d-none"><span>Id :</span> {{ $address->id }}</li>
                                                     <li><span>Name :</span> {{ $address->name }}</li>
                                                     <li><span>Phone :</span> {{ $address->phoneNumber }}</li>
                                                     <li><span>Email :</span> {{ $address->email }}</li>
@@ -328,8 +356,14 @@
             let EmailInput = $('input[name="email"]');
             let AddressInput = $('input[name="address"]');
 
+            let billingIdInput = $('input[name="billingId"]');
+            let billingNameInput = $('input[name="billingName"]');
+            let billingPhoneInput = $('input[name="billingPhoneNumber"]');
+            let billingEmailInput = $('input[name="billingEmail"]');
+            let billingAddressInput = $('input[name="billingAddress"]');
 
-            $('input[name="radioAddress"]').on('change', function() {
+
+            $('input[name="shippingAddress"]').on('click', function() {
                 let container = $(this).closest('.wsus__checkout_single_address');
                 let addressList = container.find('ul');
                 let id = addressList.find('li:contains("Id")').text().replace('Id :', '').trim();
@@ -344,6 +378,34 @@
                 PhoneInput.val(phone);
                 EmailInput.val(email);
                 AddressInput.val(address);
+            });
+            $('input[name="billingAddress"]').on('click', function() {
+                $('input[name="sameAsShippingAd"]').click();
+
+                let container = $(this).closest('.wsus__checkout_single_address');
+                let addressList = container.find('ul');
+                let id = addressList.find('li:contains("Id")').text().replace('Id :', '').trim();
+                let name = addressList.find('li:contains("Name")').text().replace('Name :', '').trim();
+                let phone = addressList.find('li:contains("Phone")').text().replace('Phone :', '').trim();
+                let email = addressList.find('li:contains("Email")').text().replace('Email :', '').trim();
+                let address = addressList.find('li:contains("Address")').text().replace('Address :', '')
+                    .trim();
+
+                billingIdInput.val(id);
+                billingNameInput.val(name);
+                billingPhoneInput.val(phone);
+                billingEmailInput.val(email);
+                billingAddressInput.val(address);
+            });
+            $('input[name="sameAsShippingAd"]').on('click', function() {
+                if ($('input[name="sameAsShippingAd"]').is(':checked')) {
+                    $('input[name="billingAddress"]').prop('checked', false);
+                    billingIdInput.val(null);
+                    billingNameInput.val(null);
+                    billingPhoneInput.val(null);
+                    billingEmailInput.val(null);
+                    billingAddressInput.val(null);
+                }
             });
         });
     </script>

@@ -118,9 +118,10 @@ class MainController extends Controller
     public function checkOut()
     {
         $user = Auth::user();
-        $addresses =  Address::where('user_id', $user->id)->where('type', 'billing')->get();
-        $principalAddress = Address::where('user_id', $user->id)->where('type', 'billing')->where('principalAddress', true)->first();
+        $shippingAddresses =  Address::where('user_id', $user->id)->where('type', 'shipping')->get();
+        $billingAddresses =  Address::where('user_id', $user->id)->where('type', 'billing')->get();
+        $principalAddress = Address::where('user_id', $user->id)->where('type', 'shipping')->where('principalAddress', true)->first();
 
-        return view('frontend.pages.check_out', compact('addresses', 'principalAddress'));
+        return view('frontend.pages.check_out', compact('shippingAddresses', 'billingAddresses', 'principalAddress'));
     }
 }

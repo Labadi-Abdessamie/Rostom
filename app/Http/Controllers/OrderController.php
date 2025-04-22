@@ -7,7 +7,7 @@ use App\Models\OrderItem;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Livewire\Livewire;
+
 
 class OrderController extends Controller
 {
@@ -41,11 +41,13 @@ class OrderController extends Controller
             'details' => ['nullable', 'string', 'max:255'],
             'TermsConditions' => ['accepted'],
             //
+            'billingId' => ['nullable', 'integer'],
             'billingName' => ['nullable', 'string', 'max:50'],
             'billingAddress' => ['nullable', 'string', 'max:100'],
             'billingPhoneNumber' => ['nullable', 'string', 'size:10'],
             'billingEmail' => ['nullable', 'email'],
         ]);
+
         $cart = session()->get('cart', []);
         if (empty($cart)) {
             return redirect()->route('frontend.index')->with('message', 'Your cart is empty!');
@@ -67,8 +69,10 @@ class OrderController extends Controller
             //'date' => Carbon::now()->addDays(15),
             'user_id' => Auth::id(),
             'shippingAddress_id' => $request->id,
-            'billingAddress_id' => $request->billingAddress_id,
+            'billingAddress_id' => $request->billingId ?? $request->id,
         ]);
+
+
         foreach ($orderItems as $productId => $item) {
             OrderItem::create([
                 'quantity' => $item['quantity'],

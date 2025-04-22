@@ -87,7 +87,7 @@ route::middleware(['auth', /*'role:client'*/])->group(function () {
         Route::post('address/store', [ClientController::class, 'storeAddress'])->name('address.store');
         Route::get('address/add', [ClientController::class, 'addAddress'])->name('address.add');
         //-----------------------------------------//
-        
+
         Route::post('profile/update/password', [ClientController::class, 'updatePassword'])->name('update_password');
 
         //Route::get('invoice', [ClientController::class, 'invoice'])->name('order_invoice');
