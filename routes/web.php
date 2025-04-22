@@ -139,6 +139,7 @@ Route::middleware(['auth',/*'role:admin'*/])->group(function () {
         Route::get('add-banner/{id?}', [AdminController::class, 'addBanner'])->name('add_banner');
 
         Route::get('orders', [AdminController::class, 'orders'])->name('orders');
+        Route::get('order-details/{id}', [AdminController::class, 'orderDetails'])->name('order_details');
         Route::get('admins', [AdminController::class, 'admins'])->name('admins');
     });
 });
