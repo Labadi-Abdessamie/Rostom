@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Magasin;
 use App\Models\Order;
+use App\Models\Review;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Product;
@@ -17,14 +18,19 @@ class AdminController extends Controller
         $products = Product::all();
         $totalClients = User::where('role', 'client')->count();
         $totalVendors = User::where('role', 'vendor')->count();
-        $magasins = Magasin::all();
+        $totalactiveVendors = User::where('role', 'vendor')->where('status', 'active')->count();
+        $totalactiveClients = User::where('role', 'client')->where('status', 'active')->count();
+        $totalAdmins=   User::where('role', 'admin')->count();
         $totalProducts = Product::count();
-        $latestOrders = Order::with(['customer', 'vendor'])
-            ->latest()
-            ->take(10)
+        $avgRating = Review::avg('rate');
+        $totalReviews = Review::count();
+        $latestOrders = Order::orderBy('created_at', 'desc')->take(5)->get();
+        $topMagasinsRating = Magasin::orderBy('rate', 'desc')->take(5)->get();
+        $bestSellingProducts = Product::withCount('orderItems')
+            ->orderBy('order_items_count', 'desc')
+            ->take(5)
             ->get();
-
-        return view('admin.index', compact('totalClients', 'totalVendors', 'totalProducts', 'magasins', 'products', 'latestOrders'));
+        return view('admin.index', compact('totalClients', 'totalVendors', 'totalProducts', 'products','latestOrders','totalactiveVendors','totalactiveClients','totalAdmins','avgRating','totalReviews','topMagasinsRating','bestSellingProducts'));
     }
 
     public function customers($type = null)
@@ -126,5 +132,15 @@ class AdminController extends Controller
         $product = Product::findOrFail($id);
         $product->delete();
         return redirect()->back()->with('success', 'Product deleted successfully.');
+    }
+    public function orders()
+    {
+        $orders = Order::all();
+        return view('admin.pages.orders', compact('orders'));
+    }
+    public function orderDetails($id)
+    {
+        $order = Order::findOrFail($id);
+        return view('admin.pages.orderDetails', compact('order'));
     }
 }
