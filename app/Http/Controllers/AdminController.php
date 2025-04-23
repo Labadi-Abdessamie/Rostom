@@ -35,21 +35,29 @@ class AdminController extends Controller
 
     public function customers($type = null)
     {
-        // ! not compelted
         if (is_null($type)) {
-            $title = "Customers";
-            $users = User::all();
-        } elseif ($type === "new") {
-            $title = "New Customers";
-            $users = User::whereDate('created_at', '>=', now()->subDays(7))->get();
+            $title = "Clients";
+            $users = User::where('role', 'client')->get();
         } elseif ($type === "blocked") {
-            $title = "Blocked Users";
-            $users = User::where('status', 'blocked')->get();
-        } else {
-            return redirect()->route('admin.users');
+            $title = "Blocked Clients";
+            $users = User::where('role', 'client')->where('status', 'blocked')->get();
+        }
+        elseif($type ==="inactive"){
+            $title = "Inactive Clients";
+            $users = User::where('role', 'client')->where('status', 'inactive')->get();
+
+        }
+        else {
+            return redirect()->route('admin.customers');
         }
 
         return view('admin.pages.customers', compact('users', 'title'));
+    }
+    public function deleteCustomer($id)
+    {
+        $user = User::findOrFail($id);
+        $user->delete();
+        return redirect()->back()->with('success', 'Client deleted successfully.');
     }
 
     public function magasins($filtre = null)
@@ -65,18 +73,45 @@ class AdminController extends Controller
     }
 
     public function vendors($type = null)
-    {
-        if (is_null($type)) {
-            $title = "Vendors";
-            $vendors = User::all();
-        } elseif ($type === "blocked") {
-            $title = "Blocked Vendors";
-            $vendors = User::where('status', 'blocked')->get();
-        } else {
-            return redirect()->route('admin.vendors');
-        }
+{
+    $perPage = 10;
 
-        return view('admin.pages.vendors', compact('vendors', 'title'));
+    if (is_null($type)) {
+        $title = "Vendors";
+        $vendors = User::where('role', 'vendor')->paginate($perPage);
+    } elseif ($type === "blocked") {
+        $title = "Blocked Vendors";
+        $vendors = User::where('status', 'blocked')->paginate($perPage);
+    } else {
+        return redirect()->route('admin.vendors');
+    }
+
+    return view('admin.pages.vendors', compact('vendors', 'title'));
+}
+    public function deleteVendor($id)
+    {
+        $vendor = User::findOrFail($id);
+        $vendor->delete();
+        return redirect()->back()->with('success', 'Vendor deleted successfully.');
+    }
+    public function showEditVendor($id)
+    {
+        $vendor = User::findOrFail($id);
+        return view('admin.pages.edit_vendor', compact('vendor'));
+    }
+    public function updateVendor(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,{$id}',
+            'status' => 'required|in:active,inactive,blocked',
+            'role' => 'required|in:client,vendor,admin',
+        ]);
+
+        $vendor = User::findOrFail($id);
+        $vendor->update($request->only(['name', 'email', 'status', 'role']));
+
+        return redirect()->route('admin.vendors')->with('success', 'Vendor updated successfully.');
     }
 
     public function products()
@@ -104,7 +139,7 @@ class AdminController extends Controller
     public function editUser($id)
     {
         $user = User::findOrFail($id);
-        return view('admin.edit_user', compact('user')); // ✅ go to dedicated edit form
+        return view('admin.edit_user', compact('user'));
     }
 
     public function updateUser(Request $request, $id)
