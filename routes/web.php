@@ -121,6 +121,7 @@ Route::middleware(['auth',/*'role:admin'*/])->group(function () {
         */
 
         Route::get('customers/{type?}', [AdminController::class, 'customers'])->name('customers');
+        Route::delete('delete-customer/{id}', [AdminController::class, 'deleteCustomer'])->name('delete.customer');
 
         Route::get('users/{id}/edit', [AdminController::class, 'editUser'])->name('edit_user');
         Route::post('users/{id}/update', [AdminController::class, 'updateUser'])->name('update_user');
@@ -129,6 +130,9 @@ Route::middleware(['auth',/*'role:admin'*/])->group(function () {
 
         Route::get('magasins/{filtre?}', [AdminController::class, 'magasins'])->name('magasins');
         Route::get('vendors/{type?}', [AdminController::class, 'vendors'])->name('vendors');
+        Route::delete('delete-vendor/{id}', [AdminController::class, 'deleteVendor'])->name('delete.vendor');
+        Route::get('vendors/edit/{id}', [AdminController::class, 'showEditVendor'])->name('vendors.edit');
+        Route::post('vendors/update/{id}', [AdminController::class, 'updateVendor'])->name('vendors.update');
 
 
         Route::get('products', [AdminController::class, 'products'])->name('products');

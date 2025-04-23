@@ -82,8 +82,13 @@
                                                     <a href="#" class="action-icon text-primary" title="View">
                                                         <i class="mdi mdi-eye"></i>
                                                     </a>
-                                                    <a href="#" class="action-icon text-warning" title="Edit">
-                                                        <i class="mdi mdi-pencil"></i>
+                                                    <form action="{{ route('admin.delete.customer', $user->id) }}" method="POST" style="display: inline;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="action-icon text-danger border-0 bg-transparent" title="Delete" onclick="return confirm('Are you sure you want to delete this customer?');">
+                                                            <i class="mdi mdi-delete"></i>
+                                                        </button>
+                                                    </form>
                                                     </a>
                                                 </td>
                                             </tr>

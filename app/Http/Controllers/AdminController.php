@@ -53,6 +53,12 @@ class AdminController extends Controller
 
         return view('admin.pages.customers', compact('users', 'title'));
     }
+    public function deleteCustomer($id)
+    {
+        $user = User::findOrFail($id);
+        $user->delete();
+        return redirect()->back()->with('success', 'Client deleted successfully.');
+    }
 
     public function magasins($filtre = null)
     {
@@ -67,18 +73,45 @@ class AdminController extends Controller
     }
 
     public function vendors($type = null)
-    {
-        if (is_null($type)) {
-            $title = "Vendors";
-            $vendors = User::all();
-        } elseif ($type === "blocked") {
-            $title = "Blocked Vendors";
-            $vendors = User::where('status', 'blocked')->get();
-        } else {
-            return redirect()->route('admin.vendors');
-        }
+{
+    $perPage = 10;
 
-        return view('admin.pages.vendors', compact('vendors', 'title'));
+    if (is_null($type)) {
+        $title = "Vendors";
+        $vendors = User::where('role', 'vendor')->paginate($perPage);
+    } elseif ($type === "blocked") {
+        $title = "Blocked Vendors";
+        $vendors = User::where('status', 'blocked')->paginate($perPage);
+    } else {
+        return redirect()->route('admin.vendors');
+    }
+
+    return view('admin.pages.vendors', compact('vendors', 'title'));
+}
+    public function deleteVendor($id)
+    {
+        $vendor = User::findOrFail($id);
+        $vendor->delete();
+        return redirect()->back()->with('success', 'Vendor deleted successfully.');
+    }
+    public function showEditVendor($id)
+    {
+        $vendor = User::findOrFail($id);
+        return view('admin.pages.edit_vendor', compact('vendor'));
+    }
+    public function updateVendor(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,{$id}',
+            'status' => 'required|in:active,inactive,blocked',
+            'role' => 'required|in:client,vendor,admin',
+        ]);
+
+        $vendor = User::findOrFail($id);
+        $vendor->update($request->only(['name', 'email', 'status', 'role']));
+
+        return redirect()->route('admin.vendors')->with('success', 'Vendor updated successfully.');
     }
 
     public function products()

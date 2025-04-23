@@ -26,7 +26,7 @@
                                 <a href="{{ route('admin.customers') }}">Customers</a>
                             </li>
                             <li>
-                                <a href="{{ route('admin.customers', ['type' => 'new']) }}">New Customers</a>
+                                <a href="{{ route('admin.customers', ['type' => 'inactive']) }}">Inactive Customers</a>
                             </li>
                             <li>
                                 <a href="{{ route('admin.customers', ['type' => 'blocked']) }}">Blocked Customers</a>
