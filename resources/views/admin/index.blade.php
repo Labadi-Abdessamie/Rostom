@@ -278,7 +278,7 @@
                                 </div>
                             </div>
 
-                            <h4 class="header-title mb-3">Top 5 Magasins by Rating</h4>
+                            <h4 class="header-title mb-3">Top 5 Magasins</h4>
 
                             <div class="table-responsive">
                                 <table class="table table-borderless table-hover table-nowrap table-centered m-0">
@@ -303,7 +303,7 @@
                                                 </td>
 
                                                 <td>
-                                                    <a href="#" class="btn btn-xs btn-light"><i class="mdi mdi-eye"></i></a>
+                                                    <a href="{{ route('frontend.vendor_details', $magasin->id) }}" class="btn btn-xs btn-light"><i class="mdi mdi-eye"></i></a>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -361,7 +361,7 @@
                                                 </td>
                 
                                                 <td>
-                                                    <a href="javascript: void(0);" class="btn btn-xs btn-light">
+                                                    <a href="{{ route('frontend.product_details', $product->id) }}" class="btn btn-xs btn-light">
                                                         <i class="mdi mdi-eye"></i>
                                                     </a>
                                                 </td>

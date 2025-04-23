@@ -35,18 +35,20 @@ class AdminController extends Controller
 
     public function customers($type = null)
     {
-        // ! not compelted
         if (is_null($type)) {
-            $title = "Customers";
-            $users = User::all();
-        } elseif ($type === "new") {
-            $title = "New Customers";
-            $users = User::whereDate('created_at', '>=', now()->subDays(7))->get();
+            $title = "Clients";
+            $users = User::where('role', 'client')->get();
         } elseif ($type === "blocked") {
-            $title = "Blocked Users";
-            $users = User::where('status', 'blocked')->get();
-        } else {
-            return redirect()->route('admin.users');
+            $title = "Blocked Clients";
+            $users = User::where('role', 'client')->where('status', 'blocked')->get();
+        }
+        elseif($type ==="inactive"){
+            $title = "Inactive Clients";
+            $users = User::where('role', 'client')->where('status', 'inactive')->get();
+
+        }
+        else {
+            return redirect()->route('admin.customers');
         }
 
         return view('admin.pages.customers', compact('users', 'title'));
@@ -104,7 +106,7 @@ class AdminController extends Controller
     public function editUser($id)
     {
         $user = User::findOrFail($id);
-        return view('admin.edit_user', compact('user')); // ✅ go to dedicated edit form
+        return view('admin.edit_user', compact('user'));
     }
 
     public function updateUser(Request $request, $id)
