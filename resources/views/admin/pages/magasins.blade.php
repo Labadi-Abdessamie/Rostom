@@ -116,6 +116,7 @@
                                                             Reject
                                                         </button>
                                                     </form>
+                                                    
                                                 @else
                                                     <a href="{{ route('admin.edit.magasin', $magasin->id) }}" class="action-icon">
                                                         <i class="mdi mdi-square-edit-outline"></i>

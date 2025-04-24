@@ -81,8 +81,8 @@ public function approveMagasin($id)
 public function rejectMagasin($id)
 {
     $magasin = Magasin::findOrFail($id);
-    $magasin->update(['status' => 'rejected']);
-    return redirect()->route('admin.magasins', ['filtre' => 'demands'])->with('success', 'Magasin rejected successfully.');
+    $magasin->delete();
+    return redirect()->route('admin.magasins', ['filtre' => 'demands'])->with('success', 'Magasin rejected and deleted successfully.');
 }
 public function deleteMagasin($id)
 {
@@ -167,8 +167,15 @@ public function updateMagasin(Request $request, $id){
 
     public function products()
     {
-        $products = Product::all();
-        return view('admin.pages.products', compact('products'));
+        $products = Product::with('magasin')->paginate(10);
+        $totalProducts = Product::count();
+        return view('admin.pages.products', compact('products','totalProducts'));
+    }
+    public function deleteProduct($id)
+    {
+        $product = Product::findOrFail($id);
+        $product->delete();
+        return redirect()->back()->with('success', 'Product deleted successfully.');
     }
 
     public function banners()
@@ -212,12 +219,6 @@ public function updateMagasin(Request $request, $id){
         $user = User::findOrFail($id);
         $user->delete();
         return redirect()->back()->with('success', 'User deleted successfully.');
-    }
-    public function deleteProduct($id)
-    {
-        $product = Product::findOrFail($id);
-        $product->delete();
-        return redirect()->back()->with('success', 'Product deleted successfully.');
     }
     public function orders()
     {
