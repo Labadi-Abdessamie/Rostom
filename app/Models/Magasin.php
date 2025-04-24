@@ -6,7 +6,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Magasin extends Model
+
 {
+    protected $fillable = [
+        'name',
+        'email',
+        'phoneNumber',
+        'location',
+        'magasinPicture',
+        'rate',
+        'magasinOpen',
+        'user_id',
+        'status', 
+    ];
     use HasFactory;
 
     public function user()

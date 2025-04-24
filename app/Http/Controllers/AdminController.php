@@ -58,16 +58,62 @@ class AdminController extends Controller
     }
 
     public function magasins($filtre = null)
-    {
-        if (is_null($filtre)) {
-            $Magasins = Magasin::get();
-        } else if ($filtre === "demands") {
-            $Magasins = Magasin::get();
-        } else {
-            return redirect()->route('admin.magasins');
-        }
-        return view('admin.pages.magasins', compact('Magasins'));
+{
+    if (is_null($filtre)) {
+        $magasins = Magasin::with('user')->paginate(10);
+    } else if ($filtre === "demands") {
+        $magasins = Magasin::with('user')->where('status', 'inactive')->paginate(10); // Maybe me(Mus) changes it
+    } else {
+        return redirect()->route('admin.magasins');
     }
+
+    return view('admin.pages.magasins', compact('magasins','filtre'));
+}
+public function approveMagasin($id)
+{
+    $magasin = Magasin::findOrFail($id);
+    $magasin->update(['status' => 'active']);
+    return redirect()->back()->with('success', 'Magasin approved successfully.');
+}
+public function rejectMagasin($id)
+{
+    $magasin = Magasin::findOrFail($id);
+    $magasin->delete();
+    return redirect()->route('admin.magasins', ['filtre' => 'demands'])->with('success', 'Magasin rejected and deleted successfully.');
+}
+public function deleteMagasin($id)
+{
+    $magasin = Magasin::findOrFail($id);
+    $magasin->delete();
+    return redirect()->back()->with('success', 'Magasin deleted successfully.');
+}
+public function showEditMagasin($id)
+{
+    $magasin = Magasin::findOrFail($id);
+    return view('admin.pages.edit_magasin', compact('magasin'));
+}
+public function updateMagasin(Request $request, $id){
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email,{$id}',
+        'phoneNumber' => 'required|string|max:255',
+        'location' => 'required|string|max:255',
+        'magasinPicture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'rate' => 'nullable|numeric|min:0|max:5',
+        'magasinOpen' => 'required|boolean',
+        'status' => 'required|in:active,inactive,blocked',
+    ]);
+
+    $magasin = Magasin::findOrFail($id);
+    $magasin->update($request->only(['name', 'email', 'phoneNumber', 'location', 'magasinOpen', 'rate', 'status']));
+
+    if ($request->hasFile('magasinPicture')) {
+        $path = $request->file('magasinPicture')->store('images/magasins');
+        $magasin->update(['magasinPicture' => $path]);
+    }
+
+    return redirect()->route('admin.magasins')->with('success', 'Magasin updated successfully.');
+}
 
     public function vendors($type = null)
     {
@@ -97,24 +143,36 @@ class AdminController extends Controller
         return view('admin.pages.edit_vendor', compact('vendor'));
     }
     public function updateVendor(Request $request, $id)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,{$id}',
-            'status' => 'required|in:active,inactive,blocked',
-            'role' => 'required|in:client,vendor,admin',
-        ]);
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email,' . $id, // Fix email validation
+        'phoneNumber' => 'required|string|max:255',
+        'location' => 'required|string|max:255',
+        'status' => 'required|in:active,inactive,blocked',
+    ]);
 
-        $vendor = User::findOrFail($id);
-        $vendor->update($request->only(['name', 'email', 'status', 'role']));
+    // Find the vendor (User) by ID
+    $vendor = User::findOrFail($id);
 
-        return redirect()->route('admin.vendors')->with('success', 'Vendor updated successfully.');
-    }
+    // Update the vendor with the validated data
+    $vendor->update($request->only(['name', 'email', 'phoneNumber', 'location', 'status']));
+
+    // Redirect with a success message
+    return redirect()->route('admin.vendors')->with('success', 'Vendor updated successfully.');
+}
 
     public function products()
     {
-        $products = Product::all();
-        return view('admin.pages.products', compact('products'));
+        $products = Product::with('magasin')->paginate(10);
+        $totalProducts = Product::count();
+        return view('admin.pages.products', compact('products','totalProducts'));
+    }
+    public function deleteProduct($id)
+    {
+        $product = Product::findOrFail($id);
+        $product->delete();
+        return redirect()->back()->with('success', 'Product deleted successfully.');
     }
 
     public function banners()
@@ -163,12 +221,6 @@ class AdminController extends Controller
         $user = User::findOrFail($id);
         $user->delete();
         return redirect()->back()->with('success', 'User deleted successfully.');
-    }
-    public function deleteProduct($id)
-    {
-        $product = Product::findOrFail($id);
-        $product->delete();
-        return redirect()->back()->with('success', 'Product deleted successfully.');
     }
     public function orders()
     {
