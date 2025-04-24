@@ -2,7 +2,6 @@
 
 @section('content')
     <div class="content">
-
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
@@ -14,6 +13,8 @@
 
             <form action="{{ route('admin.vendors.update', $vendor->id) }}" method="POST">
                 @csrf
+                @method('PUT') <!-- This line is required to simulate the PUT request -->
+
                 <div class="form-group">
                     <label for="name">Vendor Name</label>
                     <input type="text" id="name" name="name" class="form-control" value="{{ $vendor->name }}" required>
@@ -26,16 +27,19 @@
 
                 <div class="form-group">
                     <label for="phone">Phone Number</label>
-                    <input type="phone" id="phone" name="phone" class="form-control" value="{{ $vendor->phoneNumber }}" readonly>
+                    <input type="phone" id="phone" name="phoneNumber" class="form-control" value="{{ $vendor->phoneNumber }}" readonly>
                 </div>
 
-                <div class="form-group">
-                    <label for="vendorStatus">Status</label>
-                    <select name="vendorStatus" id="vendorStatus" class="form-control" required>
+                <div class="mb-3">
+                    <label for="vendorStatus" class="form-label">Status</label>
+                    <select class="form-select @error('status') is-invalid @enderror" id="vendorStatus" name="status" required>
                         <option value="active" {{ $vendor->status == 'active' ? 'selected' : '' }}>Active</option>
                         <option value="inactive" {{ $vendor->status == 'inactive' ? 'selected' : '' }}>Inactive</option>
                         <option value="blocked" {{ $vendor->status == 'blocked' ? 'selected' : '' }}>Blocked</option>
                     </select>
+                    @error('status')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="form-group">
@@ -46,6 +50,7 @@
                         <option value="admin" {{ $vendor->role == 'admin' ? 'selected' : '' }}>Admin</option>
                     </select>
                 </div>
+
                 <button type="submit" class="btn btn-primary">Update Vendor</button>
             </form>
         </div>

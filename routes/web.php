@@ -129,10 +129,17 @@ Route::middleware(['auth',/*'role:admin'*/])->group(function () {
 
 
         Route::get('magasins/{filtre?}', [AdminController::class, 'magasins'])->name('magasins');
+        Route::post('magasins/{id}/approve', [AdminController::class, 'approveMagasin'])->name('approve.magasin');
+        Route::delete('magasins/{id}/reject', [AdminController::class, 'rejectMagasin'])->name('reject.magasin');
+        Route::delete('delete-magasin/{id}', [AdminController::class, 'deleteMagasin'])->name('delete.magasin');
+        Route::get('magasins/edit/{id}', [AdminController::class, 'showEditMagasin'])->name('edit.magasin');
+        Route::put('magasins/update/{id}', [AdminController::class, 'updateMagasin'])->name('update.magasin');
+
         Route::get('vendors/{type?}', [AdminController::class, 'vendors'])->name('vendors');
         Route::delete('delete-vendor/{id}', [AdminController::class, 'deleteVendor'])->name('delete.vendor');
         Route::get('vendors/edit/{id}', [AdminController::class, 'showEditVendor'])->name('vendors.edit');
-        Route::post('vendors/update/{id}', [AdminController::class, 'updateVendor'])->name('vendors.update');
+        Route::put('vendors/update/{id}', [AdminController::class, 'updateVendor'])->name('vendors.update');
+
 
 
         Route::get('products', [AdminController::class, 'products'])->name('products');

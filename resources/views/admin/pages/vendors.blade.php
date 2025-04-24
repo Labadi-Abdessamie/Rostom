@@ -12,9 +12,7 @@
                     <div class="page-title-box">
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">UBold</a></li>
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">CRM</a></li>
-                                <li class="breadcrumb-item active">Vendors</li>
+                                <li class="breadcrumb-item active">Admin</li>
                             </ol>
                         </div>
                         <h4 class="page-title">Vendors</h4>
@@ -22,7 +20,7 @@
                 </div>
             </div>
             <!-- end page title -->
-
+            @if (false)
             <div class="row">
                 <div class="col-12">
                     <div class="card">
@@ -42,14 +40,13 @@
                                     </div>
                                 </div><!-- end col-->
                             </div>
-
+                            @endif
                             <div class="table-responsive">
                                 <table class="table table-centered table-nowrap table-striped">
                                     <thead>
                                         <tr>
                                             <th>#</th>
                                             <th>Vendor</th>
-                                            <th>Phone</th>
                                             <th>Email</th>
                                             <th>Phone Number</th>
                                             <th>Create Date</th>
@@ -66,7 +63,6 @@
                                                         class="me-2 rounded-circle" width="32" height="32">
                                                     <a href="javascript:void(0);" class="text-body fw-semibold">{{ $vendor->name }}</a>
                                                 </td>
-                                                <td>{{ $vendor->phone }}</td>
                                                 <td>{{ $vendor->email }}</td>
                                                 <td>{{ $vendor->phoneNumber }}</td>
                                                 <td>{{ $vendor->created_at->format('d/m/Y') }}</td>
