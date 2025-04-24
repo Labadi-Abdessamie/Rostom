@@ -11,9 +11,9 @@ class VendorInterfaceController extends Controller
     public function dashboard()
     {
         $vendor = Auth::user();
-        $products = Product::where('vendor_id', $vendor->id)->paginate(10);
+        //$products = Product::where('vendor_id', $vendor->id)->paginate(10);
 
-        return view('vendor.dashboard', compact('vendor', 'products'));
+        return view('vendor.index'/*, compact('vendor', 'products')*/);
     }
 
     public function createProduct()

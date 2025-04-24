@@ -11,6 +11,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\VendorController;
+use App\Http\Controllers\VendorInterfaceController;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Support\Facades\Artisan;
@@ -100,12 +101,12 @@ route::middleware(['auth', /*'role:client'*/])->group(function () {
 });
 
 //Vendor route
-route::middleware(['auth', 'role:vender'])->group(function () {
-    Route::group(['prefix' => 'vender', 'as' => 'vender.'], function () {
-        Route::get('dashboard', [VendorController::class, 'dashboard'])->name('dashboard');
-        Route::get('profile', [VendorController::class, 'profile'])->name('profile');
-        Route::post('profile/update', [VendorController::class, 'updateProfile'])->name('update_profile');
-        Route::post('profile/update/password', [VendorController::class, 'updatePassword'])->name('update_password');
+route::middleware(['auth' /*,'role:vendor'*/])->group(function () {
+    Route::group(['prefix' => 'vendor', 'as' => 'vendor.'], function () {
+        Route::get('dashboard', [VendorInterfaceController::class, 'dashboard'])->name('dashboard');
+        Route::get('profile', [VendorInterfaceController::class, 'profile'])->name('profile');
+        Route::post('profile/update', [VendorInterfaceController::class, 'updateProfile'])->name('update_profile');
+        Route::post('profile/update/password', [VendorInterfaceController::class, 'updatePassword'])->name('update_password');
     });
 });
 
