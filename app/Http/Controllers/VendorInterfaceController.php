@@ -15,6 +15,38 @@ class VendorInterfaceController extends Controller
 
         return view('vendor.index'/*, compact('vendor', 'products')*/);
     }
+    public function products()
+    {
+        //$vendor = Auth::user();
+        return view('vendor.pages.products');
+    }
+
+    public function orders()
+    {
+        //$vendor = Auth::user();
+        return view('vendor.pages.orders');
+    }
+
+    public function purchaseOrders()
+    {
+        //$vendor = Auth::user();
+        return view('vendor.pages.purchase_orders');
+    }
+    public function reviews()
+    {
+        //$vendor = Auth::user();
+        return view('vendor.pages.reviews');
+    }
+    public function contact()
+    {
+        //$vendor = Auth::user();
+        return view('vendor.pages.contact');
+    }
+    public function magasin()
+    {
+        //$vendor = Auth::user();
+        return view('vendor.pages.magasin_info');
+    }
 
     public function createProduct()
     {

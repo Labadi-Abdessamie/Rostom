@@ -75,6 +75,13 @@
                         <span> Products </span>
                     </a>
                 </li>
+
+                <li>
+                    <a href="{{ route('admin.reviews') }}">
+                        <i class="mdi mdi-comment"></i>
+                        <span> Reviews </span>
+                    </a>
+                </li>
                 <li>
                     <a data-bs-target="#sidebarProjects" data-bs-toggle="collapse" class="cursor-pointer">
                         <i class="mdi mdi-briefcase-check-outline"></i>

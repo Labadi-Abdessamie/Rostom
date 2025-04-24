@@ -20,7 +20,7 @@ class AdminController extends Controller
         $totalVendors = User::where('role', 'vendor')->count();
         $totalactiveVendors = User::where('role', 'vendor')->where('status', 'active')->count();
         $totalactiveClients = User::where('role', 'client')->where('status', 'active')->count();
-        $totalAdmins=   User::where('role', 'admin')->count();
+        $totalAdmins =   User::where('role', 'admin')->count();
         $totalProducts = Product::count();
         $avgRating = Review::avg('rate');
         $totalReviews = Review::count();
@@ -30,7 +30,7 @@ class AdminController extends Controller
             ->orderBy('order_items_count', 'desc')
             ->take(5)
             ->get();
-        return view('admin.index', compact('totalClients', 'totalVendors', 'totalProducts', 'products','latestOrders','totalactiveVendors','totalactiveClients','totalAdmins','avgRating','totalReviews','topMagasinsRating','bestSellingProducts'));
+        return view('admin.index', compact('totalClients', 'totalVendors', 'totalProducts', 'products', 'latestOrders', 'totalactiveVendors', 'totalactiveClients', 'totalAdmins', 'avgRating', 'totalReviews', 'topMagasinsRating', 'bestSellingProducts'));
     }
 
     public function customers($type = null)
@@ -41,13 +41,10 @@ class AdminController extends Controller
         } elseif ($type === "blocked") {
             $title = "Blocked Clients";
             $users = User::where('role', 'client')->where('status', 'blocked')->get();
-        }
-        elseif($type ==="inactive"){
+        } elseif ($type === "inactive") {
             $title = "Inactive Clients";
             $users = User::where('role', 'client')->where('status', 'inactive')->get();
-
-        }
-        else {
+        } else {
             return redirect()->route('admin.customers');
         }
 
@@ -73,21 +70,21 @@ class AdminController extends Controller
     }
 
     public function vendors($type = null)
-{
-    $perPage = 10;
+    {
+        $perPage = 10;
 
-    if (is_null($type)) {
-        $title = "Vendors";
-        $vendors = User::where('role', 'vendor')->paginate($perPage);
-    } elseif ($type === "blocked") {
-        $title = "Blocked Vendors";
-        $vendors = User::where('status', 'blocked')->paginate($perPage);
-    } else {
-        return redirect()->route('admin.vendors');
+        if (is_null($type)) {
+            $title = "Vendors";
+            $vendors = User::where('role', 'vendor')->paginate($perPage);
+        } elseif ($type === "blocked") {
+            $title = "Blocked Vendors";
+            $vendors = User::where('status', 'blocked')->paginate($perPage);
+        } else {
+            return redirect()->route('admin.vendors');
+        }
+
+        return view('admin.pages.vendors', compact('vendors', 'title'));
     }
-
-    return view('admin.pages.vendors', compact('vendors', 'title'));
-}
     public function deleteVendor($id)
     {
         $vendor = User::findOrFail($id);
@@ -134,6 +131,11 @@ class AdminController extends Controller
     public function admins()
     {
         return view('admin.pages.admins');
+    }
+
+    public function reviews()
+    {
+        return view('admin.pages.reviews');
     }
 
     public function editUser($id)

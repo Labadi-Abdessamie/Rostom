@@ -104,6 +104,14 @@ route::middleware(['auth', /*'role:client'*/])->group(function () {
 route::middleware(['auth' /*,'role:vendor'*/])->group(function () {
     Route::group(['prefix' => 'vendor', 'as' => 'vendor.'], function () {
         Route::get('dashboard', [VendorInterfaceController::class, 'dashboard'])->name('dashboard');
+        Route::get('products', [VendorInterfaceController::class, 'products'])->name('products');
+        Route::get('orders', [VendorInterfaceController::class, 'orders'])->name('orders');
+        Route::get('reviews', [VendorInterfaceController::class, 'reviews'])->name('reviews');
+        Route::get('purchase-orders', [VendorInterfaceController::class, 'purchaseOrders'])->name('purchase_orders');
+
+
+        Route::get('magasin', [VendorInterfaceController::class, 'magasin'])->name('magasin');
+        Route::get('contact', [VendorInterfaceController::class, 'contact'])->name('contact');
         Route::get('profile', [VendorInterfaceController::class, 'profile'])->name('profile');
         Route::post('profile/update', [VendorInterfaceController::class, 'updateProfile'])->name('update_profile');
         Route::post('profile/update/password', [VendorInterfaceController::class, 'updatePassword'])->name('update_password');
@@ -146,6 +154,7 @@ Route::middleware(['auth',/*'role:admin'*/])->group(function () {
         Route::get('orders', [AdminController::class, 'orders'])->name('orders');
         Route::get('order-details/{id}', [AdminController::class, 'orderDetails'])->name('order_details');
         Route::get('admins', [AdminController::class, 'admins'])->name('admins');
+        Route::get('reviews', [AdminController::class, 'reviews'])->name('reviews');
     });
 });
 
