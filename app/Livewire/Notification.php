@@ -18,7 +18,7 @@ class Notification extends Component
     public function showNotification($product, $message)
     {
         if ($message == "Added To cart") {
-            $this->productName = $product['name'];
+            $this->productName = $product;
         } else {
             $this->productName = null;
         }

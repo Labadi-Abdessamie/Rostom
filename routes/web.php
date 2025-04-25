@@ -1,10 +1,8 @@
 <?php
 
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ClientController;
-use App\Http\Controllers\CompareController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
@@ -12,6 +10,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\VendorInterfaceController;
+use App\Http\Middleware\RoleMiddleware;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Support\Facades\Artisan;
@@ -20,14 +19,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/cleareverything', function () {
     $clearcache = Artisan::call('cache:clear');
     echo 'Cache cleared<br>';
-
     $clearview = Artisan::call('view:clear');
     echo 'View cleared<br>';
-
     $clearconfig = Artisan::call('config:clear');
     echo 'Config cleared<br>';
 });
-
 
 Route::group(['prefix' => '/'], function () {
     Route::get('cat', [CategoryController::class, 'get']);
@@ -37,18 +33,16 @@ Route::group(['prefix' => '/'], function () {
 //Frontend route
 Route::group(['prefix' => '', 'as' => 'frontend.'], function () {
     Route::get('/', [MainController::class, 'index'])->name('index');
-
+    Route::get('products', [ProductController::class, 'index'])->name('products');
+    Route::get('product-details/{id}', [ProductController::class, 'show'])->name('product_details');
     Route::get('vendors', [VendorController::class, 'index'])->name('vendor');
     Route::get('vendor-details/{id}', [VendorController::class, 'show'])->name('vendor_details');
 
-    Route::get('products/{category?}', [ProductController::class, 'index'])->name('products');
-    Route::get('product-details/{id}', [ProductController::class, 'show'])->name('product_details');
-
-
-    Route::get('cart', [MainController::class, 'cart'])->name('cart');
-    Route::get('wishlist', [MainController::class, 'wishlist'])->name('wishlist');
+    Route::get('cart', [MainController::class, 'cart'])->name('cart')->middleware(['auth', RoleMiddleware::class . ':client']);
+    Route::get('wishlist', [MainController::class, 'wishlist'])->name('wishlist')->middleware(['auth', RoleMiddleware::class . ':client']);
     Route::get('compare', [MainController::class, 'compare'])->name('compare');
 
+    Route::get('contact', [MainController::class, 'contact'])->name('contact');
 
     //Route::get('flash-Sale', [MainController::class, 'flashSale'])->name('flash_sale');
     //Route::get('daily-deals', [MainController::class, 'dailyDeals'])->name('daily_deals');
@@ -57,7 +51,6 @@ Route::group(['prefix' => '', 'as' => 'frontend.'], function () {
     //Route::get('blog', [MainController::class, 'blog'])->name('blog');
     //Route::get('blog-details', [MainController::class, 'blogDetails'])->name('blog_details');
 
-    Route::get('contact', [MainController::class, 'contact'])->name('contact');
 
     //Route::get('user-login', [MainController::class, 'login'])->name('login');
     Route::get('forget-password', [MainController::class, 'forgetPassword'])->name('forget_password');
@@ -66,7 +59,7 @@ Route::group(['prefix' => '', 'as' => 'frontend.'], function () {
 
 
 //Client route
-route::middleware(['auth', /*'role:client'*/])->group(function () {
+route::middleware(['auth', RoleMiddleware::class . ':client'])->group(function () {
     Route::get('check-out', [MainController::class, 'checkOut'])->name('frontend.check_out');
     Route::post('create_order', [OrderController::class, 'store'])->name('create_order');
 
@@ -101,7 +94,7 @@ route::middleware(['auth', /*'role:client'*/])->group(function () {
 });
 
 //Vendor route
-route::middleware(['auth' /*,'role:vendor'*/])->group(function () {
+route::middleware(['auth',  RoleMiddleware::class . ':vendor'])->group(function () {
     Route::group(['prefix' => 'vendor', 'as' => 'vendor.'], function () {
         Route::get('dashboard', [VendorInterfaceController::class, 'dashboard'])->name('dashboard');
         Route::get('products', [VendorInterfaceController::class, 'products'])->name('products');
@@ -119,8 +112,8 @@ route::middleware(['auth' /*,'role:vendor'*/])->group(function () {
 });
 
 //Admin route
-//! Route::get('admin/login', [AdminController::class, 'login'])->name('admin.login');
-Route::middleware(['auth',/*'role:admin'*/])->group(function () {
+
+Route::middleware(['auth', RoleMiddleware::class . ':admin'])->group(function () {
     Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         Route::get('dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
         /*
@@ -178,24 +171,5 @@ Route::middleware('auth')->group(function () {
 });
 
 
-//!
-/*
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-    Route::get('/admin/users', [AdminController::class, 'manageUsers'])->name('admin.users');
-    Route::get('/admin/vendors', [AdminController::class, 'manageVendors'])->name('admin.vendors');
-    Route::get('/admin/products', [AdminController::class, 'manageProducts'])->name('admin.products');
-    Route::delete('/admin/user/{id}', [AdminController::class, 'deleteUser'])->name('admin.user.delete');
-    Route::delete('/admin/product/{id}', [AdminController::class, 'deleteProduct'])->name('admin.product.delete');
-});
-*/
-/*
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
-Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-*/
 
-Route::get('/test', [AdminController::class, 'dashboard'])->name('test');
 require __DIR__ . '/auth.php';

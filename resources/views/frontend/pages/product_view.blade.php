@@ -6,8 +6,8 @@
 
 @section('content')
     <!--============================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            BREADCRUMB START
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ==============================-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    BREADCRUMB START
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ==============================-->
     <section id="wsus__breadcrumb">
         <div class="wsus_breadcrumb_overlay">
             <div class="container">
@@ -24,12 +24,12 @@
         </div>
     </section>
     <!--============================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            BREADCRUMB END
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ==============================-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    BREADCRUMB END
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ==============================-->
 
     <!--============================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            PRODUCT PAGE START
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ==============================-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    PRODUCT PAGE START
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ==============================-->
     <section id="wsus__product_page">
         <div class="container">
             <div class="row">
@@ -56,7 +56,7 @@
                     </div>
                     <div class="wsus__product_sidebar " id="sticky_sidebar">
                         <form>
-                            <input type="text" placeholder="Search...">
+                            <input type="text" placeholder="{{ $category ? $category->name : 'Search...' }}">
                             <button class="common_btn" type="submit"><i class="far fa-search"></i></button>
                         </form>
                         <div class="accordion" id="accordionExample">
@@ -72,7 +72,9 @@
                                     <div class="accordion-body">
                                         <ul>
                                             @foreach ($categories as $category)
-                                                <li><a href="#">{{ $category->name }}</a></li>
+                                                <li><a
+                                                        href="{{ route('frontend.products', ['category' => $category->id]) }}">{{ $category->name }}</a>
+                                                </li>
                                             @endforeach
                                         </ul>
                                     </div>
@@ -251,23 +253,39 @@
                                             <i class="fas fa-list-ul"></i>
                                         </button>
                                     </div>
-                                    <div class="wsus__topbar_select">
-                                        <select class="select_2" name="state">
-                                            <option>default shorting</option>
-                                            <option>short by rating</option>
-                                            <option>short by latest</option>
-                                            <option>low to high </option>
-                                            <option>high to low</option>
+                                    <form method="GET" id="sortForm">
+                                        <input type="hidden" name="category" value="{{ request('category') }}">
+                                        <input type="hidden" name="number" value="{{ request('number') }}">
+                                        <select class="select_2" name="sort"
+                                            onchange="document.getElementById('sortForm').submit();">
+                                            <option value="">Default sorting</option>
+                                            <option value="rating" {{ request('sort') == 'rating' ? 'selected' : '' }}>Sort
+                                                by Rating</option>
+                                            <option value="latest" {{ request('sort') == 'latest' ? 'selected' : '' }}>Sort
+                                                by Latest</option>
+                                            <option value="low_high" {{ request('sort') == 'low_high' ? 'selected' : '' }}>
+                                                Low to High</option>
+                                            <option value="high_low"
+                                                {{ request('sort') == 'high_low' ? 'selected' : '' }}>High to Low</option>
                                         </select>
-                                    </div>
+                                    </form>
                                 </div>
                                 <div class="wsus__topbar_select">
-                                    <select class="select_2" name="state">
-                                        <option>show 12</option>
-                                        <option>show 15</option>
-                                        <option>show 18</option>
-                                        <option>show 21</option>
-                                    </select>
+                                    <form method="GET" id="stateForm">
+                                        <input type="hidden" name="category" value="{{ request('category') }}">
+                                        <input type="hidden" name="sort" value="{{ request('sort') }}">
+                                        <select class="select_2" name="number"
+                                            onchange="document.getElementById('stateForm').submit();">
+                                            <option value="12" {{ request('number') == '12' ? 'selected' : '' }}>Show
+                                                12</option>
+                                            <option value="15" {{ request('number') == '15' ? 'selected' : '' }}>Show
+                                                15</option>
+                                            <option value="18" {{ request('number') == '18' ? 'selected' : '' }}>Show
+                                                18</option>
+                                            <option value="21" {{ request('number') == '21' ? 'selected' : '' }}>Show
+                                                21</option>
+                                        </select>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -308,7 +326,7 @@
                                                 </ul>
                                                 <div class="wsus__product_details">
                                                     <a class="wsus__category"
-                                                        href="#">{{ $product->category->name }}
+                                                        href="{{ route('frontend.products', ['category' => $product->category->id]) }}">{{ $product->category->name }}
                                                     </a>
                                                     <p class="wsus__pro_rating">
                                                         @if ($product->rate_average != 0)
@@ -341,7 +359,7 @@
                                     @endforeach
                                 </div>
                             </div>
-                            <div class="tab-pane fade show active" id="v-pills-profile" role="tabpanel"
+                            <div class="tab-pane fade" id="v-pills-profile" role="tabpanel"
                                 aria-labelledby="v-pills-profile-tab">
                                 <div class="row">
                                     @foreach ($products as $product)
@@ -362,7 +380,7 @@
                                                 </a>
                                                 <div class="wsus__product_details">
                                                     <a class="wsus__category"
-                                                        href="#">{{ $product->category->name }}
+                                                        href="{{ route('frontend.products', ['category' => $product->category->id]) }}">{{ $product->category->name }}
                                                     </a>
                                                     <p class="wsus__pro_rating">
                                                         @if ($product->rate_average != 0)
@@ -436,6 +454,6 @@
         </div>
     </section>
     <!--============================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            PRODUCT PAGE END
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ==============================--
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    PRODUCT PAGE END
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ==============================--
 @endsection

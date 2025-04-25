@@ -49,19 +49,6 @@
                                 <ul>
                                     <li>
                                         @livewire('add-to-cart', ['product' => $secondSliderProduct], key($secondSliderProduct->id))
-                                        {{--
-                                        <form
-                                            action="{{ route('frontend.cart.add_item', ['id' => $secondSliderProduct->id]) }}"
-                                            method="POST">
-                                            @csrf
-                                            <div>
-                                                <button class="btn" type="submit">
-                                                    <a class="add_cart">add to cart</a>
-                                                </button>
-                                            </div>
-                                        </form>
-                                        --}}
-
                                     </li>
                                     <li class="cursor-pointer">
                                         @livewire('add-to-wishlist', ['product' => $secondSliderProduct], key($secondSliderProduct->id))
@@ -130,7 +117,8 @@
                                     </li>
                                 </ul>
                                 <div class="wsus__product_details">
-                                    <a class="wsus__category" href="#">{{ $regularProduct->category->name }}</a>
+                                    <a class="wsus__category"
+                                        href="{{ route('frontend.products', ['category' => $regularProduct->category->id]) }}">{{ $regularProduct->category->name }}</a>
                                     <p class="wsus__pro_rating">
                                         @if ($secondSliderProduct->rate_average != 0)
                                             @for ($i = 1; $i <= $secondSliderProduct->rate_average; $i++)
@@ -156,13 +144,6 @@
                                         @endif
                                     </p>
                                     @livewire('add-to-cart', ['product' => $regularProduct], key($regularProduct->id))
-                                    {{--
-                                    <form action="{{ route('frontend.cart.add_item', ['id' => $regularProduct->id]) }}"
-                                        method="POST">
-                                        @csrf
-                                        <button class="btn add_cart" type="submit">add to cart</button>
-                                    </form>
-                                    --}}
                                 </div>
                             </div>
                         </div>

@@ -24,9 +24,7 @@
     <link rel="stylesheet" href="{{ asset('frontend/css/venobox.min.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/responsive.css') }}">
-    <!-- Toastr
-     <link href="{{ asset('adminBackend/css/toastr.css') }}" rel="stylesheet" type="text/css" />
-     -->
+    <link rel="stylesheet" href="{{ asset('frontend/css/toastr.css') }}">
 </head>
 
 <body>
@@ -97,7 +95,11 @@
 
     <!--main/custom js-->
     <script src="{{ asset('frontend/js/main.js') }}"></script>
-    <!-- <script type="text/javascript" src="{{ asset('adminBackend/js/toastr.min.js') }}"></script> -->
+
+    <script type="text/javascript" src="{{ asset('frontend/js/toastr.min.js') }}"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     @stack('scripts')
     <script>
         @if ($errors->any())

@@ -220,9 +220,14 @@
                     </a>
                 @endif
                 <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item has-icon text-danger">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </a>
+
+                <form action="{{ route('logout') }} " id="signout" method="POST">
+                    @csrf
+                    <a onclick="document.getElementById('signout').submit();"
+                        class="dropdown-item has-icon text-danger cursor-pointer">
+                        <i class="fas fa-sign-out-alt"></i> Log out
+                    </a>
+                </form>
             </div>
         </li>
     </ul>

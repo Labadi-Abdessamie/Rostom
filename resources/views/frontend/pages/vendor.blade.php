@@ -6,8 +6,8 @@
 
 @section('content')
     <!--============================
-                                                                                                                                                                                BREADCRUMB START
-                                                                                                                                                                            ==============================-->
+                                                                                                                                                                                    BREADCRUMB START
+                                                                                                                                                                                ==============================-->
     <section id="wsus__breadcrumb">
         <div class="wsus_breadcrumb_overlay">
             <div class="container">
@@ -24,12 +24,12 @@
         </div>
     </section>
     <!--============================
-                                                     BREADCRUMB END
-                                                     ==============================-->
+                                                         BREADCRUMB END
+                                                         ==============================-->
 
     <!--============================
-                                                    VENDORS START
-                                                ==============================-->
+                                                        VENDORS START
+                                                    ==============================-->
     <section id="wsus__product_page" class="wsus__vendors">
         <div class="container">
             <div class="row">
@@ -57,36 +57,38 @@
                                 <option>electrick</option>
                             </select>
                         </div>
-                        <div class="wsus__vendor_sidebar_select">
-                            <h4>filter by location</h4>
-                            <select class="select_2" name="state">
-                                <option>choose location</option>
-                                <option>short by rating</option>
-                                <option>short by latest</option>
-                                <option>low to high </option>
-                                <option>high to low</option>
-                            </select>
-                        </div>
-                        <div class="wsus__vendor_sidebar_select">
-                            <select class="select_2" name="state">
-                                <option>choose state</option>
-                                <option>korea</option>
-                                <option>japan</option>
-                                <option>china</option>
-                                <option>singapore</option>
-                                <option>thailand</option>
-                            </select>
-                        </div>
-                        <div class="wsus__vendor_sidebar_select">
-                            <select class="select_2" name="state">
-                                <option>search by city</option>
-                                <option>korea</option>
-                                <option>japan</option>
-                                <option>china</option>
-                                <option>singapore</option>
-                                <option>thailand</option>
-                            </select>
-                        </div>
+                        @if (false)
+                            <div class="wsus__vendor_sidebar_select">
+                                <h4>filter by location</h4>
+                                <select class="select_2" name="state">
+                                    <option>choose location</option>
+                                    <option>short by rating</option>
+                                    <option>short by latest</option>
+                                    <option>low to high </option>
+                                    <option>high to low</option>
+                                </select>
+                            </div>
+                            <div class="wsus__vendor_sidebar_select">
+                                <select class="select_2" name="state">
+                                    <option>choose state</option>
+                                    <option>korea</option>
+                                    <option>japan</option>
+                                    <option>china</option>
+                                    <option>singapore</option>
+                                    <option>thailand</option>
+                                </select>
+                            </div>
+                            <div class="wsus__vendor_sidebar_select">
+                                <select class="select_2" name="state">
+                                    <option>search by city</option>
+                                    <option>korea</option>
+                                    <option>japan</option>
+                                    <option>china</option>
+                                    <option>singapore</option>
+                                    <option>thailand</option>
+                                </select>
+                            </div>
+                        @endif
                     </div>
                 </div>
                 <div class="col-xl-9 col-lg-8">
@@ -173,6 +175,6 @@
         </div>
     </section>
     <!--============================
-                                                        VENDORS END
-                                                        ==============================-->
+                                                            VENDORS END
+                                                            ==============================-->
 @endsection

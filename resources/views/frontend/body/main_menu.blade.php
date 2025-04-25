@@ -14,30 +14,35 @@
                                 @foreach ($categories as $category)
                                     <li>
                                         @if (count($category->childrens) > 0)
-                                            <a class="wsus__droap_arrow" href=""><i class="fas fa-star"></i>
+                                            <a class="wsus__droap_arrow"
+                                                href="{{ route('frontend.products', ['category' => $category->id]) }}"><i
+                                                    class="fas fa-star"></i>
                                                 {{ $category->name }}</a>
                                             <ul class="wsus_menu_cat_droapdown">
                                                 @foreach ($category->childrens as $firstLevelChild)
                                                     <li>
-                                                        @if ($firstLevelChild->childrens)
-                                                            <a href="#">{{ $firstLevelChild->name }} <i
-                                                                    class="fas fa-angle-right"></i></a>
+                                                        @if (count($firstLevelChild->childrens) > 0)
+                                                            <a
+                                                                href="{{ route('frontend.products', ['category' => $firstLevelChild->id]) }}">{{ $firstLevelChild->name }}
+                                                                <i class="fas fa-angle-right"></i></a>
                                                             <ul class="wsus__sub_category">
                                                                 @foreach ($firstLevelChild->childrens as $SecondLevelChild)
                                                                     <li><a
-                                                                            href="#">{{ $SecondLevelChild->name }}</a>
+                                                                            href="{{ route('frontend.products', ['category' => $SecondLevelChild->id]) }}">{{ $SecondLevelChild->name }}</a>
                                                                     </li>
                                                                 @endforeach
                                                             </ul>
                                                         @else
-                                                            <a href="#">{{ $firstLevelChild->name }} <i
-                                                                    class="fas fa-angle-right"></i></a>
+                                                            <a
+                                                                href="{{ route('frontend.products', ['category' => $firstLevelChild->id]) }}">{{ $firstLevelChild->name }}
+                                                            </a>
                                                         @endif
                                                     </li>
                                                 @endforeach
                                             </ul>
                                         @else
-                                            <a href=""><i class="fas fa-star"></i>
+                                            <a href="{{ route('frontend.products', ['category' => $category->id]) }}"><i
+                                                    class="fas fa-star"></i>
                                                 {{ $category->name }}</a>
                                         @endif
                                     </li>
@@ -259,6 +264,7 @@
                                     href="{{ route('frontend.products') }}">products</a></li>
                             <li><a @if (Route::currentRouteName() == 'frontend.vendor') class="active" @endif
                                     href="{{ route('frontend.vendor') }}">vendors</a></li>
+
                             @if (Auth::user())
                                 @if (Auth::user()->role == 'client')
                                     <li><a @if (Route::currentRouteName() == 'frontend.cart') class="active" @endif
@@ -281,8 +287,8 @@
                                 @auth
                                     @if (Auth::user()->role == 'client')
                                         <li><a href="{{ route('client.dashboard') }}">My Dashboard</a></li>
-                                    @elseif (Auth::user()->role == 'vender')
-                                        <li><a href="{{ route('vender.dashboard') }}">Magasin</a></li>
+                                    @elseif (Auth::user()->role == 'vendor')
+                                        <li><a href="{{ route('vendor.dashboard') }}">Magasin</a></li>
                                     @elseif (Auth::user()->role == 'admin')
                                         <li><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
                                     @endif

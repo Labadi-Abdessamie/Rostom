@@ -12,13 +12,70 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index($category = 'category')
+    public function index(Request $request)
     {
-        $products = Product::whereHas('magasin', function ($query) {
-            $query->where('status', 'active');
-        })->where('actual_quantity', '>', '0')->latest()->paginate(12);
+        $categoryId = $request->query('category', null);
+        $sort = $request->query('sort', null);
+        $perPage = $request->query('number', 12);
+
+        $category = null;
+
+        $query = Product::whereHas('magasin', function ($q) {
+            $q->where('status', 'active');
+        })->where('actual_quantity', '>', 0);
+
+        if ($categoryId) {
+            $category = Category::find($categoryId);
+            if (!$category || $category->status !== 'active') {
+                return redirect()->route('frontend.products')
+                    ->with('message', 'This category is not active');
+            }
+            $query->where('category_id', $categoryId);
+        }
+
+        switch ($sort) {
+            case 'rating':
+                $query->orderByDesc('rate_average');
+                break;
+            case 'latest':
+                $query->orderByDesc('created_at');
+                break;
+            case 'low_high':
+                $query->orderBy('price');
+                break;
+            case 'high_low':
+                $query->orderByDesc('price');
+                break;
+            default:
+                $query->latest();
+                break;
+        }
+        $products = $query->paginate($perPage)->appends($request->query());
 
         return view('frontend.pages.product_view', compact('products', 'category'));
+
+
+        /*
+        $categoryId = $request->query('category');
+
+        $category = null;
+        if (is_null($categoryId)) {
+            $products = Product::whereHas('magasin', function ($query) {
+                $query->where('status', 'active');
+            })->where('actual_quantity', '>', '0')->latest()->paginate(12);
+        } else {
+            $category = Category::find($categoryId);
+            if (!$category || $category->status !== 'active') {
+                return redirect()->route('frontend.products')
+                    ->with('message', 'This category is not active');
+            }
+            $products = Product::whereHas('magasin', function ($query) {
+                $query->where('status', 'active');
+            })->where('actual_quantity', '>', '0')->where('category_id', $categoryId)->latest()->paginate(12);
+        }
+
+        return view('frontend.pages.product_view', compact('products', 'category'));
+        */
     }
 
     /**

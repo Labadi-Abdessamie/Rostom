@@ -6,8 +6,8 @@
 
 @section('content')
     <!--============================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             BREADCRUMB START
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ==============================-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         BREADCRUMB START
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ==============================-->
     <section id="wsus__breadcrumb">
         <div class="wsus_breadcrumb_overlay">
             <div class="container">
@@ -24,13 +24,13 @@
         </div>
     </section>
     <!--============================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            BREADCRUMB END
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ==============================-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        BREADCRUMB END
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ==============================-->
 
 
     <!--============================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           LOGIN/REGISTER PAGE START
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ==============================-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       LOGIN/REGISTER PAGE START
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ==============================-->
     <section id="wsus__login_register">
         <div class="container">
             <div class="row">
@@ -106,7 +106,7 @@
                                         @enderror
                                         <div class="wsus__login_input">
                                             <i class="far fa-envelope"></i>
-                                            <input type="email" placeholder="Email" id="email" name="email"
+                                            <input type="email" placeholder="Email" id="signupemail" name="email"
                                                 value="{{ old('email') }}">
                                         </div>
                                         @error('email')
@@ -115,7 +115,7 @@
                                         <div class="wsus__login_input">
                                             <i class="fas fa-key"></i>
                                             <input type="password" placeholder="Password" name="password"
-                                                id="password">
+                                                id="signuppassword">
                                         </div>
                                         @error('password')
                                             <div class="text-danger m-2">{{ $message }}</div>
@@ -166,6 +166,6 @@
         </div>
     </section>
     <!--============================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           LOGIN/REGISTER PAGE END
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ==============================-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       LOGIN/REGISTER PAGE END
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ==============================-->
 @endsection

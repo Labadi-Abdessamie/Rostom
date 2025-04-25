@@ -26,7 +26,6 @@ class RegisteredUserController extends Controller
     {
         return redirect()->route('login');
         /*
-
         $login = false;
         $register = true;
         return view('frontend.pages.login', compact('login', 'register'));
@@ -60,12 +59,12 @@ class RegisteredUserController extends Controller
             'role' => $request->role,
         ]);
 
-        if ($request->role == 'client') {
-            $cart = Bag::create([
+        if ($request->role === 'client') {
+            Bag::create([
                 'type' => 'cart',
                 'user_id' => $user->id,
             ]);
-            $wishlist = Bag::create([
+            Bag::create([
                 'type' => 'wishlist',
                 'user_id' => $user->id,
             ]);

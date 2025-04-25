@@ -20,7 +20,7 @@ class MainController extends Controller
                 $query->where('status', 'active');
             })->whereHas('category', function ($query) {
                 $query->where('status', 'active');
-            })->latest()->limit(6)->get();
+            })->with('category')->latest()->limit(6)->get();
         });
 
         $monthlyProducts = Cache::remember('monthlyProducts', 43200, function () {
@@ -29,11 +29,10 @@ class MainController extends Controller
                 $query->where('status', 'active');
             })->whereHas('category', function ($query) {
                 $query->where('status', 'active');
-            })->whereMonth('created_at', $currentMonth)->limit(18)->get();
+            })->whereMonth('created_at', $currentMonth)->with('category')->limit(18)->get();
         });
 
         $secondSliderProducts = Cache::remember('secondSliderProducts', 43200, function () {
-
             return Product::whereHas('magasin', function ($query) {
                 $query->where('status', 'active');
             })->whereHas('category', function ($query) {
@@ -45,12 +44,11 @@ class MainController extends Controller
         });
 
         $regularProducts = Cache::remember('regularProducts', 43200, function () {
-
             return Product::whereHas('magasin', function ($query) {
                 $query->where('status', 'active');
             })->whereHas('category', function ($query) {
                 $query->where('status', 'active');
-            })->inRandomOrder()->limit(8)->get();
+            })->inRandomOrder()->with('category')->limit(8)->get();
         });
 
 
@@ -66,17 +64,15 @@ class MainController extends Controller
         $timeoutAt = Carbon::now()->addSeconds(3);
         $categoryProducts = collect();
         do {
-
             $categoryToDisplay = Cache::remember('categoryToDisplay', 43200, function () {
                 return Category::where('status', 'active')->inRandomOrder()->first();
             }) ?? null;
 
             if ($categoryToDisplay->products()->exists()) {
-
                 $categoryProducts = Cache::remember('categoryProducts', 43200, function () use ($categoryToDisplay) {
                     return $categoryToDisplay->products()->whereHas('magasin', function ($query) {
                         $query->where('status', 'active');
-                    })->inRandomOrder()->limit(6)->get();
+                    })->inRandomOrder()->with('category')->limit(6)->get();
                 });
             }
             if (Carbon::now()->greaterThan($timeoutAt)) {
@@ -121,7 +117,10 @@ class MainController extends Controller
         $shippingAddresses =  Address::where('user_id', $user->id)->where('type', 'shipping')->get();
         $billingAddresses =  Address::where('user_id', $user->id)->where('type', 'billing')->get();
         $principalAddress = Address::where('user_id', $user->id)->where('type', 'shipping')->where('principalAddress', true)->first();
-
         return view('frontend.pages.check_out', compact('shippingAddresses', 'billingAddresses', 'principalAddress'));
+    }
+    public function contact()
+    {
+        return view('frontend.pages.contact');
     }
 }

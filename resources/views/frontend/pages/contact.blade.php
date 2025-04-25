@@ -6,8 +6,8 @@
 
 @section('content')
     <!--============================
-        BREADCRUMB START
-    ==============================-->
+                                    BREADCRUMB START
+                                ==============================-->
     <section id="wsus__breadcrumb">
         <div class="wsus_breadcrumb_overlay">
             <div class="container">
@@ -16,7 +16,7 @@
                         <h4>contact us</h4>
                         <ul>
                             <li><a href="{{ route('frontend.index') }}">home</a></li>
-                            <li><a href="#">contact us</a></li>
+                            <li><a href="">contact us</a></li>
                         </ul>
                     </div>
                 </div>
@@ -24,13 +24,13 @@
         </div>
     </section>
     <!--============================
-        BREADCRUMB END
-    ==============================-->
+                                    BREADCRUMB END
+                                ==============================-->
 
 
     <!--============================
-        CONTACT PAGE START
-    ==============================-->
+                                    CONTACT PAGE START
+                                ==============================-->
     <section id="wsus__contact">
         <div class="container">
             <div class="wsus__contact_area">
@@ -41,7 +41,7 @@
                                 <div class="wsus__contact_single">
                                     <i class="fal fa-envelope"></i>
                                     <h5>mail address</h5>
-                                    <a href="mailto:example@gmail.com">example@gmail.com</a>
+                                    <a href="mailto:{{ $website->contact_email }}">{{ $website->contact_email }}</a>
                                     <span><i class="fal fa-envelope"></i></span>
                                 </div>
                             </div>
@@ -49,18 +49,21 @@
                                 <div class="wsus__contact_single">
                                     <i class="far fa-phone-alt"></i>
                                     <h5>phone number</h5>
-                                    <a href="macallto:+69522145000001">+69522145000001</a>
+                                    <a
+                                        href="macallto:+213{{ $website->contact_phone }}">+213{{ $website->contact_phone }}</a>
                                     <span><i class="far fa-phone-alt"></i></span>
                                 </div>
                             </div>
-                            <div class="col-xl-12">
-                                <div class="wsus__contact_single">
-                                    <i class="fal fa-map-marker-alt"></i>
-                                    <h5>contact address</h5>
-                                    <a href="mailto:example@gmail.com">example@gmail.com</a>
-                                    <span><i class="fal fa-map-marker-alt"></i></span>
+                            @if (false)
+                                <div class="col-xl-12">
+                                    <div class="wsus__contact_single">
+                                        <i class="fal fa-map-marker-alt"></i>
+                                        <h5>contact address</h5>
+                                        <a href="mailto:example@gmail.com">example@gmail.com</a>
+                                        <span><i class="fal fa-map-marker-alt"></i></span>
+                                    </div>
                                 </div>
-                            </div>
+                            @endif
                         </div>
                     </div>
                     <div class="col-xl-8">
@@ -101,7 +104,7 @@
                     <div class="col-xl-12">
                         <div class="wsus__con_map">
                             <iframe
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3650.1435090089785!2d90.42196781465853!3d23.81349539228068!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c62fb95f16c1%3A0xb333248370356dee!2sJamuna%20Future%20Park!5e0!3m2!1sen!2sbd!4v1639724859199!5m2!1sen!2sbd"
+                                src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d5466.032603805315!2d1.3196799!3d35.350778!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1286d1b08df59eab%3A0xd7ba2589aab1d516!2z2YPZhNmK2Kkg2KfZhNix2YrYp9i22YrYp9iqINmIINin2YTYp9i52YTYp9mFINin2YTYotmE2Yo!5e1!3m2!1sen!2sdz!4v1745602233434!5m2!1sen!2sdz"
                                 width="1600" height="450" style="border:0;" allowfullscreen="100"
                                 loading="lazy"></iframe>
                         </div>
@@ -111,6 +114,6 @@
         </div>
     </section>
     <!--============================
-        CONTACT PAGE END
-    ==============================-->
+                                    CONTACT PAGE END
+                                ==============================-->
 @endsection

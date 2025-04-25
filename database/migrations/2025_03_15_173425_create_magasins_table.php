@@ -20,10 +20,12 @@ return new class extends Migration
             $table->string('magasinPicture')->nullable();
             $table->string('vitrineVideo')->nullable();
             $table->text('bio')->nullable();
-            $table->float('rate');
+            $table->float('rate_average')->default(0);
+            $table->unsignedInteger('rate_count')->default(0);
             $table->string('location');
             $table->boolean('magasinOpen')->default(0);
             $table->enum('status', ['active', 'firstOpening', 'inactive', 'blocked'])->default('firstOpening');
+            $table->unsignedInteger('category');
             $table->string('facebookLink')->nullable();
             $table->string('instagramLink')->nullable();
             $table->string('tiktokLink')->nullable();

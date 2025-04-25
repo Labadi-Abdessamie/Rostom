@@ -8,7 +8,9 @@
                     <div class="col-xl-12">
                         <div class="wsus__section_header">
                             <h3>{{ $categoryProducts[0]->category->name }}</h3>
-                            <a class="see_btn" href="#">see more <i class="fas fa-caret-right"></i></a>
+                            <a class="see_btn"
+                                href="{{ route('frontend.products', ['category' => $categoryProducts[0]->category->id]) }}">see
+                                more <i class="fas fa-caret-right"></i></a>
                         </div>
                     </div>
                 </div>
@@ -42,7 +44,8 @@
                                     </li>
                                 </ul>
                                 <div class="wsus__product_details">
-                                    <a class="wsus__category" href="#">{{ $categoryProduct->category->name }}</a>
+                                    <a class="wsus__category"
+                                        href="{{ route('frontend.products', ['category' => $categoryProduct->category->id]) }}">{{ $categoryProduct->category->name }}</a>
                                     <p class="wsus__pro_rating">
                                         @if ($categoryProduct->rate_average != 0)
                                             @for ($i = 1; $i <= $categoryProduct->rate_average; $i++)

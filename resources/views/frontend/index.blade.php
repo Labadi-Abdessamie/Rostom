@@ -5,16 +5,6 @@
 @endsection
 
 @section('content')
-    {{--
-    @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show position-fixed start-50 translate-middle shadow"
-            role="alert" style="z-index: 9999;">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
-    --}}
-
     <!-- ========== BANNER Start ========== -->
     @include('frontend.body.wsus_banner')
     <!-- BANNER End -->

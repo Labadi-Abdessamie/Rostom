@@ -33,11 +33,11 @@
 
     <div class="wsus__dashboard_menu">
         <div class="wsusd__dashboard_user">
-            <img @if (Auth::user()->profilePicture) src="{{ storage_path('app/private/client/' . Auth::user()->profilePicture) }}"
-            @else
-            src="{{ asset('frontend/images/No_Image.png') }}" @endif
+            <img src="{{ Auth::user()->profilePicture ? asset('storage/' . Auth::user()->profilePicture) : asset('frontend/images/No_Image.png') }}"
                 alt="Profile Picture" class="img-fluid">
-            <p>{{ Auth::user()->name }}</p>
+            <a href="{{ route('client.profile') }}">
+                <p>{{ Auth::user()->name }}</p>
+            </a>
         </div>
     </div>
 
@@ -48,8 +48,8 @@
                     <i class="far fa-bars dash_bar"></i>
                     <i class="far fa-times dash_close"></i>
                 </span>
-                <a href="{{ route('client.dashboard') }}" class="dash_logo"><img
-                        src="{{ asset('frontend/images/logo.png') }}" alt="logo" class="img-fluid w-50"></a>
+                <a href="{{ route('frontend.index') }}" class="dash_logo"><img src="{{ asset($website->logo) }}"
+                        alt="logo" class="img-fluid w-50"></a>
                 <ul class="dashboard_link">
                     <li>
                         <a href="{{ route('client.dashboard') }}"

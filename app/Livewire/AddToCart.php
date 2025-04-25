@@ -26,28 +26,32 @@ class AddToCart extends Component
     {
         $user = Auth::user();
         if ($user) {
-            $product = Product::findOrFail($this->product->id);
-            if ($product->magasin->status == 'active') {
-                $cart = session()->get('cart', []);
-                if (isset($cart[$this->product->id])) {
-                    $cart[$this->product->id]['quantity']++;
+            if ($user->role === 'client') {
+                $product = Product::findOrFail($this->product->id);
+                if ($product->magasin->status == 'active') {
+                    $cart = session()->get('cart', []);
+                    if (isset($cart[$this->product->id])) {
+                        $cart[$this->product->id]['quantity']++;
+                    } else {
+                        $cart[$this->product->id] = [
+                            'id' => null,
+                            'quantity' => 1,
+                            'product' => [
+                                'image' => $this->product->principalImage,
+                                'name' => $this->product->name,
+                                'actual_quantity' => $this->product->actual_quantity,
+                                'price' => $this->product->price,
+                            ]
+                        ];
+                    }
+                    session()->put('cart', $cart);
+                    $this->dispatch('Notification', product: ['name' => $this->product->name], message: 'Added To cart');
+                    //return redirect()->back()->with('success', 'Added');
                 } else {
-                    $cart[$this->product->id] = [
-                        'id' => null,
-                        'quantity' => 1,
-                        'product' => [
-                            'image' => $this->product->principalImage,
-                            'name' => $this->product->name,
-                            'actual_quantity' => $this->product->actual_quantity,
-                            'price' => $this->product->price,
-                        ]
-                    ];
+                    $this->dispatch('Notification', product: ['name' => $this->product->name], message: 'Error Adding To cart');
                 }
-                session()->put('cart', $cart);
-                $this->dispatch('Notification', product: ['name' => $this->product->name], message: 'Added To cart');
-                //return redirect()->back()->with('success', 'Added');
             } else {
-                $this->dispatch('Notification', product: ['name' => $this->product->name], message: 'Error Adding To cart');
+                $this->dispatch('Notification', product: "error", message: 'Just clients can add to carts');
             }
         } else {
             return redirect()->route('login');

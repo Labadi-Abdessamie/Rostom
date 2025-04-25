@@ -46,7 +46,8 @@
                                 </li>
                             </ul>
                             <div class="wsus__product_details">
-                                <a class="wsus__category" href="">{{ $sliderProduct->category->name }}
+                                <a class="wsus__category"
+                                    href="{{ route('frontend.products', ['category' => $sliderProduct->category->id]) }}">{{ $sliderProduct->category->name }}
                                 </a>
                                 <p class="wsus__pro_rating">
                                     @if ($sliderProduct->rate_average != 0)

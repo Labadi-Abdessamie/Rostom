@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Category;
+use App\Models\Website;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\View;
@@ -24,7 +25,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-
+        View::share('website', Cache::remember('website', 1, function () {
+            return Website::first();
+        }));
 
         View::share('categories', Cache::remember('categories', 21600, function () {
             return Category::WhereNull('parentId')->where('status', 'active')->with([
