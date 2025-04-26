@@ -26,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+
         View::share('website', Cache::remember('website', 1, function () {
             return Website::first();
         }));
@@ -42,6 +43,7 @@ class AppServiceProvider extends ServiceProvider
                 }
             ])->get();
         }));
+
         Paginator::useBootstrap();
     }
 }

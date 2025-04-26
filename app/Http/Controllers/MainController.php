@@ -61,14 +61,14 @@ class MainController extends Controller
         });
 
 
-        $timeoutAt = Carbon::now()->addSeconds(3);
+        $timeoutAt = Carbon::now()->addSeconds(0.5);
         $categoryProducts = collect();
         do {
             $categoryToDisplay = Cache::remember('categoryToDisplay', 43200, function () {
                 return Category::where('status', 'active')->inRandomOrder()->first();
             }) ?? null;
 
-            if ($categoryToDisplay->products()->exists()) {
+            if ($categoryToDisplay && $categoryToDisplay->products()->exists()) {
                 $categoryProducts = Cache::remember('categoryProducts', 43200, function () use ($categoryToDisplay) {
                     return $categoryToDisplay->products()->whereHas('magasin', function ($query) {
                         $query->where('status', 'active');

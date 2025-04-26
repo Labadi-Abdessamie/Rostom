@@ -3,7 +3,7 @@
     ==============================-->
     <section id="wsus__electronic">
         <div class="container">
-            @if ($categoryProducts)
+            @if (count($categoryProducts) > 0)
                 <div class="row">
                     <div class="col-xl-12">
                         <div class="wsus__section_header">
