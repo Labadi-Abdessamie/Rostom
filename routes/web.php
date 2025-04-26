@@ -150,11 +150,18 @@ Route::middleware(['auth', RoleMiddleware::class . ':admin'])->group(function ()
 
         Route::get('banners', [AdminController::class, 'banners'])->name('banners');
         Route::get('add-banner/{id?}', [AdminController::class, 'addBanner'])->name('add_banner');
+        Route::post('store-banner', [AdminController::class, 'storeBanner'])->name('store_banner');
+        Route::delete('delete-banner/{id}', [AdminController::class, 'deleteBanner'])->name('delete_banner');
+        Route::get('banner/edit/{id}', [AdminController::class, 'showEditBanner'])->name('edit_banner');
+        Route::put('banner/update/{id}', [AdminController::class, 'updateBanner'])->name('update_banner');
 
         Route::get('orders', [AdminController::class, 'orders'])->name('orders');
+        Route::delete('delete-order/{id}', [AdminController::class, 'deleteOrder'])->name('delete_order');
         Route::get('order-details/{id}', [AdminController::class, 'orderDetails'])->name('order_details');
         Route::get('admins', [AdminController::class, 'admins'])->name('admins');
         Route::get('reviews', [AdminController::class, 'reviews'])->name('reviews');
+        Route::delete('delete-review/{id}', [AdminController::class, 'deleteReview'])->name('delete_review');
+        
     });
 });
 

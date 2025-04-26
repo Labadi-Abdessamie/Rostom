@@ -3,15 +3,11 @@
 @section('styles')
     <!-- Plugins css -->
     <link href="assets/libs/dropzone/min/dropzone.min.css" rel="stylesheet" type="text/css" />
-    <link href="assets/libs/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
-    <link href="assets/libs/flatpickr/flatpickr.min.css" rel="stylesheet" type="text/css" />
 @endsection
 
 @section('scripts')
-    <!-- plugin js -->
+    <!-- Plugin js -->
     <script src="assets/libs/dropzone/min/dropzone.min.js"></script>
-    <script src="assets/libs/select2/js/select2.min.js"></script>
-    <script src="assets/libs/flatpickr/flatpickr.min.js"></script>
 @endsection
 
 @section('content')
@@ -20,217 +16,146 @@
         <!-- Start Content-->
         <div class="container-fluid">
 
-            <!-- start page title -->
+            <!-- Start Page Title -->
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box">
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="javascript: void(0);">UBold</a></li>
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">Projects</a></li>
-                                <li class="breadcrumb-item active">Create Project</li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Banners</a></li>
+                                <li class="breadcrumb-item active">Add Banner</li>
                             </ol>
                         </div>
-                        <h4 class="page-title">Create Project</h4>
+                        <h4 class="page-title">Add Banner</h4>
                     </div>
                 </div>
             </div>
-            <!-- end page title -->
+            <!-- End Page Title -->
 
+            <!-- Add Banner Form -->
             <div class="row">
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
 
-                            <div class="row">
-                                <div class="col-xl-6">
-                                    <div class="mb-3">
-                                        <label for="projectname" class="form-label">Project Name</label>
-                                        <input type="text" id="projectname" class="form-control"
-                                            placeholder="Enter project name">
-                                    </div>
+                            <form action="{{ route('admin.store_banner') }}" method="POST" enctype="multipart/form-data">
+                                @csrf
 
-                                    <div class="mb-3">
-                                        <label for="project-overview" class="form-label">Project Overview</label>
-                                        <textarea class="form-control" id="project-overview" rows="5" placeholder="Enter some brief about project.."></textarea>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label">Project Privacy</label> <br />
-                                        <div class="form-check form-check-inline">
-                                            <input type="radio" id="customRadio1" name="customRadio"
-                                                class="form-check-input">
-                                            <label class="form-check-label" for="customRadio1">Private</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input type="radio" id="customRadio2" name="customRadio"
-                                                class="form-check-input">
-                                            <label class="form-check-label" for="customRadio2">Team</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input type="radio" id="customRadio3" name="customRadio"
-                                                class="form-check-input" checked>
-                                            <label class="form-check-label" for="customRadio3">Public</label>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-lg-6">
-                                            <!-- Date View -->
-                                            <div class="mb-3">
-                                                <label class="form-label">Start Date</label>
-                                                <input type="text" class="form-control" data-toggle="flatpicker"
-                                                    placeholder="October 9, 2019">
-                                            </div>
+                                <div class="row">
+                                    <!-- Banner Title and Description -->
+                                    <div class="col-xl-6">
+                                        <div class="mb-3">
+                                            <label for="banner-title" class="form-label">Banner Title</label>
+                                            <input type="text" id="banner-title" name="title" class="form-control"
+                                                   placeholder="Enter banner title" value="{{ old('title') }}">
                                         </div>
 
-                                        <div class="col-lg-6">
-                                            <!-- Date View -->
-                                            <div class="mb-3">
-                                                <label class="form-label">Due Date</label>
-                                                <input type="text" class="form-control" data-toggle="flatpicker"
-                                                    placeholder="March 9, 2020">
-                                            </div>
+                                        <div class="mb-3">
+                                            <label for="banner-description" class="form-label">Banner Description</label>
+                                            <textarea class="form-control" id="banner-description" name="description" rows="5" placeholder="Enter banner description">{{ old('description') }}</textarea>
                                         </div>
-                                    </div>
+                                    </div> <!-- end col -->
 
-                                    <div class="mb-3">
-                                        <label for="project-priority" class="form-label">Project Priority</label>
+                                    <!-- Banner Image Upload -->
+                                    <div class="col-xl-6">
+                                        <div class="my-3 mt-xl-0">
+                                            <label for="banner-image" class="mb-0 form-label">Banner Image</label>
+                                            <p class="text-muted font-14">Recommended image size 1920x1080 (px).</p>
 
-                                        <select class="form-control" data-toggle="select2" data-width="100%">
-                                            <option value="MD">Medium</option>
-                                            <option value="HI">High</option>
-                                            <option value="LW">Low</option>
-                                        </select>
-                                    </div>
+                                            <div class="dropzone" id="bannerDropzone" data-plugin="dropzone" data-previews-container="#file-previews" data-upload-preview-template="#uploadPreviewTemplate">
+                                                <div class="fallback">
+                                                    <input name="image" type="file" />
+                                                </div>
 
-                                    <div class="mb-3">
-                                        <label for="project-budget" class="form-label">Budget</label>
-                                        <input type="text" id="project-budget" class="form-control"
-                                            placeholder="Enter project budget">
-                                    </div>
-
-                                </div> <!-- end col-->
-
-                                <div class="col-xl-6">
-                                    <div class="my-3 mt-xl-0">
-                                        <label for="projectname" class="mb-0 form-label">Avatar</label>
-                                        <p class="text-muted font-14">Recommended thumbnail size 800x400 (px).</p>
-
-                                        <form action="/" method="post" class="dropzone" id="myAwesomeDropzone"
-                                            data-plugin="dropzone" data-previews-container="#file-previews"
-                                            data-upload-preview-template="#uploadPreviewTemplate">
-                                            <div class="fallback">
-                                                <input name="file" type="file" />
+                                                <div class="dz-message needsclick">
+                                                    <i class="h3 text-muted dripicons-cloud-upload"></i>
+                                                    <h4>Drop files here or click to upload.</h4>
+                                                </div>
                                             </div>
 
-                                            <div class="dz-message needsclick">
-                                                <i class="h3 text-muted dripicons-cloud-upload"></i>
-                                                <h4>Drop files here or click to upload.</h4>
-                                            </div>
-                                        </form>
+                                            <!-- Preview -->
+                                            <div class="dropzone-previews mt-3" id="file-previews"></div>
 
-                                        <!-- Preview -->
-                                        <div class="dropzone-previews mt-3" id="file-previews"></div>
-
-                                        <!-- file preview template -->
-                                        <div class="d-none" id="uploadPreviewTemplate">
-                                            <div class="card mt-1 mb-0 shadow-none border">
-                                                <div class="p-2">
-                                                    <div class="row align-items-center">
-                                                        <div class="col-auto">
-                                                            <img data-dz-thumbnail src="#"
-                                                                class="avatar-sm rounded bg-light" alt="">
-                                                        </div>
-                                                        <div class="col ps-0">
-                                                            <a href="javascript:void(0);" class="text-muted fw-bold"
-                                                                data-dz-name></a>
-                                                            <p class="mb-0" data-dz-size></p>
-                                                        </div>
-                                                        <div class="col-auto">
-                                                            <!-- Button -->
-                                                            <a href="" class="btn btn-link btn-lg text-muted"
-                                                                data-dz-remove>
-                                                                <i class="mdi mdi-close"></i>
-                                                            </a>
+                                            <!-- File preview template -->
+                                            <div class="d-none" id="uploadPreviewTemplate">
+                                                <div class="card mt-1 mb-0 shadow-none border">
+                                                    <div class="p-2">
+                                                        <div class="row align-items-center">
+                                                            <div class="col-auto">
+                                                                <img data-dz-thumbnail src="#" class="avatar-sm rounded bg-light" alt="">
+                                                            </div>
+                                                            <div class="col ps-0">
+                                                                <a href="javascript:void(0);" class="text-muted fw-bold" data-dz-name></a>
+                                                                <p class="mb-0" data-dz-size></p>
+                                                            </div>
+                                                            <div class="col-auto">
+                                                                <a href="javascript:void(0);" class="btn btn-link btn-lg text-muted" data-dz-remove>
+                                                                    <i class="mdi mdi-close"></i>
+                                                                </a>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <!-- end file preview template -->
-                                    </div>
+                                    </div> <!-- end col -->
+                                </div>
+                                <!-- end row -->
 
-                                    <div>
-                                        <label for="project-overview" class="form-label">Team Members</label>
-
-                                        <select class="form-control" data-toggle="select2" data-width="100%">
-                                            <option>Select</option>
-                                            <option value="AZ">Mary Scott</option>
-                                            <option value="CO">Holly Campbell</option>
-                                            <option value="ID">Beatrice Mills</option>
-                                            <option value="MT">Melinda Gills</option>
-                                            <option value="NE">Linda Garza</option>
-                                            <option value="NM">Randy Ortez</option>
-                                            <option value="ND">Lorene Block</option>
-                                            <option value="UT">Mike Baker</option>
-                                        </select>
-
-                                        <div class="mt-2" id="tooltips-container">
-                                            <a href="javascript:void(0);" class="d-inline-block">
-                                                <img src="assets/images/users/user-6.jpg" class="rounded-circle avatar-xs"
-                                                    alt="friend" data-bs-container="#tooltips-container"
-                                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Mat Helme">
-                                            </a>
-
-                                            <a href="javascript:void(0);" class="d-inline-block">
-                                                <img src="assets/images/users/user-7.jpg" class="rounded-circle avatar-xs"
-                                                    alt="friend" data-bs-container="#tooltips-container"
-                                                    data-bs-toggle="tooltip" data-bs-placement="top"
-                                                    title="Michael Zenaty">
-                                            </a>
-
-                                            <a href="javascript:void(0);" class="d-inline-block">
-                                                <img src="assets/images/users/user-8.jpg" class="rounded-circle avatar-xs"
-                                                    alt="friend" data-bs-container="#tooltips-container"
-                                                    data-bs-toggle="tooltip" data-bs-placement="top"
-                                                    title="James Anderson">
-                                            </a>
-
-                                            <a href="javascript:void(0);" class="d-inline-block">
-                                                <img src="assets/images/users/user-4.jpg" class="rounded-circle avatar-xs"
-                                                    alt="friend" data-bs-container="#tooltips-container"
-                                                    data-bs-toggle="tooltip" data-bs-placement="top"
-                                                    title="Lorene Block">
-                                            </a>
-
-                                            <a href="javascript:void(0);" class="d-inline-block">
-                                                <img src="assets/images/users/user-5.jpg" class="rounded-circle avatar-xs"
-                                                    alt="friend" data-bs-container="#tooltips-container"
-                                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Mike Baker">
-                                            </a>
+                                <!-- Link and Other Fields -->
+                                <div class="row">
+                                    <div class="col-xl-6">
+                                        <div class="mb-3">
+                                            <label for="banner-link" class="form-label">Banner Link (Optional)</label>
+                                            <input type="url" id="banner-link" name="link" class="form-control" placeholder="Enter banner link (optional)" value="{{ old('link') }}">
                                         </div>
 
-                                    </div>
-                                </div> <!-- end col-->
-                            </div>
-                            <!-- end row -->
+                                        <div class="mb-3">
+                                            <label for="banner-page" class="form-label">Page</label>
+                                            <input type="text" id="banner-page" name="page" class="form-control" placeholder="Enter page" value="{{ old('page') }}">
+                                        </div>
 
+                                        <div class="mb-3">
+                                            <label for="banner-position" class="form-label">Position</label>
+                                            <input type="text" id="banner-position" name="position" class="form-control" placeholder="Enter position" value="{{ old('position') }}">
+                                        </div>
 
-                            <div class="row mt-3">
-                                <div class="col-12 text-center">
-                                    <button type="button" class="btn btn-success waves-effect waves-light m-1"><i
-                                            class="fe-check-circle me-1"></i> Create</button>
-                                    <button type="button" class="btn btn-light waves-effect waves-light m-1"><i
-                                            class="fe-x me-1"></i> Cancel</button>
+                                        <div class="mb-3">
+                                            <label for="banner-type" class="form-label">Type</label>
+                                            <select id="banner-type" name="type" class="form-select">
+                                                <option value="normal" {{ old('type') == 'normal' ? 'selected' : '' }}>Normal</option>
+                                                <option value="cooldown" {{ old('type') == 'cooldown' ? 'selected' : '' }}>Cooldown</option>
+                                            </select>
+                                        </div>
+                                    </div> <!-- end col -->
+
+                                    <!-- Banner Status -->
+                                    <div class="col-xl-6">
+                                        <div class="mb-3">
+                                            <label for="banner-status" class="form-label">Status</label>
+                                            <select id="banner-status" name="status" class="form-select">
+                                                <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Active</option>
+                                                <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                                            </select>
+                                        </div>
+                                    </div> <!-- end col -->
                                 </div>
-                            </div>
+                                <!-- end row -->
 
+                                <!-- Submit Button -->
+                                <div class="row mt-3">
+                                    <div class="col-12 text-center">
+                                        <button type="submit" class="btn btn-success waves-effect waves-light m-1"><i class="fe-check-circle me-1"></i> Add Banner</button>
+                                        <a href="{{ route('admin.banners') }}" class="btn btn-light waves-effect waves-light m-1"><i class="fe-x me-1"></i> Cancel</a>
+                                    </div>
+                                </div>
+                            </form>
                         </div> <!-- end card-body -->
                     </div> <!-- end card-->
                 </div> <!-- end col-->
             </div>
-            <!-- end row-->
+            <!-- end row -->
 
         </div> <!-- container -->
 

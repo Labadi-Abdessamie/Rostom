@@ -1,7 +1,6 @@
 @extends('admin.master')
 @section('title', 'Admin | Reviews')
 
-
 @section('styles')
     <link rel="stylesheet" href="{{ asset('vendor/modules/datatables/datatables.min.css') }}">
     <link rel="stylesheet"
@@ -43,9 +42,7 @@
                                 <table class="table table-striped" id="table-1">
                                     <thead>
                                         <tr>
-                                            <th class="text-center">
-                                                Id
-                                            </th>
+                                            <th class="text-center">Id</th>
                                             <th>Product Name</th>
                                             <th>Customer Name</th>
                                             <th>Rate</th>
@@ -54,20 +51,22 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>
-                                                1
-                                            </td>
-                                            <td>Create a mobile app</td>
-                                            <td>
-                                                DZ 50
-                                            </td>
-                                            <td class="text-center">
-                                                13
-                                            </td>
-                                            <td>4.5</td>
-                                            <td><a href="#" class="btn btn-secondary">Detail</a></td>
-                                        </tr>
+                                        @foreach ($reviews as $review)
+                                            <tr>
+                                                <td class="text-center">{{ $review->id }}</td>
+                                                <td>{{ $review->product ? $review->product->name : 'N/A' }}</td>
+                                                <td>{{ $review->user ? $review->user->name : 'N/A' }}</td>
+                                                <td class="text-center">{{ $review->rate ?? 'N/A' }}</td>
+                                                <td>{{ $review->content ?? 'N/A' }}</td>
+                                                <td>
+                                                    <form action="{{ route('admin.delete_review', $review->id) }}" method="POST" style="display: inline;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this review?')">Delete</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>

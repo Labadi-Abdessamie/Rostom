@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Banner;
 use App\Models\Magasin;
 use App\Models\Order;
 use App\Models\Review;
@@ -176,25 +177,125 @@ public function updateMagasin(Request $request, $id){
     }
 
     public function banners()
+{
+    // Optionally eager load relationships if needed, e.g., ->with('relatedModel')
+    $banners = Banner::all();
+
+    // Make sure to check if view name is correct: 'admin.pages.banners'
+    return view('admin.pages.banners', [
+        'banners' => $banners
+    ]);
+}
+    public function showEditBanner($id)
     {
-        return view('admin.pages.banners', /*compact('')*/);
+        $banner = Banner::findOrFail($id);
+        return view('admin.pages.edit_banner', compact('banner'));
     }
-    public function banner() {}
+    public function updateBanner(Request $request, $id)
+{
+    $request->validate([
+        'title' => 'required|string',
+        'description' => 'required|string',
+        'page' => 'required|string',
+        'position' => 'required|string',
+        'type' => 'required|string',
+        'status' => 'required|string',
+        'link' => 'nullable|url',
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+    ]);
+
+    $banner = Banner::findOrFail($id);
+
+    // Update fields manually
+    $banner->title = $request->title;
+    $banner->description = $request->description;
+    $banner->link = $request->link ?? '#';
+    $banner->page = $request->page;
+    $banner->position = $request->position;
+    $banner->type = $request->type;
+    $banner->status = $request->status;
+
+    // Handle image if uploaded
+    if ($request->hasFile('image')) {
+        $path = $request->file('image')->store('banners', 'public');
+        $banner->image = $path;
+    }
+
+    $banner->save();
+
+    return redirect()->route('admin.banners')->with('success', 'Banner updated successfully.');
+}
+
+    public function deleteBanner($id)
+    {
+        $banner = Banner::findOrFail($id);
+        $banner->delete();
+        return redirect()->back()->with('success', 'Banner deleted successfully.');
+    }
 
     public function addBanner()
     {
         return view('admin.pages.add-banner');
     }
 
+    public function storeBanner(Request $request)
+{
+    // Validate incoming request data
+    $request->validate([
+        'title' => 'required|string',
+        'description' => 'required|string',
+        'page' => 'required|string',
+        'position' => 'required|string',
+        'type' => 'required|string',
+        'status' => 'required|string',
+        'link' => 'nullable|url',
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+    ]);
+
+    // Create a new Banner instance and fill the properties
+    $banner = new Banner();
+    $banner->title = $request->title;
+    $banner->description = $request->description;
+    $banner->link = $request->link ?? '#';  // Default to '#' if no link is provided
+    $banner->page = $request->page;
+    $banner->position = $request->position;
+    $banner->type = $request->type;
+    $banner->status = $request->status;
+
+    // Handle image upload if present
+    if ($request->hasFile('image')) {
+        // Store the image file in the 'banners' directory
+        $path = $request->file('image')->store('banners', 'public');
+        $banner->image = $path;
+    }
+
+    // Save the banner data to the database
+    $banner->save();
+
+    // Redirect to banners list with a success message
+    return redirect()->route('admin.banners')->with('success', 'Banner created successfully.');
+}
+
+
     public function admins()
-    {
-        return view('admin.pages.admins');
+    {   
+        $admins = User::where('role', 'admin')->paginate(10);
+        $totalAdmins = User::where('role', 'admin')->count();
+        return view('admin.pages.admins', compact('admins','totalAdmins'));
     }
 
     public function reviews()
     {
-        return view('admin.pages.reviews');
+        $reviews = Review::with('user', 'product')->paginate(10);
+        return view('admin.pages.reviews', compact('reviews'));
     }
+
+    public function deleteReview($id){
+        $review = Review::findOrFail($id);
+        $review->delete();
+        return redirect()->back()->with('success', 'Review deleted successfully.');
+    }
+        
 
     public function editUser($id)
     {
@@ -223,10 +324,18 @@ public function updateMagasin(Request $request, $id){
         return redirect()->back()->with('success', 'User deleted successfully.');
     }
     public function orders()
+{
+    $orders = Order::with(['user', 'shippingAddress', 'billingAddress'])->get();
+
+    return view('admin.pages.orders', compact('orders'));
+}
+    public function deleteOrder($id)
     {
-        $orders = Order::all();
-        return view('admin.pages.orders', compact('orders'));
+        $order = Order::findOrFail($id);
+        $order->delete();
+        return redirect()->back()->with('success', 'Order deleted successfully.');
     }
+
     public function orderDetails($id)
     {
         $order = Order::findOrFail($id);

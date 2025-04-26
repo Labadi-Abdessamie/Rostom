@@ -1,504 +1,93 @@
 @extends('admin.master')
 
-
-
 @section('content')
-    <div class="content">
+<div class="content">
+    <div class="container-fluid">
 
-        <!-- Start Content-->
-        <div class="container-fluid">
-
-            <!-- start page title -->
-            <div class="row">
-                <div class="col-12">
-                    <div class="page-title-box">
-                        <div class="page-title-right">
-                            <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">UBold</a></li>
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">Projects</a></li>
-                                <li class="breadcrumb-item active">Projects List</li>
-                            </ol>
-                        </div>
-                        <h4 class="page-title">Projects List</h4>
-                    </div>
+        <!-- Page Title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-flex align-items-center justify-content-between">
+                    <h4 class="page-title">Banners List</h4>
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="#">Admin</a></li>
+                        <li class="breadcrumb-item active">Banners</li>
+                    </ol>
                 </div>
             </div>
-            <!-- end page title -->
+        </div>
 
-            <div class="row mb-2">
-                <div class="col-sm-4">
-                    <a href="project-create.html" class="btn btn-danger rounded-pill waves-effect waves-light mb-3"><i
-                            class="mdi mdi-plus"></i> Create Project</a>
+        <!-- Create Button -->
+        <div class="row mb-4">
+            <div class="col-sm-4">
+                <a href="{{ route('admin.add_banner') }}" class="btn btn-danger rounded-pill waves-effect waves-light">
+                    <i class="mdi mdi-plus"></i> Create Banner
+                </a>
+            </div>
+        </div>
+
+        <!-- Banners Grid -->
+        <div class="row">
+            @forelse ($banners as $banner)
+                <div class="col-lg-4">
+                    <div class="card banner-box shadow-sm">
+                        <div class="card-body position-relative">
+
+                            <!-- Actions Dropdown -->
+                            <div class="dropdown position-absolute top-0 end-0 mt-2 me-2">
+                                <a href="#" class="dropdown-toggle text-muted" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="mdi mdi-dots-horizontal h4"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end">
+                                    <a class="dropdown-item" href="{{ route('admin.edit_banner', $banner->id) }}">Edit</a>
+                                    <form action="{{ route('admin.delete_banner', $banner->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this banner?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="dropdown-item text-danger">Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Banner Image -->
+                            @if ($banner->image)
+                                <img src="{{ asset('storage/' . $banner->image) }}" alt="Banner Image" class="img-fluid mb-3 rounded shadow-sm">
+                            @endif
+
+                            <!-- Banner Details -->
+                            <h5 class="mt-2">
+                                <a href="{{ $banner->link ?? '#' }}" class="text-dark fw-bold" target="_blank">{{ $banner->title }}</a>
+                            </h5>
+                            <p class="text-muted small">{{ $banner->description }}</p>
+
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <strong>Page:</strong> <span>{{ $banner->page }}</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <strong>Position:</strong> <span>{{ $banner->position }}</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <strong>Type:</strong> <span>{{ $banner->type }}</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <strong>Status:</strong>
+                                    <span class="badge bg-{{ $banner->status === 'active' ? 'success' : 'danger' }}">
+                                        {{ ucfirst($banner->status) }}
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-sm-8">
-                    <div class="text-sm-end">
-                        <div class="btn-group mb-3">
-                            <button type="button" class="btn btn-primary">All</button>
-                        </div>
-                        <div class="btn-group mb-3 ms-1">
-                            <button type="button" class="btn btn-light">Ongoing</button>
-                            <button type="button" class="btn btn-light">Finished</button>
-                        </div>
-                        <div class="btn-group mb-3 ms-2 d-none d-sm-inline-block">
-                            <button type="button" class="btn btn-dark"><i class="mdi mdi-apps"></i></button>
-                        </div>
-                        <div class="btn-group mb-3 d-none d-sm-inline-block">
-                            <button type="button" class="btn btn-link text-dark"><i
-                                    class="mdi mdi-format-list-bulleted-type"></i></button>
-                        </div>
-                    </div>
-                </div><!-- end col-->
-            </div>
-            <!-- end row-->
-
-
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="card project-box">
-                        <div class="card-body">
-                            <div class="dropdown float-end">
-                                <a href="#" class="dropdown-toggle card-drop arrow-none" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                    <i class="mdi mdi-dots-horizontal m-0 text-muted h3"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <a class="dropdown-item" href="#">Edit</a>
-                                    <a class="dropdown-item" href="#">Delete</a>
-                                    <a class="dropdown-item" href="#">Add Members</a>
-                                    <a class="dropdown-item" href="#">Add Due Date</a>
-                                </div>
-                            </div> <!-- end dropdown -->
-                            <!-- Title-->
-                            <h4 class="mt-0"><a href="project-detail.html" class="text-dark">New Admin Design</a></h4>
-                            <p class="text-muted text-uppercase"><i class="mdi mdi-account-circle"></i> <small>Orange
-                                    Limited</small></p>
-                            <div class="badge bg-soft-success text-success mb-3">Finished</div>
-                            <!-- Desc-->
-                            <p class="text-muted font-13 mb-3 sp-line-2">With supporting text below as a natural lead-in to
-                                additional contenposuere erat a
-                                ante...<a href="javascript:void(0);" class="fw-bold text-muted">view more</a>
-                            </p>
-                            <!-- Task info-->
-                            <p class="mb-1">
-                                <span class="pe-2 text-nowrap mb-2 d-inline-block">
-                                    <i class="mdi mdi-format-list-bulleted-type text-muted"></i>
-                                    <b>78</b> Tasks
-                                </span>
-                                <span class="text-nowrap mb-2 d-inline-block">
-                                    <i class="mdi mdi-comment-multiple-outline text-muted"></i>
-                                    <b>214</b> Comments
-                                </span>
-                            </p>
-                            <!-- Team-->
-                            <div class="avatar-group mb-3" id="tooltips-container">
-                                <a href="javascript: void(0);" class="avatar-group-item">
-                                    <img src="assets/images/users/user-1.jpg" class="rounded-circle avatar-sm"
-                                        alt="friend" data-bs-container="#tooltips-container" data-bs-toggle="tooltip"
-                                        data-bs-placement="bottom" title="Mat Helme" />
-                                </a>
-
-                                <a href="javascript: void(0);" class="avatar-group-item">
-                                    <img src="assets/images/users/user-2.jpg" class="rounded-circle avatar-sm"
-                                        alt="friend" data-bs-container="#tooltips-container" data-bs-toggle="tooltip"
-                                        data-bs-placement="bottom" title="Michael Zenaty" />
-                                </a>
-
-                                <a href="javascript: void(0);" class="avatar-group-item">
-                                    <img src="assets/images/users/user-3.jpg" class="rounded-circle avatar-sm"
-                                        alt="friend" data-bs-container="#tooltips-container" data-bs-toggle="tooltip"
-                                        data-bs-placement="bottom" title="James Anderson" />
-                                </a>
-
-                                <a href="javascript: void(0);" class="avatar-group-item">
-                                    <img src="assets/images/users/user-4.jpg" class="rounded-circle avatar-sm"
-                                        alt="friend" data-bs-container="#tooltips-container" data-bs-toggle="tooltip"
-                                        data-bs-placement="bottom" title="Mat Helme" />
-                                </a>
-
-                                <a href="javascript: void(0);" class="avatar-group-item">
-                                    <img src="assets/images/users/user-5.jpg" class="rounded-circle avatar-sm"
-                                        alt="friend" data-bs-container="#tooltips-container" data-bs-toggle="tooltip"
-                                        data-bs-placement="bottom" title="Username" />
-                                </a>
-                            </div>
-                            <!-- Progress-->
-                            <p class="mb-2 fw-semibold">Task completed: <span class="float-end">28/78</span></p>
-                            <div class="progress mb-1" style="height: 7px;">
-                                <div class="progress-bar" role="progressbar" aria-valuenow="34" aria-valuemin="0"
-                                    aria-valuemax="100" style="width: 34%;">
-                                </div><!-- /.progress-bar .progress-bar-danger -->
-                            </div><!-- /.progress .no-rounded -->
-                        </div>
-                    </div> <!-- end card box-->
-                </div><!-- end col-->
-
-                <div class="col-lg-4">
-                    <div class="card project-box">
-                        <div class="card-body">
-                            <div class="dropdown float-end">
-                                <a href="#" class="dropdown-toggle card-drop arrow-none" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                    <i class="mdi mdi-dots-horizontal m-0 text-muted h3"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <a class="dropdown-item" href="#">Edit</a>
-                                    <a class="dropdown-item" href="#">Delete</a>
-                                    <a class="dropdown-item" href="#">Add Members</a>
-                                    <a class="dropdown-item" href="#">Add Due Date</a>
-                                </div>
-                            </div> <!-- end dropdown -->
-                            <!-- Title-->
-                            <h4 class="mt-0"><a href="project-detail.html" class="text-dark">App Design and
-                                    Development</a></h4>
-                            <p class="text-muted text-uppercase"><i class="mdi mdi-account-circle"></i> <small>Moondust
-                                    Softwares</small></p>
-                            <div class="badge bg-soft-secondary text-secondary mb-3">Ongoing</div>
-                            <!-- Desc-->
-                            <p class="text-muted font-13 mb-3 sp-line-2">A handful of model sentence structures, to
-                                generate Lorem Ipsum which looks reasonable...<a href="javascript:void(0);"
-                                    class="fw-bold text-muted">view more</a>
-                            </p>
-                            <!-- Task info-->
-                            <p class="mb-1">
-                                <span class="pe-2 text-nowrap mb-2 d-inline-block">
-                                    <i class="mdi mdi-format-list-bulleted-type text-muted"></i>
-                                    <b>81</b> Tasks
-                                </span>
-                                <span class="text-nowrap mb-2 d-inline-block">
-                                    <i class="mdi mdi-comment-multiple-outline text-muted"></i>
-                                    <b>103</b> Comments
-                                </span>
-                            </p>
-                            <!-- Team-->
-                            <div class="avatar-group mb-3" id="tooltips-container1">
-                                <a href="javascript: void(0);" class="avatar-group-item">
-                                    <img src="assets/images/users/user-6.jpg" class="rounded-circle avatar-sm"
-                                        alt="friend" data-bs-container="#tooltips-container1" data-bs-toggle="tooltip"
-                                        data-bs-placement="bottom" title="Mat Helme" />
-                                </a>
-
-                                <a href="javascript: void(0);" class="avatar-group-item">
-                                    <img src="assets/images/users/user-7.jpg" class="rounded-circle avatar-sm"
-                                        alt="friend" data-bs-container="#tooltips-container1" data-bs-toggle="tooltip"
-                                        data-bs-placement="bottom" title="Michael Zenaty" />
-                                </a>
-
-                                <a href="javascript: void(0);" class="avatar-group-item">
-                                    <img src="assets/images/users/user-8.jpg" class="rounded-circle avatar-sm"
-                                        alt="friend" data-bs-container="#tooltips-container1" data-bs-toggle="tooltip"
-                                        data-bs-placement="bottom" title="James Anderson" />
-                                </a>
-                            </div>
-                            <!-- Progress-->
-                            <p class="mb-2 fw-semibold">Task completed: <span class="float-end">55/85</span></p>
-                            <div class="progress mb-1" style="height: 7px;">
-                                <div class="progress-bar" role="progressbar" aria-valuenow="80" aria-valuemin="0"
-                                    aria-valuemax="100" style="width: 80%;">
-                                </div><!-- /.progress-bar .progress-bar-danger -->
-                            </div><!-- /.progress .no-rounded -->
-                        </div>
-                    </div> <!-- end card box-->
-                </div><!-- end col-->
-
-                <div class="col-lg-4">
-                    <div class="card project-box">
-                        <div class="card-body">
-                            <div class="dropdown float-end">
-                                <a href="#" class="dropdown-toggle card-drop arrow-none" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                    <i class="mdi mdi-dots-horizontal m-0 text-muted h3"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <a class="dropdown-item" href="#">Edit</a>
-                                    <a class="dropdown-item" href="#">Delete</a>
-                                    <a class="dropdown-item" href="#">Add Members</a>
-                                    <a class="dropdown-item" href="#">Add Due Date</a>
-                                </div>
-                            </div> <!-- end dropdown -->
-                            <!-- Title-->
-                            <h4 class="mt-0"><a href="project-detail.html" class="text-dark">Landing page Design</a>
-                            </h4>
-                            <p class="text-muted text-uppercase"><i class="mdi mdi-account-circle"></i> <small>Rose
-                                    Technologies</small></p>
-                            <div class="badge bg-soft-success text-success mb-3">Finished</div>
-                            <!-- Desc-->
-                            <p class="text-muted font-13 mb-3 sp-line-2">You need to be sure there isn't anything
-                                embarrassing hidden in the middle of text...<a href="javascript:void(0);"
-                                    class="fw-bold text-muted">view more</a>
-                            </p>
-                            <!-- Task info-->
-                            <p class="mb-1">
-                                <span class="pe-2 text-nowrap mb-2 d-inline-block">
-                                    <i class="mdi mdi-format-list-bulleted-type text-muted"></i>
-                                    <b>42</b> Tasks
-                                </span>
-                                <span class="text-nowrap mb-2 d-inline-block">
-                                    <i class="mdi mdi-comment-multiple-outline text-muted"></i>
-                                    <b>65</b> Comments
-                                </span>
-                            </p>
-                            <!-- Team-->
-                            <div class="avatar-group mb-3" id="tooltips-container2">
-                                <a href="javascript: void(0);" class="avatar-group-item">
-                                    <img src="assets/images/users/user-9.jpg" class="rounded-circle avatar-sm"
-                                        alt="friend" data-bs-container="#tooltips-container2" data-bs-toggle="tooltip"
-                                        data-bs-placement="bottom" title="Mat Helme" />
-                                </a>
-
-                                <a href="javascript: void(0);" class="avatar-group-item">
-                                    <img src="assets/images/users/user-10.jpg" class="rounded-circle avatar-sm"
-                                        alt="friend" data-bs-container="#tooltips-container2" data-bs-toggle="tooltip"
-                                        data-bs-placement="bottom" title="Michael Zenaty" />
-                                </a>
-
-                                <a href="javascript: void(0);" class="avatar-group-item">
-                                    <img src="assets/images/users/user-1.jpg" class="rounded-circle avatar-sm"
-                                        alt="friend" data-bs-container="#tooltips-container2" data-bs-toggle="tooltip"
-                                        data-bs-placement="bottom" title="James Anderson" />
-                                </a>
-
-                                <a href="javascript: void(0);" class="avatar-group-item">
-                                    <img src="assets/images/users/user-3.jpg" class="rounded-circle avatar-sm"
-                                        alt="friend" data-bs-container="#tooltips-container2" data-bs-toggle="tooltip"
-                                        data-bs-placement="bottom" title="Mat Helme" />
-                                </a>
-                            </div>
-                            <!-- Progress-->
-                            <p class="mb-2 fw-semibold">Task completed: <span class="float-end">21/42</span></p>
-                            <div class="progress mb-1" style="height: 7px;">
-                                <div class="progress-bar" role="progressbar" aria-valuenow="50" aria-valuemin="0"
-                                    aria-valuemax="100" style="width: 50%;">
-                                </div><!-- /.progress-bar .progress-bar-danger -->
-                            </div><!-- /.progress .no-rounded -->
-                        </div>
-                    </div> <!-- end card box-->
-                </div><!-- end col-->
-            </div>
-            <!-- end row -->
-
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="card project-box">
-                        <div class="card-body">
-                            <div class="dropdown float-end">
-                                <a href="#" class="dropdown-toggle card-drop arrow-none" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                    <i class="mdi mdi-dots-horizontal m-0 text-muted h3"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <a class="dropdown-item" href="#">Edit</a>
-                                    <a class="dropdown-item" href="#">Delete</a>
-                                    <a class="dropdown-item" href="#">Add Members</a>
-                                    <a class="dropdown-item" href="#">Add Due Date</a>
-                                </div>
-                            </div> <!-- end dropdown -->
-                            <!-- Title-->
-                            <h4 class="mt-0"><a href="project-detail.html" class="text-dark">Custom Software
-                                    Development</a></h4>
-                            <p class="text-muted text-uppercase"><i class="mdi mdi-account-circle"></i> <small>Apple
-                                    Navigations</small></p>
-                            <div class="badge bg-soft-secondary text-secondary mb-3">Ongoing</div>
-                            <!-- Desc-->
-                            <p class="text-muted font-13 mb-3 sp-line-2">You need to be sure there isn't anything
-                                embarrassing hidden in the middle of text...<a href="javascript:void(0);"
-                                    class="fw-bold text-muted">view more</a>
-                            </p>
-                            <!-- Task info-->
-                            <p class="mb-1">
-                                <span class="pe-2 text-nowrap mb-2 d-inline-block">
-                                    <i class="mdi mdi-format-list-bulleted-type text-muted"></i>
-                                    <b>95</b> Tasks
-                                </span>
-                                <span class="text-nowrap mb-2 d-inline-block">
-                                    <i class="mdi mdi-comment-multiple-outline text-muted"></i>
-                                    <b>1.3k</b> Comments
-                                </span>
-                            </p>
-                            <!-- Team-->
-                            <div class="avatar-group mb-3" id="tooltips-container3">
-                                <a href="javascript: void(0);" class="avatar-group-item">
-                                    <img src="assets/images/users/user-5.jpg" class="rounded-circle avatar-sm"
-                                        alt="friend" data-bs-container="#tooltips-container3" data-bs-toggle="tooltip"
-                                        data-bs-placement="bottom" title="Mat Helme" />
-                                </a>
-
-                                <a href="javascript: void(0);" class="avatar-group-item">
-                                    <img src="assets/images/users/user-8.jpg" class="rounded-circle avatar-sm"
-                                        alt="friend" data-bs-container="#tooltips-container3" data-bs-toggle="tooltip"
-                                        data-bs-placement="bottom" title="Michael Zenaty" />
-                                </a>
-
-                                <a href="javascript: void(0);" class="avatar-group-item">
-                                    <img src="assets/images/users/user-9.jpg" class="rounded-circle avatar-sm"
-                                        alt="friend" data-bs-container="#tooltips-container3" data-bs-toggle="tooltip"
-                                        data-bs-placement="bottom" title="James Anderson" />
-                                </a>
-                            </div>
-                            <!-- Progress-->
-                            <p class="mb-2 fw-semibold">Task completed: <span class="float-end">70/95</span></p>
-                            <div class="progress mb-1" style="height: 7px;">
-                                <div class="progress-bar" role="progressbar" aria-valuenow="68" aria-valuemin="0"
-                                    aria-valuemax="100" style="width: 68%;">
-                                </div><!-- /.progress-bar .progress-bar-danger -->
-                            </div><!-- /.progress .no-rounded -->
-                        </div>
-                    </div> <!-- end card box-->
-                </div><!-- end col-->
-
-                <div class="col-lg-4">
-                    <div class="card project-box">
-                        <div class="card-body">
-                            <div class="dropdown float-end">
-                                <a href="#" class="dropdown-toggle card-drop arrow-none" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                    <i class="mdi mdi-dots-horizontal m-0 text-muted h3"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <a class="dropdown-item" href="#">Edit</a>
-                                    <a class="dropdown-item" href="#">Delete</a>
-                                    <a class="dropdown-item" href="#">Add Members</a>
-                                    <a class="dropdown-item" href="#">Add Due Date</a>
-                                </div>
-                            </div> <!-- end dropdown -->
-                            <!-- Title-->
-                            <h4 class="mt-0"><a href="project-detail.html" class="text-dark">Website Redesign</a></h4>
-                            <p class="text-muted text-uppercase"><i class="mdi mdi-account-circle"></i> <small>Enigma
-                                    Navigations</small></p>
-                            <div class="badge bg-soft-secondary text-secondary mb-3">Ongoing</div>
-                            <!-- Desc-->
-                            <p class="text-muted font-13 mb-3 sp-line-2">There are many variations of passages of Lorem
-                                Ipsum available natural lead-in to additional...<a href="javascript:void(0);"
-                                    class="fw-bold text-muted">view more</a>
-                            </p>
-                            <!-- Task info-->
-                            <p class="mb-1">
-                                <span class="pe-2 text-nowrap mb-2 d-inline-block">
-                                    <i class="mdi mdi-format-list-bulleted-type text-muted"></i>
-                                    <b>36</b> Tasks
-                                </span>
-                                <span class="text-nowrap mb-2 d-inline-block">
-                                    <i class="mdi mdi-comment-multiple-outline text-muted"></i>
-                                    <b>78</b> Comments
-                                </span>
-                            </p>
-                            <!-- Team-->
-                            <div class="avatar-group mb-3" id="tooltips-container4">
-                                <a href="javascript: void(0);" class="avatar-group-item">
-                                    <img src="assets/images/users/user-3.jpg" class="rounded-circle avatar-sm"
-                                        alt="friend" data-bs-container="#tooltips-container4" data-bs-toggle="tooltip"
-                                        data-bs-placement="bottom" title="James Anderson" />
-                                </a>
-
-                                <a href="javascript: void(0);" class="avatar-group-item">
-                                    <img src="assets/images/users/user-4.jpg" class="rounded-circle avatar-sm"
-                                        alt="friend" data-bs-container="#tooltips-container4" data-bs-toggle="tooltip"
-                                        data-bs-placement="bottom" title="Mat Helme" />
-                                </a>
-
-                                <a href="javascript: void(0);" class="avatar-group-item">
-                                    <img src="assets/images/users/user-5.jpg" class="rounded-circle avatar-sm"
-                                        alt="friend" data-bs-container="#tooltips-container4" data-bs-toggle="tooltip"
-                                        data-bs-placement="bottom" title="Username" />
-                                </a>
-
-                                <a href="javascript: void(0);" class="avatar-group-item">
-                                    <img src="assets/images/users/user-1.jpg" class="rounded-circle avatar-sm"
-                                        alt="friend" data-bs-container="#tooltips-container4" data-bs-toggle="tooltip"
-                                        data-bs-placement="bottom" title="Mat Helme" />
-                                </a>
-                            </div>
-                            <!-- Progress-->
-                            <p class="mb-2 fw-semibold">Task completed: <span class="float-end">12/36</span></p>
-                            <div class="progress mb-1" style="height: 7px;">
-                                <div class="progress-bar" role="progressbar" aria-valuenow="33" aria-valuemin="0"
-                                    aria-valuemax="100" style="width: 33%;">
-                                </div><!-- /.progress-bar .progress-bar-danger -->
-                            </div><!-- /.progress .no-rounded -->
-                        </div>
-                    </div> <!-- end card box-->
-                </div><!-- end col-->
-
-                <div class="col-lg-4">
-                    <div class="card project-box">
-                        <div class="card-body">
-                            <div class="dropdown float-end">
-                                <a href="#" class="dropdown-toggle card-drop arrow-none" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                    <i class="mdi mdi-dots-horizontal m-0 text-muted h3"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <a class="dropdown-item" href="#">Edit</a>
-                                    <a class="dropdown-item" href="#">Delete</a>
-                                    <a class="dropdown-item" href="#">Add Members</a>
-                                    <a class="dropdown-item" href="#">Add Due Date</a>
-                                </div>
-                            </div> <!-- end dropdown -->
-                            <!-- Title-->
-                            <h4 class="mt-0"><a href="project-detail.html" class="text-dark">Multipurpose Landing
-                                    Template</a></h4>
-                            <p class="text-muted text-uppercase"><i class="mdi mdi-account-circle"></i> <small>Pride
-                                    Softwares</small></p>
-                            <div class="badge bg-soft-success text-success mb-3">Finished</div>
-                            <!-- Desc-->
-                            <p class="text-muted font-13 mb-3 sp-line-2">With supporting text below as a natural lead-in to
-                                additional contenposuere erat a
-                                ante...<a href="javascript:void(0);" class="fw-bold text-muted">view more</a>
-                            </p>
-                            <!-- Task info-->
-                            <p class="mb-1">
-                                <span class="pe-2 text-nowrap mb-2 d-inline-block">
-                                    <i class="mdi mdi-format-list-bulleted-type text-muted"></i>
-                                    <b>30</b> Tasks
-                                </span>
-                                <span class="text-nowrap mb-2 d-inline-block">
-                                    <i class="mdi mdi-comment-multiple-outline text-muted"></i>
-                                    <b>148</b> Comments
-                                </span>
-                            </p>
-                            <!-- Team-->
-                            <div class="avatar-group mb-3" id="tooltips-container5">
-                                <a href="javascript: void(0);" class="avatar-group-item">
-                                    <img src="assets/images/users/user-6.jpg" class="rounded-circle avatar-sm"
-                                        alt="friend" data-bs-container="#tooltips-container5" data-bs-toggle="tooltip"
-                                        data-bs-placement="bottom" title="Mat Helme" />
-                                </a>
-
-                                <a href="javascript: void(0);" class="avatar-group-item">
-                                    <img src="assets/images/users/user-7.jpg" class="rounded-circle avatar-sm"
-                                        alt="friend" data-bs-container="#tooltips-container5" data-bs-toggle="tooltip"
-                                        data-bs-placement="bottom" title="Michael Zenaty" />
-                                </a>
-
-                                <a href="javascript: void(0);" class="avatar-group-item">
-                                    <img src="assets/images/users/user-8.jpg" class="rounded-circle avatar-sm"
-                                        alt="friend" data-bs-container="#tooltips-container5" data-bs-toggle="tooltip"
-                                        data-bs-placement="bottom" title="James Anderson" />
-                                </a>
-                            </div>
-                            <!-- Progress-->
-                            <p class="mb-2 fw-semibold">Task completed: <span class="float-end">28/30</span></p>
-                            <div class="progress mb-1" style="height: 7px;">
-                                <div class="progress-bar" role="progressbar" aria-valuenow="95" aria-valuemin="0"
-                                    aria-valuemax="100" style="width: 95%;">
-                                </div><!-- /.progress-bar .progress-bar-danger -->
-                            </div><!-- /.progress .no-rounded -->
-                        </div>
-                    </div> <!-- end card box-->
-                </div><!-- end col-->
-            </div>
-            <!-- end row -->
-
-            <div class="row">
+            @empty
                 <div class="col-12">
-                    <div class="text-center mb-3">
-                        <a href="javascript:void(0);" class="text-danger"><i class="mdi mdi-spin mdi-loading me-1"></i>
-                            Load more </a>
+                    <div class="alert alert-warning text-center">
+                        <i class="mdi mdi-alert-circle-outline me-2"></i> No banners available.
                     </div>
-                </div> <!-- end col-->
-            </div>
-            <!-- end row -->
+                </div>
+            @endforelse
+        </div>
 
-        </div> <!-- container -->
-
-    </div> <!-- content -->
+    </div>
+</div>
 @endsection
