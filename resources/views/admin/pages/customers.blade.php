@@ -82,10 +82,11 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    <a href="#" class="action-icon text-primary" title="View">
+                                                    <a href="{{ route('admin.edit_user', ['id' => $user->id]) }}"
+                                                        class="action-icon text-primary" title="View">
                                                         <i class="mdi mdi-eye"></i>
                                                     </a>
-                                                    <form action="{{ route('admin.delete.customer', $user->id) }}"
+                                                    <form action="{{ route('admin.delete_user', $user->id) }}"
                                                         method="POST" style="display: inline;">
                                                         @csrf
                                                         @method('DELETE')

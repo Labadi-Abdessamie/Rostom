@@ -63,7 +63,11 @@ class ReviewController extends Controller
     }
     public function destroy($id)
     {
-        $review = Review::where('id', $id)->where('user_id', Auth::id())->first();
+        if (Auth::user()->role == "admin") {
+            $review = Review::where('id', $id)->first();
+        } else {
+            $review = Review::where('id', $id)->where('user_id', Auth::id())->first();
+        }
         if ($review) {
             $product = Product::findorFail($review->product_id);
             if ($product->rate_count - 1 == 0) {

@@ -33,7 +33,7 @@
                 <div class="col-12">
                     <div class="page-title-box">
                         <div class="page-title-right">
-                            
+
                         </div>
                         <h3 class="page-title">Dashboard</h3>
                     </div>
@@ -46,59 +46,60 @@
                     <div class="card shadow-sm">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
-                                <div class="avatar-lg rounded-circle bg-primary text-white d-flex align-items-center justify-content-center shadow-sm">
+                                <div
+                                    class="avatar-lg rounded-circle bg-info text-white d-flex align-items-center justify-content-center shadow-sm">
                                     <i class="fe-users font-24"></i>
                                 </div>
                                 <div class="ms-3">
-                                    <h4 class="mb-0 text-dark">{{$totalVendors}}</h4>
-                                    <p class="text-muted mb-0">Total Vendors</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6 col-xl-3">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div class="avatar-lg rounded-circle bg-success text-white d-flex align-items-center justify-content-center shadow-sm">
-                                    <i class="fe-shopping-cart font-24"></i>
-                                </div>
-                                <div class="ms-3">
-                                    <h4 class="mb-0 text-dark">{{$totalProducts}}</h4>
-                                    <p class="text-muted mb-0">Total Products</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6 col-xl-3">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div class="avatar-lg rounded-circle bg-info text-white d-flex align-items-center justify-content-center shadow-sm">
-                                    <i class="fe-bar-chart-line font-24"></i>
-                                </div>
-                                <div class="ms-3">
-                                    <h4 class="mb-0 text-dark">{{$totalClients}}</h4>
+                                    <h4 class="mb-0 text-dark">{{ $totalClients }}</h4>
                                     <p class="text-muted mb-0">Total Clients</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
                 <div class="col-md-6 col-xl-3">
                     <div class="card shadow-sm">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
-                                <div class="avatar-lg rounded-circle bg-danger text-white d-flex align-items-center justify-content-center shadow-sm">
-                                    <i class="fe-user-check font-24"></i>
+                                <div
+                                    class="avatar-lg rounded-circle bg-primary text-white d-flex align-items-center justify-content-center shadow-sm">
+                                    <i class="fe-users font-24"></i>
                                 </div>
                                 <div class="ms-3">
-                                    <h4 class="mb-0 text-dark">{{$totalAdmins}}</h4>
+                                    <h4 class="mb-0 text-dark">{{ $totalVendors }}</h4>
+                                    <p class="text-muted mb-0">Total Vendors</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-3">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div
+                                    class="avatar-lg rounded-circle bg-success text-white d-flex align-items-center justify-content-center shadow-sm">
+                                    <i class="fe-shopping-cart font-24"></i>
+                                </div>
+                                <div class="ms-3">
+                                    <h4 class="mb-0 text-dark">{{ $totalProducts }}</h4>
+                                    <p class="text-muted mb-0">Total Products</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-xl-3">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div
+                                    class="avatar-lg rounded-circle bg-danger text-white d-flex align-items-center justify-content-center shadow-sm">
+                                    <i class="fe-settings font-24"></i>
+                                </div>
+                                <div class="ms-3">
+                                    <h4 class="mb-0 text-dark">{{ $totalAdmins }}</h4>
                                     <p class="text-muted mb-0">Total Admins</p>
                                 </div>
                             </div>
@@ -110,12 +111,13 @@
                     <div class="card shadow-sm">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
-                                <div class="avatar-lg rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center shadow-sm">
-                                    <i class="fe-user-check font-24"></i>
+                                <div
+                                    class="avatar-lg rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center shadow-sm">
+                                    <i class="fe-home font-24"></i>
                                 </div>
                                 <div class="ms-3">
-                                    <h4 class="mb-0 text-dark">{{$totalactiveClients}}</h4>
-                                    <p class="text-muted mb-0">Active Clients</p>
+                                    <h4 class="mb-0 text-dark">{{ $totalMagasins }}</h4>
+                                    <p class="text-muted mb-0">Total Magasins</p>
                                 </div>
                             </div>
                         </div>
@@ -126,12 +128,13 @@
                     <div class="card shadow-sm">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
-                                <div class="avatar-lg rounded-circle bg-light text-dark d-flex align-items-center justify-content-center shadow-sm">
-                                    <i class="fe-user-check font-24"></i>
+                                <div
+                                    class="avatar-lg rounded-circle bg-light text-dark d-flex align-items-center justify-content-center shadow-sm">
+                                    <i class="fe-shopping-cart font-24"></i>
                                 </div>
                                 <div class="ms-3">
-                                    <h4 class="mb-0 text-dark">{{$totalactiveVendors}}</h4>
-                                    <p class="text-muted mb-0">Active Vendors</p>
+                                    <h4 class="mb-0 text-dark">{{ $totalActiveMagasins }}</h4>
+                                    <p class="text-muted mb-0">Active Magasins</p>
                                 </div>
                             </div>
                         </div>
@@ -142,11 +145,12 @@
                     <div class="card shadow-sm">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
-                                <div class="avatar-lg rounded-circle bg-warning text-white d-flex align-items-center justify-content-center shadow-sm">
+                                <div
+                                    class="avatar-lg rounded-circle bg-warning text-white d-flex align-items-center justify-content-center shadow-sm">
                                     <i class="fe-star font-24"></i>
                                 </div>
                                 <div class="ms-3">
-                                    <h4 class="mb-0 text-dark">{{$totalReviews}}</h4>
+                                    <h4 class="mb-0 text-dark">{{ $totalReviews }}</h4>
                                     <p class="text-muted mb-0">Total Reviews</p>
                                 </div>
                             </div>
@@ -154,84 +158,83 @@
                     </div>
                 </div>
             </div>
-            <!-- end of the cards--> 
+            <!-- end of the cards-->
 
-            
+
             <div class="row">
                 <div class="col-lg-4">
                     <div class="card">
                         <div class="card-body">
                             @if (false)
-                            <div class="dropdown float-end">
-                                <a href="#" class="dropdown-toggle arrow-none card-drop" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                    <i class="mdi mdi-dots-vertical"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <!-- item-->
-                                    <a href="javascript:void(0);" class="dropdown-item">Sales Report</a>
-                                    <!-- item-->
-                                    <a href="javascript:void(0);" class="dropdown-item">Export Report</a>
-                                    <!-- item-->
-                                    <a href="javascript:void(0);" class="dropdown-item">Profit</a>
-                                    <!-- item-->
-                                    <a href="javascript:void(0);" class="dropdown-item">Action</a>
+                                <div class="dropdown float-end">
+                                    <a href="#" class="dropdown-toggle arrow-none card-drop" data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                        <i class="mdi mdi-dots-vertical"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-end">
+                                        <!-- item-->
+                                        <a href="javascript:void(0);" class="dropdown-item">Sales Report</a>
+                                        <!-- item-->
+                                        <a href="javascript:void(0);" class="dropdown-item">Export Report</a>
+                                        <!-- item-->
+                                        <a href="javascript:void(0);" class="dropdown-item">Profit</a>
+                                        <!-- item-->
+                                        <a href="javascript:void(0);" class="dropdown-item">Action</a>
+                                    </div>
                                 </div>
-                            </div>
                             @endif
-                            
+
                             <h4 class="header-title mb-0">Average Rating</h4>
 
                             @php
-                            $percent = round(($avgRating / 5) * 100);
-                            $circleCircumference = 377;
-                            $dashOffset = $circleCircumference - ($circleCircumference * $percent / 100);
-                             @endphp
+                                $percent = round(($avgRating / 5) * 100);
+                                $circleCircumference = 377;
+                                $dashOffset = $circleCircumference - ($circleCircumference * $percent) / 100;
+                            @endphp
 
-                              <div class="widget-chart text-center" dir="ltr">
+                            <div class="widget-chart text-center" dir="ltr">
 
-                            <!-- Cercle de satisfaction -->
-                            <div class="position-relative d-inline-block mt-0" style="width: 140px; height: 140px;">
-                             <svg width="140" height="140">
-                             <circle cx="70" cy="70" r="60" stroke="#e6e6e6" stroke-width="10" fill="none"/>
-                               <circle cx="70" cy="70" r="60"
-                             stroke="#28a745" stroke-width="10" fill="none"
-                           stroke-dasharray="{{ $circleCircumference }}"
-                          stroke-dashoffset="{{ $dashOffset }}"
-                           stroke-linecap="round"
-                           transform="rotate(-90 70 70)" />
-        </svg>
-        <div class="position-absolute top-50 start-50 translate-middle">
-            <strong>Satisfaction</strong><br>
-            <span class="text-muted">{{ $percent }}%</span>
-        </div>
-    </div>
+                                <!-- Cercle de satisfaction -->
+                                <div class="position-relative d-inline-block mt-0" style="width: 140px; height: 140px;">
+                                    <svg width="140" height="140">
+                                        <circle cx="70" cy="70" r="60" stroke="#e6e6e6" stroke-width="10"
+                                            fill="none" />
+                                        <circle cx="70" cy="70" r="60" stroke="#28a745" stroke-width="10"
+                                            fill="none" stroke-dasharray="{{ $circleCircumference }}"
+                                            stroke-dashoffset="{{ $dashOffset }}" stroke-linecap="round"
+                                            transform="rotate(-90 70 70)" />
+                                    </svg>
+                                    <div class="position-absolute top-50 start-50 translate-middle">
+                                        <strong>Satisfaction</strong><br>
+                                        <span class="text-muted">{{ $percent }}%</span>
+                                    </div>
+                                </div>
 
-    <!-- Textes -->
-    <h5 class="text-muted mt-0">Average customer rating</h5>
-    <h2>{{ number_format($avgRating, 1) }} / 5 ⭐</h2>
+                                <!-- Textes -->
+                                <h5 class="text-muted mt-0">Average customer rating</h5>
+                                <h2>{{ number_format($avgRating, 1) }} / 5 ⭐</h2>
 
-    <p class="text-muted w-75 mx-auto sp-line-2">
-        Based on reviews from customers.
-    </p>
-    @if (false)
-    <!-- maybe i add the function to test only on year / month / last week -->
-    <div class="row mt-3">
-        <div class="col-4">
-            <p class="text-muted font-15 mb-1 text-truncate">Target</p>
-            <h4><i class="fe-arrow-up text-success me-1"></i>95%</h4>
-        </div>
-        <div class="col-4">
-            <p class="text-muted font-15 mb-1 text-truncate">Last week</p>
-            <h4><i class="fe-arrow-up text-success me-1"></i>88%</h4>
-        </div>
-        <div class="col-4">
-            <p class="text-muted font-15 mb-1 text-truncate">Last month</p>
-            <h4><i class="fe-arrow-down text-danger me-1"></i>85%</h4>
-        </div>
-    </div>
-      @endif
-</div>
+                                <p class="text-muted w-75 mx-auto sp-line-2">
+                                    Based on reviews from customers.
+                                </p>
+                                @if (false)
+                                    <!-- maybe i add the function to test only on year / month / last week -->
+                                    <div class="row mt-3">
+                                        <div class="col-4">
+                                            <p class="text-muted font-15 mb-1 text-truncate">Target</p>
+                                            <h4><i class="fe-arrow-up text-success me-1"></i>95%</h4>
+                                        </div>
+                                        <div class="col-4">
+                                            <p class="text-muted font-15 mb-1 text-truncate">Last week</p>
+                                            <h4><i class="fe-arrow-up text-success me-1"></i>88%</h4>
+                                        </div>
+                                        <div class="col-4">
+                                            <p class="text-muted font-15 mb-1 text-truncate">Last month</p>
+                                            <h4><i class="fe-arrow-down text-danger me-1"></i>85%</h4>
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
 
                         </div>
                     </div> <!-- end card -->
@@ -263,26 +266,27 @@
                 <div class="col-xl-6">
                     <div class="card">
                         <div class="card-body">
-                            <div class="dropdown float-end">
-                                <a href="#" class="dropdown-toggle arrow-none card-drop" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                    <i class="mdi mdi-dots-vertical"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <!-- item-->
-                                    <a href="javascript:void(0);" class="dropdown-item">Edit Report</a>
-                                    <!-- item-->
-                                    <a href="javascript:void(0);" class="dropdown-item">Export Report</a>
-                                    <!-- item-->
-                                    <a href="javascript:void(0);" class="dropdown-item">Action</a>
+                            @if (false)
+                                <div class="dropdown float-end">
+                                    <a href="#" class="dropdown-toggle arrow-none card-drop"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="mdi mdi-dots-vertical"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-end">
+                                        <!-- item-->
+                                        <a href="javascript:void(0);" class="dropdown-item">Edit Report</a>
+                                        <!-- item-->
+                                        <a href="javascript:void(0);" class="dropdown-item">Export Report</a>
+                                        <!-- item-->
+                                        <a href="javascript:void(0);" class="dropdown-item">Action</a>
+                                    </div>
                                 </div>
-                            </div>
+                            @endif
 
                             <h4 class="header-title mb-3">Top 5 Magasins</h4>
 
                             <div class="table-responsive">
                                 <table class="table table-borderless table-hover table-nowrap table-centered m-0">
-
                                     <thead class="table-light">
                                         <tr>
                                             <th>Magasin</th>
@@ -295,15 +299,18 @@
                                             <tr>
                                                 <td>
                                                     <h5 class="m-0 fw-normal">{{ $magasin->name }}</h5>
-                                                    <p class="mb-0 text-muted"><small>Member Since {{ $magasin->created_at->format('Y') }}</small></p>
+                                                    <p class="mb-0 text-muted"><small>Member Since
+                                                            {{ $magasin->created_at->format('Y') }}</small></p>
                                                 </td>
 
                                                 <td>
-                                                    <span class="badge bg-success">{{ number_format($magasin->rate, 1) }} ⭐</span>
+                                                    <span class="badge bg-success">{{ number_format($magasin->rate, 1) }}
+                                                        ⭐</span>
                                                 </td>
 
                                                 <td>
-                                                    <a href="{{ route('frontend.vendor_details', $magasin->id) }}" class="btn btn-xs btn-light"><i class="mdi mdi-eye"></i></a>
+                                                    <a href="{{ route('frontend.vendor_details', $magasin->id) }}"
+                                                        class="btn btn-xs btn-light"><i class="mdi mdi-eye"></i></a>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -317,26 +324,29 @@
                 <div class="col-xl-6">
                     <div class="card">
                         <div class="card-body">
-                            <div class="dropdown float-end">
-                                <a href="#" class="dropdown-toggle arrow-none card-drop" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                    <i class="mdi mdi-dots-vertical"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <!-- item-->
-                                    <a href="javascript:void(0);" class="dropdown-item">Edit Report</a>
-                                    <!-- item-->
-                                    <a href="javascript:void(0);" class="dropdown-item">Export Report</a>
-                                    <!-- item-->
-                                    <a href="javascript:void(0);" class="dropdown-item">Action</a>
+                            @if (false)
+                                <div class="dropdown float-end">
+                                    <a href="#" class="dropdown-toggle arrow-none card-drop"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="mdi mdi-dots-vertical"></i>
+                                    </a>
+
+                                    <div class="dropdown-menu dropdown-menu-end">
+                                        <!-- item-->
+                                        <a href="javascript:void(0);" class="dropdown-item">Edit Report</a>
+                                        <!-- item-->
+                                        <a href="javascript:void(0);" class="dropdown-item">Export Report</a>
+                                        <!-- item-->
+                                        <a href="javascript:void(0);" class="dropdown-item">Action</a>
+                                    </div>
                                 </div>
-                            </div>
-                
+                            @endif
+
                             <h4 class="header-title mb-3">Best Selling Products</h4>
-                
+
                             <div class="table-responsive">
                                 <table class="table table-borderless table-nowrap table-hover table-centered m-0">
-                
+
                                     <thead class="table-light">
                                         <tr>
                                             <th>Product Name</th>
@@ -351,17 +361,18 @@
                                                 <td>
                                                     <h5 class="m-0 fw-normal">{{ $product->name }}</h5>
                                                 </td>
-                
+
                                                 <td>
                                                     {{ $product->orderItems->sum('quantity') }} Units
                                                 </td>
-                
+
                                                 <td>
                                                     <span class="badge bg-soft-success text-success">Available</span>
                                                 </td>
-                
+
                                                 <td>
-                                                    <a href="{{ route('frontend.product_details', $product->id) }}" class="btn btn-xs btn-light">
+                                                    <a href="{{ route('frontend.product_details', $product->id) }}"
+                                                        class="btn btn-xs btn-light">
                                                         <i class="mdi mdi-eye"></i>
                                                     </a>
                                                 </td>
@@ -373,7 +384,7 @@
                         </div>
                     </div> <!-- end card-->
                 </div> <!-- end col -->
-                
+
             </div>
             <!-- end row -->
 

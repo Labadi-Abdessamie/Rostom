@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\BannerController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\MainController;
@@ -11,9 +12,11 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\VendorInterfaceController;
 use App\Http\Middleware\RoleMiddleware;
+use App\Http\Middleware\StatusMiddleware;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/cleareverything', function () {
@@ -58,7 +61,7 @@ Route::group(['prefix' => '', 'as' => 'frontend.'], function () {
 
 route::middleware(['auth'])->group(function () {
     Route::get('dashboard', [MainController::class, 'dashboard'])->name('dashboard');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::patch('/profile-update', [ProfileController::class, 'update'])->name('profile.update');
 });
 
 //Client route
@@ -97,7 +100,7 @@ route::middleware(['auth', RoleMiddleware::class . ':client'])->group(function (
 });
 
 //Vendor route
-route::middleware(['auth',  RoleMiddleware::class . ':vendor'])->group(function () {
+route::middleware(['auth',  RoleMiddleware::class . ':vendor'/*, StatusMiddleware::class*/])->group(function () {
     Route::group(['prefix' => 'vendor', 'as' => 'vendor.'], function () {
         Route::get('dashboard', [VendorInterfaceController::class, 'dashboard'])->name('dashboard');
         Route::get('products', [VendorInterfaceController::class, 'products'])->name('products');
@@ -105,7 +108,6 @@ route::middleware(['auth',  RoleMiddleware::class . ':vendor'])->group(function 
         Route::get('orders', [VendorInterfaceController::class, 'orders'])->name('orders');
         Route::get('reviews', [VendorInterfaceController::class, 'reviews'])->name('reviews');
         Route::get('purchase-orders', [VendorInterfaceController::class, 'purchaseOrders'])->name('purchase_orders');
-
 
         Route::get('magasin', [VendorInterfaceController::class, 'magasin'])->name('magasin');
         Route::get('contact', [VendorInterfaceController::class, 'contact'])->name('contact');
@@ -121,52 +123,52 @@ Route::middleware(['auth', RoleMiddleware::class . ':admin'])->group(function ()
     Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         Route::get('dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
         Route::get('profile', [AdminController::class, 'profile'])->name('profile');
+        //!Route::post('profile/update/password', [AdminController::class, 'updatePassword'])->name('update_password');
 
-        /*
-        Route::post('profile/update', [AdminController::class, 'updateProfile'])->name('update_profile');
-        Route::post('profile/update/password', [AdminController::class, 'updatePassword'])->name('update_password');
-        Route::get('profile', [AdminController::class, 'profile'])->name('profile');
-        */
-
+        //!GET ROUTES
         Route::get('customers/{type?}', [AdminController::class, 'customers'])->name('customers');
-        Route::delete('delete-customer/{id}', [AdminController::class, 'deleteCustomer'])->name('delete.customer');
-
-        Route::get('users/{id}/edit', [AdminController::class, 'editUser'])->name('edit_user');
-        Route::post('users/{id}/update', [AdminController::class, 'updateUser'])->name('update_user');
-        Route::delete('delete-user/{id}', [AdminController::class, 'deleteUser'])->name('delete_user');
-
-
-        Route::get('magasins/{filtre?}', [AdminController::class, 'magasins'])->name('magasins');
-        Route::post('magasins/{id}/approve', [AdminController::class, 'approveMagasin'])->name('approve.magasin');
-        Route::delete('magasins/{id}/reject', [AdminController::class, 'rejectMagasin'])->name('reject.magasin');
-        Route::delete('delete-magasin/{id}', [AdminController::class, 'deleteMagasin'])->name('delete.magasin');
-        Route::get('magasins/edit/{id}', [AdminController::class, 'showEditMagasin'])->name('edit.magasin');
-        Route::put('magasins/update/{id}', [AdminController::class, 'updateMagasin'])->name('update.magasin');
 
         Route::get('vendors/{type?}', [AdminController::class, 'vendors'])->name('vendors');
-        Route::delete('delete-vendor/{id}', [AdminController::class, 'deleteVendor'])->name('delete.vendor');
-        Route::get('vendors/edit/{id}', [AdminController::class, 'showEditVendor'])->name('vendors.edit');
-        Route::put('vendors/update/{id}', [AdminController::class, 'updateVendor'])->name('vendors.update');
+
+        Route::get('user/{id}/edit', [AdminController::class, 'editUser'])->name('edit_user');
+        Route::put('user/{id}/update', [AdminController::class, 'updateUser'])->name('update_user');
+        Route::delete('user/{id}/delete', [AdminController::class, 'deleteUser'])->name('delete_user');
+        Route::post('admin/store', [ProfileController::class, 'store'])->name('store_admin');
+
+
+        Route::get('magasin/{filtre?}', [AdminController::class, 'magasins'])->name('magasins');
+
+        Route::post('magasin/{id}/approve', [AdminController::class, 'approveMagasin'])->name('approve.magasin');
+        Route::delete('magasin/{id}/reject', [AdminController::class, 'rejectMagasin'])->name('reject.magasin');
+
+        Route::get('magasin/{id}/edit', [AdminController::class, 'showEditMagasin'])->name('edit.magasin');
+        Route::put('magasin/{id}/update', [AdminController::class, 'updateMagasin'])->name('update.magasin');
+        Route::delete('magasin/{id}/delete', [AdminController::class, 'deleteMagasin'])->name('delete.magasin');
+
+
+
 
 
 
         Route::get('products', [AdminController::class, 'products'])->name('products');
-        Route::delete('delete-product/{id}', [AdminController::class, 'deleteProduct'])->name('delete_product');
+        Route::delete('delete-product/{id}', [ProductController::class, 'destroy'])->name('delete_product');
 
 
-        Route::get('banners', [AdminController::class, 'banners'])->name('banners');
-        Route::get('add-banner/{id?}', [AdminController::class, 'addBanner'])->name('add_banner');
-        Route::post('store-banner', [AdminController::class, 'storeBanner'])->name('store_banner');
-        Route::delete('delete-banner/{id}', [AdminController::class, 'deleteBanner'])->name('delete_banner');
-        Route::get('banner/edit/{id}', [AdminController::class, 'showEditBanner'])->name('edit_banner');
-        Route::put('banner/update/{id}', [AdminController::class, 'updateBanner'])->name('update_banner');
+        Route::get('banners', [BannerController::class, 'index'])->name('banners');
+        Route::get('banner/create', [BannerController::class, 'create'])->name('add_banner');
+        Route::post('banner/store', [BannerController::class, 'store'])->name('store_banner');
+        Route::delete('banner/{id}/delete', [BannerController::class, 'destroy'])->name('delete_banner');
+        Route::get('banner/{id}/edit', [BannerController::class, 'edit'])->name('edit_banner');
+        Route::put('banner/{id}/update', [BannerController::class, 'update'])->name('update_banner');
 
         Route::get('orders', [AdminController::class, 'orders'])->name('orders');
         Route::delete('delete-order/{id}', [AdminController::class, 'deleteOrder'])->name('delete_order');
         Route::get('order-details/{id}', [AdminController::class, 'orderDetails'])->name('order_details');
         Route::get('admins', [AdminController::class, 'admins'])->name('admins');
+
+
         Route::get('reviews', [AdminController::class, 'reviews'])->name('reviews');
-        Route::delete('delete-review/{id}', [AdminController::class, 'deleteReview'])->name('delete_review');
+        Route::delete('review/{id}/delete', [ReviewController::class, 'destroy'])->name('delete_review');
     });
 });
 

@@ -73,6 +73,10 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
+        if (is_null($user->email_verified_at)) {
+            return redirect()->route('verification.notice');
+        }
+
         return redirect(route('dashboard', absolute: false));
     }
 }

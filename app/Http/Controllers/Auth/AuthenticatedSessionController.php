@@ -34,10 +34,12 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
         $request->session()->regenerate();
 
+        $user = Auth::user();
+
         // ✅ Redirect according to role
-        if (Auth::user()->role == 'client') {
+        if ($user->role == 'client') {
             // ✅ Handle Cart
-            $cart = Auth::user()->bags->where('type', 'cart')->first();
+            $cart = $user->bags->where('type', 'cart')->first();
             if ($cart) {
                 $cart->load(['bagItems.product']);
                 $cartItems = [];
@@ -62,7 +64,7 @@ class AuthenticatedSessionController extends Controller
             }
 
             // ✅ Handle Wishlist
-            $wishlist = Auth::user()->bags->where('type', 'wishlist')->first();
+            $wishlist = $user->bags->where('type', 'wishlist')->first();
             if ($wishlist) {
                 $wishlist->load(['bagItems.product']);
                 $wishlistItems = [];
@@ -81,19 +83,18 @@ class AuthenticatedSessionController extends Controller
                         ];
                     }
                 }
-
                 session(['wishlist' => $wishlistItems]);
             }
         }
-        switch (Auth::user()->role) {
+
+        switch ($user->role) {
             case "client":
-                return redirect()->route('client.dashboard');
-                break;
             case "vendor":
-                return redirect()->route('vendor.dashboard');
+                if (is_null($user->email_verified_at)) {
+                    return redirect()->route('verification.notice');
+                }
                 break;
             case "admin":
-                return redirect()->route('admin.dashboard');
                 break;
             default:
                 Auth::guard('web')->logout();
@@ -102,6 +103,8 @@ class AuthenticatedSessionController extends Controller
                 return redirect('/');
                 break;
         }
+
+        return redirect(route('dashboard', absolute: false));
     }
 
     /**
@@ -109,8 +112,10 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        if (Auth::user()->role == 'client') {
-            $cart = Auth::user()->bags()->where('type', 'cart')->with('bagItems')->first();
+        $user = Auth::user();
+
+        if ($user->role == 'client') {
+            $cart = $user->bags()->where('type', 'cart')->with('bagItems')->first();
             $sessionCart = session()->get('cart', []);
             if ($cart) {
                 $dbItems = $cart->bagItems->keyBy('product_id');
@@ -138,7 +143,7 @@ class AuthenticatedSessionController extends Controller
                     }
                 }
             }
-            $wishlist = Auth::user()->bags()->where('type', 'wishlist')->with('bagItems')->first();
+            $wishlist = $user->bags()->where('type', 'wishlist')->with('bagItems')->first();
             $sessionWishlist = session()->get('wishlist', []);
             if ($wishlist) {
                 $dbItems = $wishlist->bagItems->keyBy('product_id');

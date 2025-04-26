@@ -68,7 +68,7 @@
                     </div>
 
                 </div>
-                <button type="submit" class="m-2 btn btn-primary">Update Vendor</button>
+                <button type="submit" class="m-2 btn btn-primary">Save changes</button>
             </form>
         </div>
     </div>

@@ -61,7 +61,8 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-centered table-striped dt-responsive nowrap w-100">
+                                <table class="table table-centered table-striped dt-responsive nowrap w-100"
+                                    id="products-datatable">
                                     <thead>
                                         <tr>
                                             <th>#</th>
@@ -79,9 +80,10 @@
                                                 <td>{{ $loop->iteration + ($vendors->currentPage() - 1) * $vendors->perPage() }}
                                                 </td>
                                                 <td class="table-user">
-                                                    <img src="{{ $vendor->image_url }}" alt="vendor-image"
-                                                        class="me-2 rounded-circle" width="32" height="32">
-                                                    <a href="javascript:void(0);"
+                                                    <img src="{{ $vendor->profilePicture ? asset('storage/profile_pictures/' . $vendor->id . '/' . $vendor->profilePicture) : asset('frontend/images/No_Image.png') }}"
+                                                        alt="vendor-image" class="me-2 rounded-circle" width="32"
+                                                        height="32">
+                                                    <a href="{{ route('admin.edit_user', ['id' => $vendor->id]) }}"
                                                         class="text-body fw-semibold">{{ $vendor->name }}</a>
                                                 </td>
                                                 <td>{{ $vendor->email }}</td>
@@ -97,11 +99,11 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    <a href="{{ route('admin.vendors.edit', ['id' => $vendor->id]) }}"
+                                                    <a href="{{ route('admin.edit_user', ['id' => $vendor->id]) }}"
                                                         class="action-icon">
                                                         <i class="mdi mdi-square-edit-outline"></i>
                                                     </a>
-                                                    <form action="{{ route('admin.delete.vendor', $vendor->id) }}"
+                                                    <form action="{{ route('admin.delete_user', $vendor->id) }}"
                                                         method="POST" style="display: inline;">
                                                         @csrf
                                                         @method('DELETE')

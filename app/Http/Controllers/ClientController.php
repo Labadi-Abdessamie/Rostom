@@ -67,29 +67,7 @@ class ClientController extends Controller
 
         return view('client.pages.profile', compact('data'));
     }
-    /*
-    public function update()
-    {
-        $user = Auth::user();
-        $data = request()->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'phoneNumber' => 'nullable|string|max:10',
-            'bio' => 'nullable|string|max:1000',
-            'profilePicture' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-        ]);
 
-        if (request()->hasFile('profilePicture')) {
-            $file = request()->file('profilePicture');
-            $path = $file->store('profile_pictures/' . $user->id, 'public');
-            $data['profilePicture'] = basename($path);
-        }
-
-        $user->update($data);
-
-        return redirect()->back()->with('success', 'Profile updated successfully.');
-    }
-    */
     public function address()
     {
         // Retrieve the authenticated user
@@ -263,5 +241,30 @@ class ClientController extends Controller
         } else {
             return redirect()->back()->with('error', 'Review not found or unauthorized.');
         }
+    }
+    */
+
+
+    /*
+    public function update()
+    {
+        $user = Auth::user();
+        $data = request()->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phoneNumber' => 'nullable|string|max:10',
+            'bio' => 'nullable|string|max:1000',
+            'profilePicture' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        if (request()->hasFile('profilePicture')) {
+            $file = request()->file('profilePicture');
+            $path = $file->store('profile_pictures/' . $user->id, 'public');
+            $data['profilePicture'] = basename($path);
+        }
+
+        $user->update($data);
+
+        return redirect()->back()->with('success', 'Profile updated successfully.');
     }
     */

@@ -9,10 +9,10 @@
                         <a class="wsus__footer_2_logo" href="{{ route('frontend.index') }}">
                             <img src="{{ asset('' . $website->logo . '') }}" alt="logo">
                         </a>
-                        <a class="action" href="callto:+213'.{{ $website->contact_phone }}'"><i
+                        <a class="action" href="callto:+213{{ $website->contact_phone }}"><i
                                 class="fas fa-phone-alt"></i>
                             +213{{ $website->contact_phone }}</a>
-                        <a class="action" href="mailto:'.{{ $website->contact_email }}"><i class="far fa-envelope"></i>
+                        <a class="action" href="mailto:{{ $website->contact_email }}"><i class="far fa-envelope"></i>
                             {{ $website->contact_email }}</a>
                         @if (false)
                             <p><i class="fal fa-map-marker-alt"></i> 36 Liberty City, Tiaret, DZ</p>

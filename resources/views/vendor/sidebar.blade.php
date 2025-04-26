@@ -2,7 +2,7 @@
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
             <a
-                href="{{ route('frontend.index') }}">{{ Auth::user()->magasin->name ? Auth::user()->magasin->name : 'Magasin' }}</a>
+                href="{{ route('frontend.index') }}">{{ Auth::user()->magasin()->exists() ? Auth::user()->magasin->name : 'Magasin' }}</a>
         </div>
         <div class="sidebar-brand sidebar-brand-sm">
             <a href="index.html">St</a>

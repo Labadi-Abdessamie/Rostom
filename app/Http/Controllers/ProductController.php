@@ -55,6 +55,7 @@ class ProductController extends Controller
         return view('frontend.pages.product_view', compact('products', 'category'));
 
 
+        //! Precedent code works without filters
         /*
         $categoryId = $request->query('category');
 
@@ -131,6 +132,8 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $product = Product::findOrFail($id);
+        $product->delete();
+        return redirect()->back()->with('success', 'Product deleted successfully.');
     }
 }

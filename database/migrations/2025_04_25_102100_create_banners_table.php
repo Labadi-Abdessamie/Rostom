@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('description');
             $table->string('image');
-            $table->string('link');
+            $table->string('link')->nullable();
             $table->string('page');
             $table->unsignedInteger('position');
             $table->enum('status', ['active', 'inactive'])->default('inactive'); //? active more better
