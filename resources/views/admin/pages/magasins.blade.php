@@ -97,6 +97,9 @@
                                                 </td>
                                                 <td>
                                                     @if ($filtre === 'demands')
+                                                        <a href="{{ route('admin.show.register', $magasin->id) }}"
+                                                            target="_blank" class="btn btn-sm btn-primary">Register
+                                                        </a>
                                                         <form action="{{ route('admin.approve.magasin', $magasin->id) }}"
                                                             method="POST" style="display:inline;">
                                                             @csrf

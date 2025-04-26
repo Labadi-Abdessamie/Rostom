@@ -21,9 +21,12 @@ class Magasin extends Model
         'tiktokLink',
         'whatsupLink',
         'category_id',
-        'user_id', 
+        'status',
+        'rate_average',
+        'rate_count',
+        'user_id',
     ];
-    
+
     use HasFactory;
 
     public function user()

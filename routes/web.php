@@ -101,7 +101,14 @@ route::middleware(['auth', RoleMiddleware::class . ':client'])->group(function (
 });
 
 //Vendor route
-route::middleware(['auth',  RoleMiddleware::class . ':vendor'/*, StatusMiddleware::class*/])->group(function () {
+route::middleware(['auth',  RoleMiddleware::class . ':vendor'])->group(function () {
+    Route::group(['prefix' => 'vendor', 'as' => 'vendor.'], function () {
+        Route::get('magasin/create', [MagasinController::class, 'create'])->name('magasin_create');
+        Route::post('magasin/store', [MagasinController::class, 'store'])->name('magasin_store');
+    });
+});
+
+route::middleware(['auth',  RoleMiddleware::class . ':vendor', StatusMiddleware::class])->group(function () {
     Route::group(['prefix' => 'vendor', 'as' => 'vendor.'], function () {
         Route::get('dashboard', [VendorInterfaceController::class, 'dashboard'])->name('dashboard');
         Route::get('products', [VendorInterfaceController::class, 'products'])->name('products');
@@ -111,8 +118,7 @@ route::middleware(['auth',  RoleMiddleware::class . ':vendor'/*, StatusMiddlewar
         Route::get('purchase-orders', [VendorInterfaceController::class, 'purchaseOrders'])->name('purchase_orders');
 
         Route::get('magasin', [VendorInterfaceController::class, 'magasin'])->name('magasin');
-        Route::get('magasin/create', [MagasinController::class, 'create'])->name('magasin_create');
-        Route::post('magasin/store', [MagasinController::class, 'store'])->name('magasin_store');
+
 
         Route::get('contact', [VendorInterfaceController::class, 'contact'])->name('contact');
         Route::get('profile', [VendorInterfaceController::class, 'profile'])->name('profile');
@@ -142,6 +148,7 @@ Route::middleware(['auth', RoleMiddleware::class . ':admin'])->group(function ()
 
         Route::get('magasin/{filtre?}', [AdminController::class, 'magasins'])->name('magasins');
 
+        Route::get('register/{id}', [AdminController::class, 'showRegister'])->name('show.register');
         Route::post('magasin/{id}/approve', [AdminController::class, 'approveMagasin'])->name('approve.magasin');
         Route::delete('magasin/{id}/reject', [AdminController::class, 'rejectMagasin'])->name('reject.magasin');
 

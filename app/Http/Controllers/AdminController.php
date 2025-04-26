@@ -10,7 +10,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
 {
@@ -173,13 +174,18 @@ class AdminController extends Controller
     public function rejectMagasin($id)
     {
         $magasin = Magasin::findOrFail($id);
+        $magasin->user->magasin_id = null;
+        $magasin->user->save();
         $magasin->delete();
         return redirect()->route('admin.magasins', ['filtre' => 'demands'])->with('success', 'Magasin rejected and deleted successfully.');
     }
     public function deleteMagasin($id)
     {
         $magasin = Magasin::findOrFail($id);
+        $magasin->user->magasin_id = null;
+        $magasin->user->save();
         $magasin->delete();
+
         return redirect()->back()->with('success', 'Magasin deleted successfully.');
     }
     public function showEditMagasin($id)
@@ -209,5 +215,22 @@ class AdminController extends Controller
         }
 
         return redirect()->route('admin.magasins')->with('success', 'Magasin updated successfully.');
+    }
+    public function showRegister($id)
+    {
+        $magasin = Magasin::findOrFail($id);
+        $directory = 'demands/' . $magasin->user->id . '/' . $magasin->id . '/';
+        $files = Storage::disk('local')->files($directory);
+        if (empty($files)) {
+            abort(404);
+        }
+        $path = $files[0];
+        if (!Storage::disk('local')->exists($path)) {
+            abort(404);
+        }
+        $file = Storage::disk('local')->get($path);
+        $type = Storage::disk('local')->mimeType($path);
+
+        return Response::make($file, 200)->header("Content-Type", $type);
     }
 }

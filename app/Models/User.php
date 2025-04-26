@@ -25,7 +25,8 @@ class User extends Authenticatable
         'profilePicture',
         'bio',
         'role',
-        'status'
+        'status',
+        'magasin_id',
     ];
 
     /**
