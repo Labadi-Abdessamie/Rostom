@@ -10,15 +10,20 @@ class Magasin extends Model
 {
     protected $fillable = [
         'name',
-        'email',
         'phoneNumber',
-        'location',
+        'email',
         'magasinPicture',
-        'rate',
-        'magasinOpen',
-        'user_id',
-        'status',
+        'vitrineVideo',
+        'bio',
+        'location',
+        'facebookLink',
+        'instagramLink',
+        'tiktokLink',
+        'whatsupLink',
+        'category_id',
+        'user_id', 
     ];
+    
     use HasFactory;
 
     public function user()
