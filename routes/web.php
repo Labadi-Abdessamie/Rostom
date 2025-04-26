@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\MagasinController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
@@ -110,6 +111,9 @@ route::middleware(['auth',  RoleMiddleware::class . ':vendor'/*, StatusMiddlewar
         Route::get('purchase-orders', [VendorInterfaceController::class, 'purchaseOrders'])->name('purchase_orders');
 
         Route::get('magasin', [VendorInterfaceController::class, 'magasin'])->name('magasin');
+        Route::get('magasin/create', [MagasinController::class, 'create'])->name('magasin_create');
+        Route::post('magasin/store', [MagasinController::class, 'store'])->name('magasin_store');
+
         Route::get('contact', [VendorInterfaceController::class, 'contact'])->name('contact');
         Route::get('profile', [VendorInterfaceController::class, 'profile'])->name('profile');
         Route::post('profile/update', [VendorInterfaceController::class, 'updateProfile'])->name('update_profile');
