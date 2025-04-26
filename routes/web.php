@@ -53,10 +53,13 @@ Route::group(['prefix' => '', 'as' => 'frontend.'], function () {
 
 
     //Route::get('user-login', [MainController::class, 'login'])->name('login');
-    Route::get('forget-password', [MainController::class, 'forgetPassword'])->name('forget_password');
+    //Route::get('forget-password', [MainController::class, 'forgetPassword'])->name('forget_password');
 });
 
-
+route::middleware(['auth'])->group(function () {
+    Route::get('dashboard', [MainController::class, 'dashboard'])->name('dashboard');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+});
 
 //Client route
 route::middleware(['auth', RoleMiddleware::class . ':client'])->group(function () {
@@ -98,6 +101,7 @@ route::middleware(['auth',  RoleMiddleware::class . ':vendor'])->group(function 
     Route::group(['prefix' => 'vendor', 'as' => 'vendor.'], function () {
         Route::get('dashboard', [VendorInterfaceController::class, 'dashboard'])->name('dashboard');
         Route::get('products', [VendorInterfaceController::class, 'products'])->name('products');
+        Route::get('profile', [VendorInterfaceController::class, 'profile'])->name('profile');
         Route::get('orders', [VendorInterfaceController::class, 'orders'])->name('orders');
         Route::get('reviews', [VendorInterfaceController::class, 'reviews'])->name('reviews');
         Route::get('purchase-orders', [VendorInterfaceController::class, 'purchaseOrders'])->name('purchase_orders');
@@ -116,6 +120,8 @@ route::middleware(['auth',  RoleMiddleware::class . ':vendor'])->group(function 
 Route::middleware(['auth', RoleMiddleware::class . ':admin'])->group(function () {
     Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         Route::get('dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+        Route::get('profile', [AdminController::class, 'profile'])->name('profile');
+
         /*
         Route::post('profile/update', [AdminController::class, 'updateProfile'])->name('update_profile');
         Route::post('profile/update/password', [AdminController::class, 'updatePassword'])->name('update_password');
@@ -161,16 +167,15 @@ Route::middleware(['auth', RoleMiddleware::class . ':admin'])->group(function ()
         Route::get('admins', [AdminController::class, 'admins'])->name('admins');
         Route::get('reviews', [AdminController::class, 'reviews'])->name('reviews');
         Route::delete('delete-review/{id}', [AdminController::class, 'deleteReview'])->name('delete_review');
-        
     });
 });
 
 
-
+/*
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
-
+*/
 /*
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

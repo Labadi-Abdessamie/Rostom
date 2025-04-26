@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedInteger('quantity');
             $table->enum('status', ['pending', 'notAvailable', 'available']);
-            $table->string('description')->nullable()->default(null);
+            $table->string('description')->nullable();
             $table->unsignedBigInteger('order_id');
             $table->unsignedBigInteger('product_id');
             $table->timestamps();

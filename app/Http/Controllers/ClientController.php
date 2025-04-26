@@ -51,39 +51,7 @@ class ClientController extends Controller
 
         return view('client.pages.reviews', compact('reviews'));
     }
-    //! This two methods are updated and moved to the review controller
-    /*
-    public function updateReview(Request $request, $id)
-    {
-        $request->validate([
-            'rate' => 'required|integer|min:1|max:5',
-            'content' => 'required|string|max:1000',
-        ]);
 
-        $review = Review::where('id', $id)->where('user_id', Auth::id())->first();
-
-        if ($review) {
-            $review->update([
-                'rate' => $request->input('rate'),
-                'content' => $request->input('content'),
-            ]);
-            return redirect()->back()->with('success', 'Review updated successfully.');
-        } else {
-            return redirect()->back()->with('error', 'Review not found or unauthorized.');
-        }
-    }
-    public function deleteReview($id)
-    {
-        $review = Review::where('id', $id)->where('user_id', Auth::id())->first();
-
-        if ($review) {
-            $review->delete();
-            return redirect()->back()->with('success', 'Review deleted successfully.');
-        } else {
-            return redirect()->back()->with('error', 'Review not found or unauthorized.');
-        }
-    }
-    */
     public function profile()
     {
         $user = Auth::user();
@@ -99,6 +67,7 @@ class ClientController extends Controller
 
         return view('client.pages.profile', compact('data'));
     }
+    /*
     public function update()
     {
         $user = Auth::user();
@@ -120,6 +89,7 @@ class ClientController extends Controller
 
         return redirect()->back()->with('success', 'Profile updated successfully.');
     }
+    */
     public function address()
     {
         // Retrieve the authenticated user
@@ -260,3 +230,38 @@ class ClientController extends Controller
     }
     */
 }
+
+
+//! This two methods are updated and moved to the review controller
+    /*
+    public function updateReview(Request $request, $id)
+    {
+        $request->validate([
+            'rate' => 'required|integer|min:1|max:5',
+            'content' => 'required|string|max:1000',
+        ]);
+
+        $review = Review::where('id', $id)->where('user_id', Auth::id())->first();
+
+        if ($review) {
+            $review->update([
+                'rate' => $request->input('rate'),
+                'content' => $request->input('content'),
+            ]);
+            return redirect()->back()->with('success', 'Review updated successfully.');
+        } else {
+            return redirect()->back()->with('error', 'Review not found or unauthorized.');
+        }
+    }
+    public function deleteReview($id)
+    {
+        $review = Review::where('id', $id)->where('user_id', Auth::id())->first();
+
+        if ($review) {
+            $review->delete();
+            return redirect()->back()->with('success', 'Review deleted successfully.');
+        } else {
+            return redirect()->back()->with('error', 'Review not found or unauthorized.');
+        }
+    }
+    */

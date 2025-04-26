@@ -15,6 +15,11 @@ class VendorInterfaceController extends Controller
 
         return view('vendor.index'/*, compact('vendor', 'products')*/);
     }
+    public function profile()
+    {
+        $vendor = Auth::user();
+        return view('vendor.pages.profile', compact('vendor'));
+    }
     public function products()
     {
         //$vendor = Auth::user();

@@ -203,12 +203,14 @@
         @endif
         <li class="dropdown"><a href="#" data-toggle="dropdown"
                 class="nav-link dropdown-toggle nav-link-lg nav-link-user">
-                <img alt="image" src="" class="rounded-circle mr-1">
-                <div class="d-sm-none d-lg-inline-block">Hi, Ujang Maman</div>
+                <img alt="image"
+                    src="{{ Auth::user()->profilePicture ? asset('storage/profile_pictures/' . Auth::id() . '/' . Auth::user()->profilePicture) : asset('frontend/images/No_Image.png') }}"
+                    class="rounded-circle mr-1">
+                <div class="d-sm-none d-lg-inline-block">Hi,{{ Auth::user()->name }}</div>
             </a>
             <div class="dropdown-menu dropdown-menu-right">
-                <div class="dropdown-title">Logged in 5 min ago</div>
-                <a href="features-profile.html" class="dropdown-item has-icon">
+                {{-- <div class="dropdown-title">Logged in 5 min ago</div> --}}
+                <a href="{{ route('vendor.profile') }}" class="dropdown-item has-icon">
                     <i class="far fa-user"></i> Profile
                 </a>
                 @if (false)

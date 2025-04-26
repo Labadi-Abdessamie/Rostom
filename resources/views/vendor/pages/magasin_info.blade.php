@@ -1,6 +1,6 @@
 @extends('vendor.master')
 
-@section('title', 'Vendor | Profile')
+@section('title', 'Vendor | Magasin')
 
 @section('styles')
     <link rel="stylesheet" href="{{ asset('vendor/modules/bootstrap-social/bootstrap-social.css') }}">
@@ -14,10 +14,10 @@
 @section('content')
     <section class="section">
         <div class="section-header">
-            <h1>Profile</h1>
+            <h1>Magasin</h1>
             <div class="section-header-breadcrumb">
-                <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
-                <div class="breadcrumb-item">Profile</div>
+                <div class="breadcrumb-item active"><a href="{{ route('vendor.dashboard') }}">Dashboard</a></div>
+                <div class="breadcrumb-item">Magasin</div>
             </div>
         </div>
         <div class="section-body">

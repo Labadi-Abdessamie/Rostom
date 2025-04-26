@@ -286,13 +286,21 @@
                         <ul class="wsus__menu_item wsus__menu_item_right">
                             @if (Route::has('login'))
                                 @auth
-                                    @if (Auth::user()->role == 'client')
-                                        <li><a href="{{ route('client.dashboard') }}">My Dashboard</a></li>
-                                    @elseif (Auth::user()->role == 'vendor')
-                                        <li><a href="{{ route('vendor.dashboard') }}">Magasin</a></li>
-                                    @elseif (Auth::user()->role == 'admin')
-                                        <li><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                                    @endif
+                                    <li><a href="{{ route('dashboard') }}">
+                                            @switch(Auth::user()->role)
+                                                @case('client')
+                                                    My Dashboard
+                                                @break
+
+                                                @case('vendor')
+                                                    Magasin
+                                                @break
+
+                                                @case('admin')
+                                                    Dashboard
+                                                @break
+                                            @endswitch
+                                        </a></li>
                                 @else
                                     <li><a @if (Route::currentRouteName() == 'login') class="active" @endif
                                             href="{{ route('login') }}">login</a></li>

@@ -6,8 +6,8 @@
 
 @section('content')
     <!--============================
-         BREADCRUMB START
-    ==============================-->
+                                                                                                                 BREADCRUMB START
+                                                                                                            ==============================-->
     <section id="wsus__breadcrumb">
         <div class="wsus_breadcrumb_overlay">
             <div class="container">
@@ -16,7 +16,7 @@
                         <h4>forgot password</h4>
                         <ul>
                             <li><a href="{{ route('frontend.index') }}">home</a></li>
-                            <li><a href="#">forgot password</a></li>
+                            <li><a href="">forgot password</a></li>
                         </ul>
                     </div>
                 </div>
@@ -24,11 +24,11 @@
         </div>
     </section>
     <!--============================
-        BREADCRUMB END
-    ==============================-->
+                                                                                                                BREADCRUMB END
+                                                                                                            ==============================-->
     <!--============================
-        FORGET PASSWORD START
-    ==============================-->
+                                                                                                                FORGET PASSWORD START
+                                                                                                            ==============================-->
     <section id="wsus__login_register">
         <div class="container">
             <div class="row">
@@ -36,27 +36,30 @@
                     <div class="wsus__forget_area">
                         <span class="qiestion_icon"><i class="fal fa-question-circle"></i></span>
                         <h4>forget password ?</h4>
-                        <p>enter the email address to register with <span>Atlas Mall</span></p>
+                        <p>enter the email address you register with in <span>{{ $website->name }}</span></p>
                         <div class="wsus__login">
                             <form method="POST" action="{{ route('password.email') }}">
                                 @csrf
+                                @if (session('status'))
+                                    <div class = "text-center text-primary">
+                                        {{ session('status') }}
+                                    </div>
+                                @endif
                                 <div class="wsus__login_input">
                                     <i class="fal fa-envelope"></i>
-                                    <input type="email" name="email" id="email" value="{{old('email')}}" placeholder="Your Email">
+                                    <input type="email" name="email" id="email" value="{{ old('email') }}"
+                                        placeholder="Your Email">
                                 </div>
                                 <button class="common_btn" type="submit">send</button>
                             </form>
                         </div>
-                        <a class="see_btn mt-4" href="{{route('frontend.login')}}">go to login</a>
+                        <a class="see_btn mt-4" href="{{ route('login') }}">go to login</a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
     <!--============================
-        FORGET PASSWORD END
-    ==============================-->
-
-
-
+                                                                                                                FORGET PASSWORD END
+                                                                                                            ==============================-->
 @endsection

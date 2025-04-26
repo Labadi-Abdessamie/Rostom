@@ -3,8 +3,10 @@
 @section('title', 'Admin | Customers')
 
 @section('styles')
-    <link href="{{ asset('assets/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ asset('assets/libs/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('assets/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet"
+        type="text/css" />
+    <link href="{{ asset('assets/libs/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css') }}" rel="stylesheet"
+        type="text/css" />
 @endsection
 
 @section('scripts')
@@ -29,7 +31,6 @@
 
         <!-- Start Content-->
         <div class="container-fluid">
-
             <!-- start page title -->
             <div class="row">
                 <div class="col-12">
@@ -44,31 +45,33 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-
                             <div class="table-responsive">
                                 <table class="table table-centered table-striped dt-responsive nowrap w-100"
-                                    id="customers-datatable">
+                                    id="products-datatable">
                                     <thead>
                                         <tr>
                                             <th>#</th>
+                                            <th>Id</th>
                                             <th>Name</th>
                                             <th>Email</th>
                                             <th>Phone</th>
                                             <th>Bio</th>
                                             <th>Role</th>
-                                            <th>Status</th>
                                             <th style="width: 75px;">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($users as $user)
                                             <tr>
+                                                {{--
+                                                <td><span class="badge bg-info text-dark">{{ ucfirst($user->role) }}</span></td>
+                                                --}}
+                                                <td></td>
                                                 <td>{{ $user->id }}</td>
                                                 <td>{{ $user->name }}</td>
                                                 <td>{{ $user->email }}</td>
                                                 <td>{{ $user->phoneNumber }}</td>
                                                 <td>{{ $user->bio ?? '—' }}</td>
-                                                <td><span class="badge bg-info text-dark">{{ ucfirst($user->role) }}</span></td>
                                                 <td>
                                                     @if ($user->status === 'blocked')
                                                         <span class="badge bg-danger">Blocked</span>
@@ -82,10 +85,14 @@
                                                     <a href="#" class="action-icon text-primary" title="View">
                                                         <i class="mdi mdi-eye"></i>
                                                     </a>
-                                                    <form action="{{ route('admin.delete.customer', $user->id) }}" method="POST" style="display: inline;">
+                                                    <form action="{{ route('admin.delete.customer', $user->id) }}"
+                                                        method="POST" style="display: inline;">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" class="action-icon text-danger border-0 bg-transparent" title="Delete" onclick="return confirm('Are you sure you want to delete this customer?');">
+                                                        <button type="submit"
+                                                            class="action-icon text-danger border-0 bg-transparent"
+                                                            title="Delete"
+                                                            onclick="return confirm('Are you sure you want to delete this customer?');">
                                                             <i class="mdi mdi-delete"></i>
                                                         </button>
                                                     </form>

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('supplierName');
             $table->double('totalAmount');
-            $table->date('date');
+            $table->date('doneDate');
             $table->enum('type', ['quote', 'order', 'delivery']);
             $table->enum('paymentStatus', ['full', 'partial', 'debt']);
             $table->unsignedBigInteger('magasin_id');

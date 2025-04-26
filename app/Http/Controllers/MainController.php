@@ -94,6 +94,24 @@ class MainController extends Controller
         ));
     }
 
+    public function dashboard()
+    {
+        switch (Auth::user()->role) {
+            case "client":
+                return redirect()->route('client.dashboard');
+                break;
+            case "vendor":
+                return redirect()->route('vendor.dashboard');
+                break;
+            case "admin":
+                return redirect()->route('admin.dashboard');
+                break;
+            default:
+                Auth::guard('web')->logout();
+                return redirect('/');
+                break;
+        }
+    }
     public function cart()
     {
         $user = Auth::user();

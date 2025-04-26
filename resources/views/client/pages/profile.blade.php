@@ -36,9 +36,9 @@
                     <div class="wsus__dash_pro_area">
                         <h4>Basic Information</h4>
                         <!-- Profile Update Form -->
-                        <form method="POST" action="{{ route('client.profile.update') }}" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
                             @csrf
-                            @method('PUT')
+                            @method('PATCH')
 
                             <div class="row">
                                 <div class="col-xl-9">

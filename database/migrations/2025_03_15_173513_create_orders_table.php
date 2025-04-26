@@ -16,9 +16,9 @@ return new class extends Migration
             $table->enum('status', ['pending', 'processing', 'confirmed', 'delivered', 'cancelled'])->default('pending');
             $table->string('details')->nullable();
             $table->double('totalAmount');
-            $table->date('date')->nullable();
-            $table->enum('paymentMethod', ['cashOnDelivery', 'Edahabia'])->default('cashOnDelivery');;
-            $table->enum('paymentStatus', ['pending', 'failed', 'success'])->default('pending');;
+            $table->date('doneDate')->nullable();
+            $table->enum('paymentMethod', ['cashOnDelivery', 'Edahabia'])->default('cashOnDelivery');
+            $table->enum('paymentStatus', ['pending', 'failed', 'success'])->default('pending');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('shippingAddress_id');
             $table->unsignedBigInteger('billingAddress_id')->nullable()->default(null);

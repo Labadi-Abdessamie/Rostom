@@ -1,5 +1,26 @@
 @extends('admin.master')
 
+
+@section('styles')
+    <link href="{{ asset('assets/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet"
+        type="text/css" />
+    <link href="{{ asset('assets/libs/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css') }}" rel="stylesheet"
+        type="text/css" />
+@endsection
+
+@section('scripts')
+    <!-- third party js -->
+    <script src="{{ asset('assets/libs/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/datatables.net-bs5/js/dataTables.bootstrap5.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js') }}"></script>
+    <script src="{{ asset('assets/libs/jquery-datatables-checkboxes/js/dataTables.checkboxes.min.js') }}"></script>
+    <!-- third party js ends -->
+
+    <!-- Datatables init -->
+    <script src="{{ asset('assets/js/pages/customers.init.js') }}"></script>
+@endsection
+
 @section('content')
     <div class="content">
 
@@ -21,28 +42,26 @@
             </div>
             <!-- end page title -->
             @if (false)
+                <div class="row mb-2">
+                    <div class="col-sm-4">
+                        <button type="button" class="btn btn-danger waves-effect waves-light" data-bs-toggle="modal"
+                            data-bs-target="#custom-modal"><i class="mdi mdi-plus-circle me-1"></i> Add Vendor</button>
+                    </div>
+                    <div class="col-sm-8">
+                        <div class="text-sm-end mt-2 mt-sm-0">
+                            <button type="button" class="btn btn-success mb-2 me-1"><i class="mdi mdi-cog"></i></button>
+                            <button type="button" class="btn btn-light mb-2 me-1">Import</button>
+                            <button type="button" class="btn btn-light mb-2">Export</button>
+                        </div>
+                    </div><!-- end col-->
+                </div>
+            @endif
             <div class="row">
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            <div class="row mb-2">
-                                <div class="col-sm-4">
-                                    <button type="button" class="btn btn-danger waves-effect waves-light"
-                                        data-bs-toggle="modal" data-bs-target="#custom-modal"><i
-                                            class="mdi mdi-plus-circle me-1"></i> Add Vendor</button>
-                                </div>
-                                <div class="col-sm-8">
-                                    <div class="text-sm-end mt-2 mt-sm-0">
-                                        <button type="button" class="btn btn-success mb-2 me-1"><i
-                                                class="mdi mdi-cog"></i></button>
-                                        <button type="button" class="btn btn-light mb-2 me-1">Import</button>
-                                        <button type="button" class="btn btn-light mb-2">Export</button>
-                                    </div>
-                                </div><!-- end col-->
-                            </div>
-                            @endif
                             <div class="table-responsive">
-                                <table class="table table-centered table-nowrap table-striped">
+                                <table class="table table-centered table-striped dt-responsive nowrap w-100">
                                     <thead>
                                         <tr>
                                             <th>#</th>
@@ -57,11 +76,13 @@
                                     <tbody>
                                         @foreach ($vendors as $vendor)
                                             <tr>
-                                                <td>{{ $loop->iteration + ($vendors->currentPage() - 1) * $vendors->perPage() }}</td>
+                                                <td>{{ $loop->iteration + ($vendors->currentPage() - 1) * $vendors->perPage() }}
+                                                </td>
                                                 <td class="table-user">
                                                     <img src="{{ $vendor->image_url }}" alt="vendor-image"
                                                         class="me-2 rounded-circle" width="32" height="32">
-                                                    <a href="javascript:void(0);" class="text-body fw-semibold">{{ $vendor->name }}</a>
+                                                    <a href="javascript:void(0);"
+                                                        class="text-body fw-semibold">{{ $vendor->name }}</a>
                                                 </td>
                                                 <td>{{ $vendor->email }}</td>
                                                 <td>{{ $vendor->phoneNumber }}</td>
@@ -76,13 +97,17 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    <a href="{{ route('admin.vendors.edit', ['id' => $vendor->id]) }}" class="action-icon">
+                                                    <a href="{{ route('admin.vendors.edit', ['id' => $vendor->id]) }}"
+                                                        class="action-icon">
                                                         <i class="mdi mdi-square-edit-outline"></i>
                                                     </a>
-                                                    <form action="{{ route('admin.delete.vendor', $vendor->id) }}" method="POST" style="display: inline;">
+                                                    <form action="{{ route('admin.delete.vendor', $vendor->id) }}"
+                                                        method="POST" style="display: inline;">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" class="action-icon btn btn-link p-0 text-danger" onclick="return confirm('Are you sure?');">
+                                                        <button type="submit"
+                                                            class="action-icon btn btn-link p-0 text-danger"
+                                                            onclick="return confirm('Are you sure?');">
                                                             <i class="mdi mdi-delete"></i>
                                                         </button>
                                                     </form>

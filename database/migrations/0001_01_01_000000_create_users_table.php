@@ -22,7 +22,6 @@ return new class extends Migration
             $table->string('bio')->nullable();
             $table->enum('role', ['client', 'vendor', 'admin'])->default('client');
             $table->enum('status', ['inactive', 'active', 'blocked'])->default('inactive');
-            // ! the magasin_id   obliged?
             $table->unsignedBigInteger('magasin_id')->nullable()->default(null);
             $table->rememberToken();
             $table->timestamps();

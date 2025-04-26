@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Category;
 use App\Models\Website;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;

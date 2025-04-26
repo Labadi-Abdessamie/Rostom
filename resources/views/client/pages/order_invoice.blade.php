@@ -16,7 +16,7 @@
                                 <div class="col-xl-4 col-md-4 mb-5 mb-md-0">
                                     <div class="wsus__invoice_single">
                                         <h5>Invoice To</h5>
-                                        @if($order->billingAddress)
+                                        @if ($order->billingAddress)
                                             <h6>{{ $order->billingAddress->name }}</h6>
                                             <p>{{ $order->billingAddress->address }}</p>
                                         @else
@@ -29,7 +29,7 @@
                                 <div class="col-xl-4 col-md-4 mb-5 mb-md-0">
                                     <div class="wsus__invoice_single text-md-center">
                                         <h5>Shipping Information</h5>
-                                        @if($order->shippingAddress)
+                                        @if ($order->shippingAddress)
                                             <h6>Name: {{ $order->shippingAddress->name }}</h6>
                                             <p>Address: {{ $order->shippingAddress->address }}</p>
                                         @else
@@ -61,6 +61,7 @@
                                             <th class="name">Product</th>
                                             <th class="amount">Price</th>
                                             <th class="quentity">Quantity</th>
+                                            <th class="quentity">Status</th>
                                             <th class="total">Total</th>
                                         </tr>
                                     </thead>
@@ -68,19 +69,26 @@
                                         @foreach ($orderItems as $item)
                                             <tr>
                                                 <td class="images">
-                                                    <img src="{{ asset($item->product->principalImage ?? 'images/default.jpg') }}" alt="product" class="img-fluid w-100">
+                                                    <img src="{{ asset($item->product->principalImage ?? 'images/default.jpg') }}"
+                                                        alt="product" class="img-fluid w-100">
                                                 </td>
                                                 <td class="name">
                                                     <p>{{ $item->product->name ?? 'Product Name' }}</p>
-                                                   @if(false)
-                                                       
-                                                    @if($item->color) <span>Color: {{ $item->color }}</span> @endif
-                                                    @if($item->size) <span>Size: {{ $item->size }}</span> @endif
+                                                    @if (false)
+                                                        @if ($item->color)
+                                                            <span>Color: {{ $item->color }}</span>
+                                                        @endif
+                                                        @if ($item->size)
+                                                            <span>Size: {{ $item->size }}</span>
+                                                        @endif
                                                     @endif
                                                 </td>
                                                 <td class="amount">{{ number_format($item->product->price, 2) }} DZD</td>
                                                 <td class="quentity">{{ $item->quantity }}</td>
-                                                <td class="total">{{ number_format($item->product->price * $item->quantity, 2) }} DZD</td>
+                                                <td class="quentity">{{ $item->status }}</td>
+                                                <td class="total">
+                                                    {{ number_format($item->product->price * $item->quantity, 2) }} DZD
+                                                </td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -88,18 +96,28 @@
                             </div>
                         </div>
 
-                        {{-- Invoice Summary --}}
-                        <div class="wsus__invoice_footer">
-                        @php
-                           $shipping_fee = 100; 
-                        @endphp
-                          <p><span>Shipping Fee:</span> {{ number_format($shipping_fee,2) }} DZD</p>
-                          <p><span>Total Amount:</span> {{ number_format($order->totalAmount, 2) }} DZD</p>
-                          @if (false)
-                            <p><span>Tax:</span> {{ number_format($order->tax ?? 0, 2) }} DZD</p>
-                            <p><span>Discount:</span> {{ number_format($order->discount ?? 0, 2) }} DZD</p>
+                        <form> {{-- ! For the last confirmation --}}
+                            <div class="wsus__invoice_footer">
+                                @php
+                                    $shipping_fee = 100;
+                                @endphp
+                                <p><span>Shipping Fee:</span> {{ number_format($shipping_fee, 2) }} DZD</p>
+                                <p><span>Total Amount:</span> {{ number_format($order->totalAmount, 2) }} DZD</p>
+                                @if (false)
+                                    <p><span>Tax:</span> {{ number_format($order->tax ?? 0, 2) }} DZD</p>
+                                    <p><span>Discount:</span> {{ number_format($order->discount ?? 0, 2) }} DZD</p>
+                                @endif
+                            </div>
+                            @if ($order->status == 'confirmed')
+                                <div class="text-center">
+                                    <button class="mt-2 btn btn-danger ">Confirm Order & Pay</button>
+                                </div>
+                            @else
+                                <div class="text-center">
+                                    <p class="mt-2 btn btn-danger ">Your order is {{ $order->status }}</p>
+                                </div>
                             @endif
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>

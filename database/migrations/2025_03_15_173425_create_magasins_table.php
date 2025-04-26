@@ -22,7 +22,7 @@ return new class extends Migration
             $table->text('bio')->nullable();
             $table->string('location');
             $table->boolean('magasinOpen')->default(0);
-            $table->float('rate_average')->default(0);
+            $table->float('rate')->default(0);
             $table->unsignedInteger('rate_count')->default(0);
             $table->enum('status', ['active', 'firstOpening', 'inactive', 'blocked'])->default('firstOpening');
             $table->double('balance')->default(0);
