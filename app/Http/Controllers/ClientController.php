@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Models\OrderItem;
 use App\Models\Review;
 use App\Models\User;
@@ -45,8 +44,6 @@ class ClientController extends Controller
     public function reviews()
     {
         $user = Auth::user();
-
-
         $reviews = Review::with('product')
             ->where('user_id', $user->id)
             ->latest()
@@ -54,6 +51,8 @@ class ClientController extends Controller
 
         return view('client.pages.reviews', compact('reviews'));
     }
+    //! This two methods are updated and moved to the review controller
+    /*
     public function updateReview(Request $request, $id)
     {
         $request->validate([
@@ -84,6 +83,7 @@ class ClientController extends Controller
             return redirect()->back()->with('error', 'Review not found or unauthorized.');
         }
     }
+    */
     public function profile()
     {
         $user = Auth::user();
@@ -105,13 +105,15 @@ class ClientController extends Controller
         $data = request()->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
-            'phoneNumber' => 'nullable|string|max:20',
+            'phoneNumber' => 'nullable|string|max:10',
             'bio' => 'nullable|string|max:1000',
-            'profilePicture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'profilePicture' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         if (request()->hasFile('profilePicture')) {
-            $data['profilePicture'] = request()->file('profilePicture')->store('profile_pictures', 'public');
+            $file = request()->file('profilePicture');
+            $path = $file->store('profile_pictures/' . $user->id, 'public');
+            $data['profilePicture'] = basename($path);
         }
 
         $user->update($data);
@@ -191,7 +193,7 @@ class ClientController extends Controller
         $address = $user->addresses()->findOrFail($id);
 
         if ($request->has('principalAddress')) {
-            $user->addresses()->where('id', '!=', $id)->update([
+            $user->addresses()->where('type', $address->type)->where('id', '!=', $id)->update([
                 'principalAddress' => false
             ]);
         }

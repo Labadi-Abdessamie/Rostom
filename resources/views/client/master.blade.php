@@ -33,7 +33,7 @@
 
     <div class="wsus__dashboard_menu">
         <div class="wsusd__dashboard_user">
-            <img src="{{ Auth::user()->profilePicture ? asset('storage/' . Auth::user()->profilePicture) : asset('frontend/images/No_Image.png') }}"
+            <img src="{{ Auth::user()->profilePicture ? asset('storage/profile_pictures/' . Auth::id() . '/' . Auth::user()->profilePicture) : asset('frontend/images/No_Image.png') }}"
                 alt="Profile Picture" class="img-fluid">
             <a href="{{ route('client.profile') }}">
                 <p>{{ Auth::user()->name }}</p>
@@ -41,6 +41,7 @@
         </div>
     </div>
 
+    <livewire:notification />
     <section id="wsus__dashboard">
         <div class="container-fluid">
             <div class="dashboard_sidebar">

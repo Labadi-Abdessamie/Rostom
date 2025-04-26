@@ -274,12 +274,13 @@
                                 <li><a @if (Route::currentRouteName() == 'frontend.cart') class="active" @endif
                                         href="{{ route('frontend.cart') }}">Cart</a></li>
                             @endif
+                            <li><a @if (Route::currentRouteName() == 'frontend.contact') class="active" @endif
+                                    href="{{ route('frontend.contact') }}">contact</a></li>
                             @if (false)
                                 <li><a href="{{ route('frontend.daily_deals') }}">daily deals</a></li>
                                 <li><a href="{{ route('frontend.track_order') }}">track order</a></li>
                                 <li><a href="{{ route('frontend.brands') }}">brands</a></li>
                                 <li><a href="{{ route('frontend.blog') }}">blog</a></li>
-                                <li><a href="{{ route('frontend.contact') }}">contact</a></li>
                             @endif
                         </ul>
                         <ul class="wsus__menu_item wsus__menu_item_right">

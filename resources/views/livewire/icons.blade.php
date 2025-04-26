@@ -18,7 +18,8 @@
             @else
                 <span>0</span>
             @endif
-        </a></li>
+        </a>
+    </li>
     @if (Auth::check())
         @if (Auth::user()->role === 'client')
             <li><a class="wsus__cart_icon cursor-pointer"><i class="fal fa-shopping-bag"></i>

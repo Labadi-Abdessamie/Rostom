@@ -38,7 +38,7 @@ class Wishlist extends Component
         }
     }
 
-    public function addToCart($productId)
+    public function addToCart($productId, $quantity = 1)
     {
         $user = Auth::user();
         if ($user) {
@@ -46,11 +46,11 @@ class Wishlist extends Component
             if ($product->magasin->status == 'active') {
                 $cart = session()->get('cart', []);
                 if (isset($cart[$productId])) {
-                    $cart[$productId]['quantity']++;
+                    $cart[$productId]['quantity'] += $quantity;
                 } else {
                     $cart[$productId] = [
                         'id' => null,
-                        'quantity' => 1,
+                        'quantity' => $quantity,
                         'product' => [
                             'image' => $product->principalImage,
                             'name' => $product->name,
@@ -61,7 +61,6 @@ class Wishlist extends Component
                 }
                 session()->put('cart', $cart);
                 $this->dispatch('Notification', product: ['name' => $product->name], message: 'Added To cart');
-                //return redirect()->back()->with('success', 'Added');
             } else {
                 $this->dispatch('Notification', product: ['name' => $product->name], message: 'Error Adding To cart');
             }

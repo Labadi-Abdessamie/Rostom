@@ -28,7 +28,7 @@
     })">
     <div class="flex items-center gap-3">
         <div>
-            <p class="font-semibold"> {{ $message }}!
+            <p class="font-semibold">{{ $message }}!
                 @if ($productName)
                     <span class="text-sm">{{ $productName }}</span>
                 @endif

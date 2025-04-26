@@ -69,8 +69,8 @@ route::middleware(['auth', RoleMiddleware::class . ':client'])->group(function (
         Route::get('orders/{id}', [ClientController::class, 'orderDetails'])->name('order_details');
         Route::get('wishlist', [ClientController::class, 'wishlist'])->name('wishlist');
         Route::get('reviews', [ClientController::class, 'reviews'])->name('reviews');
-        Route::put('reviews/{id}', [ClientController::class, 'updateReview'])->name('review.update');
-        Route::delete('reviews/{id}', [ClientController::class, 'deleteReview'])->name('review.delete');
+        Route::put('reviews/{id}', [ReviewController::class, 'update'])->name('review.update');
+        Route::delete('reviews/{id}', [ReviewController::class, 'destroy'])->name('review.delete'); //! is gonna be available to admin
         Route::get('profile', [ClientController::class, 'profile'])->name('profile');
         Route::put(('profile/update'), [ClientController::class, 'update'])->name('profile.update');
         //-----------------------------------------//
@@ -164,12 +164,13 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+/*
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-
+*/
 
 
 require __DIR__ . '/auth.php';

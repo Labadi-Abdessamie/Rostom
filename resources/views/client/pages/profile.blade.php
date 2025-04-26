@@ -94,7 +94,7 @@
                                 <!-- Profile Picture -->
                                 <div class="col-xl-3 col-sm-6 col-md-6">
                                     <div class="wsus__dash_pro_img">
-                                        <img src="{{ Auth::user()->profilePicture ? asset('storage/' . Auth::user()->profilePicture) : asset('frontend/images/No_Image.png') }}"
+                                        <img src="{{ Auth::user()->profilePicture ? asset('storage/profile_pictures/' . Auth::id() . '/' . Auth::user()->profilePicture) : asset('frontend/images/No_Image.png') }}"
                                             alt="Profile Image" class="img-fluid w-100">
                                         <input type="file" name="profilePicture">
                                         @error('profilePicture')

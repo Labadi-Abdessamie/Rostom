@@ -39,5 +39,44 @@ class ReviewController extends Controller
         */
         return redirect()->back();
     }
-    public function destroy() {}
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'rate' => 'required|integer|min:1|max:5',
+            'content' => 'required|string|max:1000',
+        ]);
+        $review = Review::where('id', $id)->where('user_id', Auth::id())->first();
+
+        if ($review) {
+            $product = Product::findorFail($review->product_id);
+            $product->rate_average = ($product->rate_average - $review->rate + $request->rate) / $product->rate_count;
+            $product->save();
+
+            $review->update([
+                'rate' => $request->input('rate'),
+                'content' => $request->input('content'),
+            ]);
+            return redirect()->back()->with('success', 'Review updated successfully.');
+        } else {
+            return redirect()->back()->with('error', 'Review not found or unauthorized.');
+        }
+    }
+    public function destroy($id)
+    {
+        $review = Review::where('id', $id)->where('user_id', Auth::id())->first();
+        if ($review) {
+            $product = Product::findorFail($review->product_id);
+            if ($product->rate_count - 1 == 0) {
+                $product->rate_average = 0;
+            } else {
+                $product->rate_average = ($product->rate_average - $review->rate) / ($product->rate_count - 1);
+            }
+            $product->rate_count--;
+            $product->save();
+            $review->delete();
+            return redirect()->back()->with('success', 'Review deleted successfully.');
+        } else {
+            return redirect()->back()->with('error', 'Review not found or unauthorized.');
+        }
+    }
 }

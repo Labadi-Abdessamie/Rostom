@@ -4,10 +4,27 @@
     <section id="wsus__mobile_menu">
         <span class="wsus__mobile_menu_close"><i class="fal fa-times"></i></span>
         <ul class="wsus__mobile_menu_header_icon d-inline-flex">
-
-            <li><a href="wishlist.html"><i class="far fa-heart"></i> <span>2</span></a></li>
-
-            <li><a href="compare.html"><i class="far fa-random"></i> </i><span>3</span></a></li>
+            @if (Auth::check())
+                @if (Auth::user()->role === 'client')
+                    <li><a href="{{ route('frontend.wishlist') }}"><i class="fal fa-heart"></i>
+                            @if (session()->has('wishlist'))
+                                <span>{{ count(session('wishlist', [])) }}</span>
+                            @else
+                                <span>0</span>
+                            @endif
+                        </a></li>
+                @endif
+            @else
+                <li><a href="{{ route('login') }}"><i class="fal fa-heart"></i><span>05</span></a></li>
+            @endif
+            <li><a href="{{ route('frontend.compare') }}"><i class="fal fa-random"></i>
+                    @if (session()->has('compare'))
+                        <span>{{ count(session('compare', [])) }}</span>
+                    @else
+                        <span>0</span>
+                    @endif
+                </a>
+            </li>
         </ul>
         <form>
             <input type="text" placeholder="Search">
@@ -29,75 +46,35 @@
                 <div class="wsus__mobile_menu_main_menu">
                     <div class="accordion accordion-flush" id="accordionFlushExample">
                         <ul class="wsus_mobile_menu_category">
-                            <li><a href="#"><i class="fas fa-star"></i> hot promotions</a></li>
-                            <li><a href="#" class="accordion-button collapsed" data-bs-toggle="collapse"
-                                    data-bs-target="#flush-collapseThreew" aria-expanded="false"
-                                    aria-controls="flush-collapseThreew"><i class="fal fa-tshirt"></i> fashion</a>
-                                <div id="flush-collapseThreew" class="accordion-collapse collapse"
-                                    data-bs-parent="#accordionFlushExample">
-                                    <div class="accordion-body">
-                                        <ul>
-                                            <li><a href="#">men's</a></li>
-                                            <li><a href="#">wemen's</a></li>
-                                            <li><a href="#">kid's</a></li>
-                                            <li><a href="#">others</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </li>
-                            <li><a href="#" class="accordion-button collapsed" data-bs-toggle="collapse"
-                                    data-bs-target="#flush-collapseThreer" aria-expanded="false"
-                                    aria-controls="flush-collapseThreer"><i class="fas fa-tv"></i> electronics</a>
-                                <div id="flush-collapseThreer" class="accordion-collapse collapse"
-                                    data-bs-parent="#accordionFlushExample">
-                                    <div class="accordion-body">
-                                        <ul>
-                                            <li><a href="#">Consumer Electronic</a></li>
-                                            <li><a href="#">Accessories & Parts</a></li>
-                                            <li><a href="#">other brands</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </li>
-                            <li><a href="#" class="accordion-button collapsed" data-bs-toggle="collapse"
-                                    data-bs-target="#flush-collapseThreerrp" aria-expanded="false"
-                                    aria-controls="flush-collapseThreerrp"><i class="fas fa-chair-office"></i>
-                                    furnicture</a>
-                                <div id="flush-collapseThreerrp" class="accordion-collapse collapse"
-                                    data-bs-parent="#accordionFlushExample">
-                                    <div class="accordion-body">
-                                        <ul>
-                                            <li><a href="#">home</a></li>
-                                            <li><a href="#">office</a></li>
-                                            <li><a href="#">restaurent</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </li>
-                            <li><a href="#" class="accordion-button collapsed" data-bs-toggle="collapse"
-                                    data-bs-target="#flush-collapseThreerrw" aria-expanded="false"
-                                    aria-controls="flush-collapseThreerrw"><i class="fal fa-mobile"></i> Smart
-                                    Phones</a>
-                                <div id="flush-collapseThreerrw" class="accordion-collapse collapse"
-                                    data-bs-parent="#accordionFlushExample">
-                                    <div class="accordion-body">
-                                        <ul>
-                                            <li><a href="#">apple</a></li>
-                                            <li><a href="#">xiaomi</a></li>
-                                            <li><a href="#">oppo</a></li>
-                                            <li><a href="#">samsung</a></li>
-                                            <li><a href="#">vivo</a></li>
-                                            <li><a href="#">others</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </li>
-                            <li><a href="#"><i class="fas fa-home-lg-alt"></i> Home & Garden</a></li>
-                            <li><a href="#"><i class="far fa-camera"></i> Accessories</a></li>
-                            <li><a href="#"><i class="fas fa-heartbeat"></i> healthy & Beauty</a></li>
-                            <li><a href="#"><i class="fal fa-gift-card"></i> Gift Ideas</a></li>
-                            <li><a href="#"><i class="fal fa-gamepad-alt"></i> Toy & Games</a></li>
-                            <li><a href="#"><i class="fal fa-gem"></i> View All Categories</a></li>
+                            @if (count($categories) > 0)
+                                @foreach ($categories as $category)
+                                    <li>
+                                        @if (count($category->childrens) > 0)
+                                            <a href="#" class="accordion-button collapsed"
+                                                data-bs-toggle="collapse" data-bs-target="#{{ $category->name }}"
+                                                aria-expanded="false" aria-controls="{{ $category->name }}"><i
+                                                    class="fal fa-tshirt"></i>
+                                                {{ $category->name }}</a>
+                                            <div id="{{ $category->name }}" class="accordion-collapse collapse"
+                                                data-bs-parent="#accordionFlushExample">
+                                                <div class="accordion-body">
+                                                    <ul>
+                                                        @foreach ($category->childrens as $firstLevelChild)
+                                                            <li>
+                                                                <a
+                                                                    href="{{ route('frontend.products', ['category' => $firstLevelChild->id]) }}">{{ $firstLevelChild->name }}
+                                                                </a>
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    </li>
+                                @endforeach
+                            @else
+                                <li><a href=""><i class="fas fa-ban"></i>Categories Are none</a></li>
+                            @endif
                         </ul>
                     </div>
                 </div>
@@ -106,46 +83,60 @@
                 <div class="wsus__mobile_menu_main_menu">
                     <div class="accordion accordion-flush" id="accordionFlushExample2">
                         <ul>
-                            <li><a href="index.html">home</a></li>
-                            <li><a href="#" class="accordion-button collapsed" data-bs-toggle="collapse"
-                                    data-bs-target="#flush-collapseThree" aria-expanded="false"
-                                    aria-controls="flush-collapseThree">shop</a>
-                                <div id="flush-collapseThree" class="accordion-collapse collapse"
-                                    data-bs-parent="#accordionFlushExample2">
-                                    <div class="accordion-body">
-                                        <ul>
-                                            <li><a href="#">men's</a></li>
-                                            <li><a href="#">wemen's</a></li>
-                                            <li><a href="#">kid's</a></li>
-                                            <li><a href="#">others</a></li>
-                                        </ul>
+                            <li><a href="{{ route('frontend.index') }}">home</a></li>
+                            <li><a href="{{ route('frontend.products') }}">products</a></li>
+                            <li><a href="{{ route('frontend.vendor') }}">vendors</a></li>
+
+                            @if (Auth::user())
+                                @if (Auth::user()->role == 'client')
+                                    <li><a href="{{ route('frontend.cart') }}">Cart</a></li>
+                                @endif
+                            @else
+                                <li><a href="{{ route('frontend.cart') }}">Cart</a></li>
+                            @endif
+
+                            @if (false)
+                                <li><a href="index.html">home</a></li>
+                                <li><a href="#" class="accordion-button collapsed" data-bs-toggle="collapse"
+                                        data-bs-target="#flush-collapseThree" aria-expanded="false"
+                                        aria-controls="flush-collapseThree">shop</a>
+                                    <div id="flush-collapseThree" class="accordion-collapse collapse"
+                                        data-bs-parent="#accordionFlushExample2">
+                                        <div class="accordion-body">
+                                            <ul>
+                                                <li><a href="#">men's</a></li>
+                                                <li><a href="#">wemen's</a></li>
+                                                <li><a href="#">kid's</a></li>
+                                                <li><a href="#">others</a></li>
+                                            </ul>
+                                        </div>
                                     </div>
-                                </div>
-                            </li>
-                            <li><a href="vendor.html">vendor</a></li>
-                            <li><a href="blog.html">blog</a></li>
-                            <li><a href="daily_deals.html">campain</a></li>
-                            <li><a href="#" class="accordion-button collapsed" data-bs-toggle="collapse"
-                                    data-bs-target="#flush-collapseThree101" aria-expanded="false"
-                                    aria-controls="flush-collapseThree101">pages</a>
-                                <div id="flush-collapseThree101" class="accordion-collapse collapse"
-                                    data-bs-parent="#accordionFlushExample2">
-                                    <div class="accordion-body">
-                                        <ul>
-                                            <li><a href="404.html">404</a></li>
-                                            <li><a href="faqs.html">faq</a></li>
-                                            <li><a href="invoice.html">invoice</a></li>
-                                            <li><a href="about_us.html">about</a></li>
-                                            <li><a href="team.html">team</a></li>
-                                            <li><a href="product_grid_view.html">product grid view</a></li>
-                                            <li><a href="product_grid_view.html">product list view</a></li>
-                                            <li><a href="team_details.html">team details</a></li>
-                                        </ul>
+                                </li>
+                                <li><a href="vendor.html">vendor</a></li>
+                                <li><a href="blog.html">blog</a></li>
+                                <li><a href="daily_deals.html">campain</a></li>
+                                <li><a href="#" class="accordion-button collapsed" data-bs-toggle="collapse"
+                                        data-bs-target="#flush-collapseThree101" aria-expanded="false"
+                                        aria-controls="flush-collapseThree101">pages</a>
+                                    <div id="flush-collapseThree101" class="accordion-collapse collapse"
+                                        data-bs-parent="#accordionFlushExample2">
+                                        <div class="accordion-body">
+                                            <ul>
+                                                <li><a href="404.html">404</a></li>
+                                                <li><a href="faqs.html">faq</a></li>
+                                                <li><a href="invoice.html">invoice</a></li>
+                                                <li><a href="about_us.html">about</a></li>
+                                                <li><a href="team.html">team</a></li>
+                                                <li><a href="product_grid_view.html">product grid view</a></li>
+                                                <li><a href="product_grid_view.html">product list view</a></li>
+                                                <li><a href="team_details.html">team details</a></li>
+                                            </ul>
+                                        </div>
                                     </div>
-                                </div>
-                            </li>
-                            <li><a href="track_order.html">track order</a></li>
-                            <li><a href="daily_deals.html">daily deals</a></li>
+                                </li>
+                                <li><a href="track_order.html">track order</a></li>
+                                <li><a href="daily_deals.html">daily deals</a></li>
+                            @endif
                         </ul>
                     </div>
                 </div>

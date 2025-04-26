@@ -3,35 +3,43 @@
         <div class="col-12">
             <div class="wsus__cart_list wishlist">
                 <div class="table-responsive">
-                    <table>
-                        <tbody>
-                            <tr class="d-flex">
-                                <th class="wsus__pro_img">
-                                    product item
-                                </th>
+                    @if ($wishlist == [])
+                        <div class="col-xl-12">
+                            <div class="wsus__cart_list cart_empty p-3 p-sm-5 text-center">
+                                <p class="mb-4">your wishlist is empty</p>
+                                <a href="{{ route('frontend.products') }}" class="common_btn"><i
+                                        class="fal fa-store me-2"></i>view our products</a>
+                            </div>
+                        </div>
+                    @else
+                        <table>
+                            <tbody>
+                                <tr class="d-flex">
+                                    <th class="wsus__pro_img">
+                                        product item
+                                    </th>
 
-                                <th class="wsus__pro_name">
-                                    product details
-                                </th>
+                                    <th class="wsus__pro_name">
+                                        product details
+                                    </th>
 
-                                <th class="wsus__pro_status">
-                                    status
-                                </th>
+                                    <th class="wsus__pro_status">
+                                        status
+                                    </th>
 
-                                <th class="wsus__pro_select">
-                                    quantity
-                                </th>
+                                    <th class="wsus__pro_select">
+                                        quantity
+                                    </th>
 
-                                <th class="wsus__pro_tk">
-                                    price
-                                </th>
+                                    <th class="wsus__pro_tk">
+                                        price
+                                    </th>
 
-                                <th class="wsus__pro_icon">
-                                    action
-                                </th>
-                            </tr>
+                                    <th class="wsus__pro_icon">
+                                        action
+                                    </th>
+                                </tr>
 
-                            @if ($wishlist != [])
                                 @foreach ($wishlist as $key => $item)
                                     <tr class="d-flex">
                                         <td class="wsus__pro_img">
@@ -65,14 +73,12 @@
                                         </td>
 
                                         <td class="wsus__pro_select">
-                                            <form class="select_number d-flex">{{--
-                                                    <button class="btn" type="button">-</button>
-                                                    <input class="form-control" type="number" min="1"
-                                                        max="100" value="{{ $item['quantity'] }}" disabled />
-                                                    <button class="btn" type="button">+</button> --}}
-                                                <input class="number_area" type="number" min="1" max="100"
+                                            <form class="select_number d-flex">
+                                                @livewire('update-quantity', ['type' => 'wishlist', 'id' => $key, 'qt' => $item['quantity']], key($key))
+                                                {{--
+                                                    <input class="number_area" type="number" min="1" max="100"
                                                     value="{{ $item['quantity'] }}" />
-
+                                                --}}
                                             </form>
                                         </td>
 
@@ -81,15 +87,16 @@
                                         </td>
 
                                         <td class="wsus__pro_icon">
-                                            <button wire:click="addToCart({{ $key }})" class="common_btn">
+                                            <button wire:click="addToCart({{ $key }},{{ $item['quantity'] }})"
+                                                class="common_btn">
                                                 Add to Cart
                                             </button>
                                         </td>
                                     </tr>
                                 @endforeach
-                            @endif
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    @endif
                 </div>
             </div>
         </div>

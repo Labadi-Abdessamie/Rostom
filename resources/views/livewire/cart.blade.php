@@ -3,8 +3,8 @@
         <div class="col-xl-12">
             <div class="wsus__cart_list cart_empty p-3 p-sm-5 text-center">
                 <p class="mb-4">your shopping cart is empty</p>
-                <a href="{{ route('frontend.products') }}" class="common_btn"><i class="fal fa-store me-2"></i>view our
-                    product</a>
+                <a href="{{ route('frontend.products') }}" class="common_btn"><i class="fal fa-store me-2"></i>view
+                    our products</a>
             </div>
         </div>
     @else
@@ -78,9 +78,7 @@
                                             <input class="form-control" type="number" min="1"
                                                 max="100" value="{{ $item['quantity'] }}" disabled />
                                             <button class="btn" type="button">+</button> --}}
-                                            <input class="number_area" type="number" min="1" max="100"
-                                                value="{{ $item['quantity'] }}" />
-
+                                            @livewire('update-quantity', ['type' => 'cart', 'id' => $key, 'qt' => $item['quantity']], key($key))
                                         </form>
                                     </td>
 

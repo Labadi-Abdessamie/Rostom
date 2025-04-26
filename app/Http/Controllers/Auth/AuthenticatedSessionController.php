@@ -138,6 +138,34 @@ class AuthenticatedSessionController extends Controller
                     }
                 }
             }
+            $wishlist = Auth::user()->bags()->where('type', 'wishlist')->with('bagItems')->first();
+            $sessionWishlist = session()->get('wishlist', []);
+            if ($wishlist) {
+                $dbItems = $wishlist->bagItems->keyBy('product_id');
+                $sessionProductIds = collect($sessionWishlist)->keys()->map(fn($id) => (int) $id);
+
+                foreach ($sessionWishlist as $productId => $sessionItem) {
+                    $productId = (int) $productId;
+
+                    if ($dbItems->has($productId)) {
+                        $dbItem = $dbItems[$productId];
+                        if ($dbItem->quantity != $sessionItem['quantity']) {
+                            $dbItem->update(['quantity' => $sessionItem['quantity']]);
+                        }
+                    } else {
+                        $wishlist->bagItems()->create([
+                            'bag_id' => $wishlist->id,
+                            'product_id' => $productId,
+                            'quantity' => $sessionItem['quantity'],
+                        ]);
+                    }
+                }
+                foreach ($dbItems as $productId => $dbItem) {
+                    if (!isset($sessionWishlist[$productId])) {
+                        $dbItem->delete();
+                    }
+                }
+            }
         }
         Auth::guard('web')->logout();
 

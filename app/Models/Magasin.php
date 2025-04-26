@@ -17,7 +17,7 @@ class Magasin extends Model
         'rate',
         'magasinOpen',
         'user_id',
-        'status', 
+        'status',
     ];
     use HasFactory;
 
@@ -28,6 +28,10 @@ class Magasin extends Model
     public function products()
     {
         return $this->hasMany(Product::class);
+    }
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
     }
     public function purchaseOrder()
     {

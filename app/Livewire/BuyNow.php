@@ -6,24 +6,21 @@ use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
-class AddToCart extends Component
+class BuyNow extends Component
 {
-    public $product;
-    public $quantity;
-
-
-    public function render()
-    {
-        return view('livewire.add-to-cart');
-    }
+    public  $product;
+    public  $quantity = 1;
 
     public function mount(Product $product, $qt = 1)
     {
         $this->product = $product;
         $this->quantity = $qt;
     }
-
-    public function addToCart()
+    public function render()
+    {
+        return view('livewire.buy-now');
+    }
+    public function buyNow()
     {
         $user = Auth::user();
         if ($user) {
@@ -46,7 +43,7 @@ class AddToCart extends Component
                         ];
                     }
                     session()->put('cart', $cart);
-                    $this->dispatch('Notification', product: ['name' => $this->product->name], message: 'Added To cart');
+                    return redirect()->route('frontend.cart');
                 } else {
                     $this->dispatch('Notification', product: ['name' => $this->product->name], message: 'Error Adding To cart');
                 }

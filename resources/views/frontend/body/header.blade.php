@@ -24,17 +24,19 @@
                         </form>
                     </div>
                 </div>
-                <div class="col-xl-5 col-3 col-md-3 col-lg-6">
+                <div class="col-xl-5 col-3 col-md-3 col-lg-6 ">
                     <div class="wsus__call_icon_area">
-                        <div class="wsus__call_area">
-                            <div class="wsus__call">
-                                <i class="fas fa-user-headset"></i>
+                        <a href="{{ route('frontend.contact') }}">
+                            <div class="wsus__call_area">
+                                <div class="wsus__call">
+                                    <i class="fas fa-user-headset"></i>
+                                </div>
+                                <div class="wsus__call_text ">
+                                    <p>{{ $website->contact_email }}</p>
+                                    <p>+213{{ $website->contact_phone }}</p>
+                                </div>
                             </div>
-                            <div class="wsus__call_text">
-                                <p>{{ $website->contact_email }}</p>
-                                <p>+213{{ $website->contact_phone }}</p>
-                            </div>
-                        </div>
+                        </a>
                         @livewire('icons')
                     </div>
                 </div>
