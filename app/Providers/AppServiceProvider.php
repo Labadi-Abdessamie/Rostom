@@ -7,6 +7,8 @@ use App\Models\Website;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -52,18 +54,31 @@ class AppServiceProvider extends ServiceProvider
             return Website::first();
         }));*/
 
-        View::share('categories', Cache::remember('categories', 21600, function () {
-            return Category::WhereNull('parentId')->where('status', 'active')->with([
-                'childrens' => function ($query) {
-                    $query->where('status', 'active')
-                        ->with([
-                            'childrens' => function ($query) {
-                                $query->where('status', 'active');
-                            }
-                        ]);
-                }
-            ])->get();
-        }));
+        try {
+            DB::connection()->getPdo();
+
+            if (Schema::hasTable('your_table_name')) {
+                View::share('categories', Cache::remember('categories', 21600, function () {
+                    return Category::WhereNull('parentId')->where('status', 'active')->with([
+                        'childrens' => function ($query) {
+                            $query->where('status', 'active')
+                                ->with([
+                                    'childrens' => function ($query) {
+                                        $query->where('status', 'active');
+                                    }
+                                ]);
+                        }
+                    ])->get();
+                }));
+            } else {
+                View::share('categories', null);
+            }
+        } catch (\Exception $e) {
+            View::share('categories', null);
+        }
+
+
+
 
         Paginator::useBootstrap();
     }
