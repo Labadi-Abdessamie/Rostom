@@ -39,9 +39,10 @@ class AppServiceProvider extends ServiceProvider
             'language' => 'en',
             'contact_email' => 'support@rostom.com',
             'contact_phone' => '798841989',
-            'social_media_links' => '
+            'social_media_links' => '{
                 "facebook" : "facebook.com",
                 "instagram" : "instagram.com"
+                }
             ',
             'customers_number' => 0,
             'vendors_number' => 0,
