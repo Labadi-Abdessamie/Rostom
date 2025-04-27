@@ -27,9 +27,30 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
 
+        View::share('website', [
+            'url' => 'youtube.com',
+            'name' => 'rostom',
+            'logo' => 'logo.png',
+            'favicon' => 'favicon.png',
+            'description' => 'Platform E-commerce Multi-vendors',
+            'owner' => 'Rostom',
+            'language' => 'en',
+            'contact_email' => 'support@rostom.com',
+            'contact_phone' => '798841989',
+            'social_media_links' => array(
+                'facebook' => 'facebook.com',
+                'instagram' => 'instagram.com'
+            ),
+            'customers_number' => 0,
+            'vendors_number' => 0,
+            'products_number' => 0,
+            'ordersDone_number' => 0,
+            'rules_and_privacy' => 'rules.pdf'
+        ]);
+        /*
         View::share('website', Cache::remember('website', 1, function () {
             return Website::first();
-        }));
+        }));*/
 
         View::share('categories', Cache::remember('categories', 21600, function () {
             return Category::WhereNull('parentId')->where('status', 'active')->with([
