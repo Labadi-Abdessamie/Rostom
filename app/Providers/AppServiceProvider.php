@@ -49,7 +49,6 @@ class AppServiceProvider extends ServiceProvider
             'ordersDone_number' => 0,
             'rules_and_privacy' => 'rules.pdf'
         ];
-
         try {
             DB::connection()->getPdo();
 
@@ -70,20 +69,16 @@ class AppServiceProvider extends ServiceProvider
                 View::share('categories', null);
             }
             if (Schema::hasTable('websites')) {
-                View::share('website', Cache::remember('website', 1, function () {
-                    return Website::first();
+                View::share('website', Cache::remember('website', 1, function () use ($DefaultInformations) {
+                    return Website::first() ?? (object) $DefaultInformations;
                 }));
             } else {
-                View::share('website', $DefaultInformations);
+                View::share('website', (object) $DefaultInformations);
             }
         } catch (\Exception $e) {
             View::share('categories', null);
-            View::share('website', $DefaultInformations);
+            View::share('website', (object) $DefaultInformations);
         }
-
-
-
-
         Paginator::useBootstrap();
     }
 }

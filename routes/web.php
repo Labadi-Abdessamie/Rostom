@@ -29,16 +29,13 @@ Route::get('/cleareverything', function () {
     echo 'Config cleared<br>';
 });
 
-Route::group(['prefix' => '/'], function () {
-    Route::get('cat', [CategoryController::class, 'get']);
-});
-
-
 //Frontend route
 Route::group(['prefix' => '', 'as' => 'frontend.'], function () {
     Route::get('/', [MainController::class, 'index'])->name('index');
+
     Route::get('products', [ProductController::class, 'index'])->name('products');
     Route::get('product-details/{id}', [ProductController::class, 'show'])->name('product_details');
+
     Route::get('vendors', [VendorController::class, 'index'])->name('vendor');
     Route::get('vendor-details/{id}', [VendorController::class, 'show'])->name('vendor_details');
 
@@ -47,17 +44,6 @@ Route::group(['prefix' => '', 'as' => 'frontend.'], function () {
     Route::get('compare', [MainController::class, 'compare'])->name('compare');
 
     Route::get('contact', [MainController::class, 'contact'])->name('contact');
-
-    //Route::get('flash-Sale', [MainController::class, 'flashSale'])->name('flash_sale');
-    //Route::get('daily-deals', [MainController::class, 'dailyDeals'])->name('daily_deals');
-    //Route::get('track-order', [MainController::class, 'trackOrder'])->name('track_order');
-    //Route::get('brands', [MainController::class, 'brands'])->name('brands');
-    //Route::get('blog', [MainController::class, 'blog'])->name('blog');
-    //Route::get('blog-details', [MainController::class, 'blogDetails'])->name('blog_details');
-
-
-    //Route::get('user-login', [MainController::class, 'login'])->name('login');
-    //Route::get('forget-password', [MainController::class, 'forgetPassword'])->name('forget_password');
 });
 
 route::middleware(['auth'])->group(function () {
@@ -201,3 +187,14 @@ Route::middleware('auth')->group(function () {
 
 
 require __DIR__ . '/auth.php';
+
+
+
+
+//! fronted route
+    //Route::get('flash-Sale', [MainController::class, 'flashSale'])->name('flash_sale');
+    //Route::get('daily-deals', [MainController::class, 'dailyDeals'])->name('daily_deals');
+    //Route::get('track-order', [MainController::class, 'trackOrder'])->name('track_order');
+    //Route::get('brands', [MainController::class, 'brands'])->name('brands');
+    //Route::get('blog', [MainController::class, 'blog'])->name('blog');
+    //Route::get('blog-details', [MainController::class, 'blogDetails'])->name('blog_details');
