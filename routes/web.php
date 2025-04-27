@@ -121,30 +121,34 @@ Route::middleware(['auth', RoleMiddleware::class . ':admin'])->group(function ()
         Route::get('dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
         Route::get('profile', [AdminController::class, 'profile'])->name('profile');
 
-        //!GET ROUTES
         Route::get('customers/{type?}', [AdminController::class, 'customers'])->name('customers');
-
         Route::get('vendors/{type?}', [AdminController::class, 'vendors'])->name('vendors');
+        Route::get('admins', [AdminController::class, 'admins'])->name('admins');
 
-        Route::get('user/{id}/edit', [AdminController::class, 'editUser'])->name('edit_user');
-        Route::put('user/{id}/update', [AdminController::class, 'updateUser'])->name('update_user');
-        Route::delete('user/{id}/delete', [AdminController::class, 'deleteUser'])->name('delete_user');
+
+        Route::get('user/{id}/edit', [ProfileController::class, 'editUser'])->name('edit_user');
+        Route::put('user/{id}/update', [ProfileController::class, 'updateUser'])->name('update_user');
+        Route::delete('user/{id}/delete', [ProfileController::class, 'deleteUser'])->name('delete_user');
         Route::post('admin/store', [ProfileController::class, 'store'])->name('store_admin');
 
 
-        Route::get('magasin/{filtre?}', [AdminController::class, 'magasins'])->name('magasins');
+        Route::get('magasin/{filtre?}', [MagasinController::class, 'magasins'])->name('magasins');
 
-        Route::get('register/{id}', [AdminController::class, 'showRegister'])->name('show.register');
-        Route::post('magasin/{id}/approve', [AdminController::class, 'approveMagasin'])->name('approve.magasin');
-        Route::delete('magasin/{id}/reject', [AdminController::class, 'rejectMagasin'])->name('reject.magasin');
+        Route::get('register/{id}', [MagasinController::class, 'showRegister'])->name('show.register');
+        Route::post('magasin/{id}/approve', [MagasinController::class, 'approveMagasin'])->name('approve.magasin');
+        Route::delete('magasin/{id}/reject', [MagasinController::class, 'rejectMagasin'])->name('reject.magasin');
 
-        Route::get('magasin/{id}/edit', [AdminController::class, 'showEditMagasin'])->name('edit.magasin');
-        Route::put('magasin/{id}/update', [AdminController::class, 'updateMagasin'])->name('update.magasin');
-        Route::delete('magasin/{id}/delete', [AdminController::class, 'deleteMagasin'])->name('delete.magasin');
-
-
+        Route::get('magasin/{id}/edit', [MagasinController::class, 'edit'])->name('edit.magasin');
+        Route::put('magasin/{id}/update', [MagasinController::class, 'update'])->name('update.magasin');
+        Route::delete('magasin/{id}/delete', [MagasinController::class, 'destroy'])->name('delete.magasin');
 
 
+        Route::get('categories', [CategoryController::class, 'index'])->name('categories');
+        Route::get('category/create', [CategoryController::class, 'create'])->name('add_category');
+        Route::post('category/store', [CategoryController::class, 'store'])->name('store_category');
+        Route::get('category/{id}/edit', [CategoryController::class, 'edit'])->name('edit_category');
+        Route::put('category/{id}/update', [CategoryController::class, 'update'])->name('update_category');
+        Route::delete('category/{id}/delete', [CategoryController::class, 'destroy'])->name('delete_category');
 
 
         Route::get('products', [AdminController::class, 'products'])->name('products');
@@ -159,9 +163,8 @@ Route::middleware(['auth', RoleMiddleware::class . ':admin'])->group(function ()
         Route::put('banner/{id}/update', [BannerController::class, 'update'])->name('update_banner');
 
         Route::get('orders', [AdminController::class, 'orders'])->name('orders');
-        Route::delete('delete-order/{id}', [AdminController::class, 'deleteOrder'])->name('delete_order');
         Route::get('order-details/{id}', [AdminController::class, 'orderDetails'])->name('order_details');
-        Route::get('admins', [AdminController::class, 'admins'])->name('admins');
+        Route::delete('delete-order/{id}', [OrderController::class, 'destroy'])->name('delete_order');
 
 
         Route::get('reviews', [AdminController::class, 'reviews'])->name('reviews');

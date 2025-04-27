@@ -14,26 +14,7 @@ use Illuminate\View\View;
 class ProfileController extends Controller
 {
 
-    public function store(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
-            'phone' => ['required', 'string', 'max:10'],
-            'password' => ['required',],
-        ]);
 
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phoneNumber' => $request->phone,
-            'password' => Hash::make($request->password),
-            'role' => "admin",
-            'status' => 'active'
-        ]);
-
-        return redirect()->back()->with('success', 'Admin created succefuly.');
-    }
     /**
      * Display the user's profile form.
      */
@@ -110,5 +91,59 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+
+
+    //! function for the profiles edition by the Admin
+
+    public function store(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'phone' => ['required', 'string', 'max:10'],
+            'password' => ['required',],
+        ]);
+
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phoneNumber' => $request->phone,
+            'password' => Hash::make($request->password),
+            'role' => "admin",
+            'status' => 'active'
+        ]);
+
+        return redirect()->back()->with('success', 'Admin created succefuly.');
+    }
+    public function editUser($id)
+    {
+        $user = User::findOrFail($id);
+        $type = $user->role;
+        return view('admin.pages.edit_user', compact('user', 'type'));
+    }
+
+    public function updateUser(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'status' => 'required|in:active,inactive,blocked',
+        ]);
+
+        $user = User::findOrFail($id);
+
+        $user->update([
+            'name' => $request->name,
+            'status' => $request->status,
+        ]);
+
+        return redirect()->back()->with('success', 'User updated successfully.');
+    }
+    public function deleteUser($id)
+    {
+        //! add here to change the pending orders to cancelled and the reviews to anynomus
+        $user = User::findOrFail($id);
+        $user->delete();
+        return redirect()->back()->with('success', 'User deleted successfully.');
     }
 }

@@ -44,7 +44,6 @@
 
     <!-- Vendor JS -->
     <script src="{{ asset('assets/js/vendor.min.js') }}"></script>
-
     @yield('scripts')
 
     <!-- App JS -->

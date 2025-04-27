@@ -28,8 +28,12 @@
                                     href="{{ route('frontend.product_details', ['id' => $categoryProduct->id]) }}">
                                     <img src="{{ asset('storage/products_images/' . $categoryProduct->id . '/' . $categoryProduct->principalImage) }}"
                                         alt="product" class="img-fluid w-100 img_1" />
-                                    <img src="{{ asset('frontend/images/none.jpg') }}" alt="product"
-                                        class="img-fluid w-100 img_2" />
+                                    <img src="
+                                        @if (@empty($categoryProduct->productImages)) {{ asset('storage/products_images/' . $categoryProduct->id . '/' . $categoryProduct->productImages[0]) }}
+                                        @else {{ asset('storage/products_images/' . $categoryProduct->id . '/' . $categoryProduct->principalImage) }} @endif
+
+                                        "
+                                        alt="product" class="img-fluid w-100 img_2" />
                                 </a>
                                 <ul class="wsus__single_pro_icon">
                                     @if (false)

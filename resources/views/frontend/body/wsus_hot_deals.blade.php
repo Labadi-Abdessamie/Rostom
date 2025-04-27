@@ -101,8 +101,11 @@
                                     href="{{ route('frontend.product_details', ['id' => $regularProduct->id]) }}">
                                     <img src="{{ asset('storage/products_images/' . $regularProduct->id . '/' . $regularProduct->principalImage) }}"
                                         alt="product" class="img-fluid w-100 img_1" />
-                                    <img src="{{ asset('frontend/images/none.jpg') }}" alt="product"
-                                        class="img-fluid w-100 img_2" />
+                                    <img src="
+                                        @if (@empty($regularProduct->productImages)) {{ asset('storage/products_images/' . $regularProduct->id . '/' . $regularProduct->productImages[0]) }}
+                                        @else {{ asset('storage/products_images/' . $regularProduct->id . '/' . $regularProduct->principalImage) }} @endif
+                                        "
+                                        alt="product" class="img-fluid w-100 img_2" />
                                 </a>
                                 <ul class="wsus__single_pro_icon">
                                     @if (false)
@@ -120,11 +123,11 @@
                                     <a class="wsus__category"
                                         href="{{ route('frontend.products', ['category' => $regularProduct->category->id]) }}">{{ $regularProduct->category->name }}</a>
                                     <p class="wsus__pro_rating">
-                                        @if ($secondSliderProduct->rate_average != 0)
-                                            @for ($i = 1; $i <= $secondSliderProduct->rate_average; $i++)
+                                        @if ($regularProduct->rate_average != 0)
+                                            @for ($i = 1; $i <= $regularProduct->rate_average; $i++)
                                                 <i class="fas fa-star"></i>
                                             @endfor
-                                            @if ($secondSliderProduct->rate_average != floor($secondSliderProduct->rate_average))
+                                            @if ($regularProduct->rate_average != floor($regularProduct->rate_average))
                                                 <i class="fas fa-star-half-alt"></i>
                                             @endif
                                         @else

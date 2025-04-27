@@ -70,8 +70,14 @@
                     </div>
                 </li>
                 <li>
-                    <a href="{{ route('admin.products') }}">
+                    <a href="{{ route('admin.categories') }}">
                         <i class="mdi mdi-table"></i>
+                        <span> Categories </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('admin.products') }}">
+                        <i class="mdi mdi-package-variant"></i>
                         <span> Products </span>
                     </a>
                 </li>

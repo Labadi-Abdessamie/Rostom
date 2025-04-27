@@ -6,10 +6,23 @@ use Illuminate\Http\Request;
 use App\Models\Magasin;
 use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 
 class MagasinController extends Controller
 {
+    public function magasins($filtre = null)
+    {
+        if (is_null($filtre)) {
+            $magasins = Magasin::with('user')->paginate(10);
+        } else if ($filtre === "demands") {
+            $magasins = Magasin::with('user')->where('status', 'firstOpening')->paginate(10); // Maybe me(Mus) changes it
+        } else {
+            return redirect()->route('admin.magasins');
+        }
+        return view('admin.pages.magasins', compact('magasins', 'filtre'));
+    }
+
     public function create()
     {
         $categories = Category::whereNull('parentId')->get();
@@ -54,7 +67,6 @@ class MagasinController extends Controller
             $magasin->magasinPicture = $request->file('magasinPicture')->store('magasin_pictures', 'public');
         }
 
-        // Handle vitrineVideo upload
         if ($request->hasFile('vitrineVideo')) {
             $magasin->vitrineVideo = $request->file('vitrineVideo')->store('vitrine_videos', 'public');
         }
@@ -76,5 +88,80 @@ class MagasinController extends Controller
         }
 
         return redirect()->back()->with('success', 'Magasin created successfully! It will be active after admin approval.');
+    }
+
+    public function showRegister($id)
+    {
+        $magasin = Magasin::findOrFail($id);
+        $directory = 'demands/' . $magasin->user->id . '/' . $magasin->id . '/';
+        $files = Storage::disk('local')->files($directory);
+        if (empty($files)) {
+            abort(404);
+        }
+        $path = $files[0];
+        if (!Storage::disk('local')->exists($path)) {
+            abort(404);
+        }
+        $file = Storage::disk('local')->get($path);
+        $type = Storage::disk('local')->mimeType($path);
+
+        return Response::make($file, 200)->header("Content-Type", $type);
+    }
+
+    public function approveMagasin($id)
+    {
+        $magasin = Magasin::findOrFail($id);
+        $magasin->update(['status' => 'active']);
+        return redirect()->back()->with('success', 'Magasin approved successfully.');
+    }
+    public function rejectMagasin($id)
+    {
+        $magasin = Magasin::findOrFail($id);
+        $magasin->user->magasin_id = null;
+        $magasin->user->save();
+        $magasin->delete();
+        return redirect()->route('admin.magasins', ['filtre' => 'demands'])->with('success', 'Magasin rejected and deleted successfully.');
+    }
+
+    public function edit($id)
+    {
+        $magasin = Magasin::findOrFail($id);
+        if (Auth::user()->role == "admin") {
+            return view('admin.pages.edit_magasin', compact('magasin'));
+        } else if (Auth::user()->role == "vendor" && $magasin->user_id == Auth::user()->id) {
+            return view('vendor.pages.magasin_info', compact('magasin'));
+        }
+    }
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => "required|email|unique:users,email,{$id}",
+            'phoneNumber' => 'required|string|max:255',
+            'location' => 'required|string|max:255',
+            'magasinPicture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'rate' => 'nullable|numeric|min:0|max:5',
+            'magasinOpen' => 'required|boolean',
+            'status' => 'required|in:active,inactive,blocked',
+        ]);
+
+        $magasin = Magasin::findOrFail($id);
+        $magasin->update($request->only(['name', 'email', 'phoneNumber', 'location', 'magasinOpen', 'rate', 'status']));
+
+        if ($request->hasFile('magasinPicture')) {
+            $path = $request->file('magasinPicture')->store('images/magasins');
+            $magasin->update(['magasinPicture' => $path]);
+        }
+        return redirect()->route('admin.magasins')->with('success', 'Magasin updated successfully.');
+    }
+
+    public function destroy($id)
+    {
+        $magasin = Magasin::findOrFail($id);
+        $magasin->user->magasin_id = null;
+        $magasin->user->save();
+        $magasin->delete();
+
+        return redirect()->back()->with('success', 'Magasin deleted successfully.');
     }
 }

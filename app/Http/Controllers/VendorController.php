@@ -43,12 +43,12 @@ class VendorController extends Controller
     {
         $vendor = Magasin::findorFail($id);
         if ($vendor->status === 'active') {
-            $products = $vendor->products()->paginate(12);
+            $products = $vendor->products()->with('productImages')->paginate(12);
             return view('frontend.pages.vendor_details', compact('vendor', 'products'));
         } elseif ($vendor->status === 'inactive') {
-            return "this magasin is inactive for now";
+            return view('frontend.pages.vendor')->with('message', "This Magasin is inactive for now");
         } elseif ($vendor->status === 'blocked') {
-            return "this magasin is blocked for now";
+            return view('frontend.pages.vendor')->with('message', "This Magasin is blocked for now");
         }
     }
 

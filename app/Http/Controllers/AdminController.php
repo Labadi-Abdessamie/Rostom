@@ -10,8 +10,6 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
 {
@@ -74,47 +72,12 @@ class AdminController extends Controller
         return view('admin.pages.admins', compact('admins', 'totalAdmins'));
     }
 
-
     //! PROFILE
     public function profile()
     {
         $admin = Auth::user();
         return view('admin.pages.profile', compact('admin'));
     }
-
-    public function editUser($id)
-    {
-        $user = User::findOrFail($id);
-        $type = $user->role;
-        return view('admin.pages.edit_user', compact('user', 'type'));
-    }
-
-    public function updateUser(Request $request, $id)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'status' => 'required|in:active,inactive,blocked',
-        ]);
-
-        $user = User::findOrFail($id);
-
-        $user->update([
-            'name' => $request->name,
-            'status' => $request->status,
-        ]);
-
-        return redirect()->back()->with('success', 'User updated successfully.');
-    }
-    public function deleteUser($id)
-    {
-        //! add here to change the pending orders to cancelled and the reviews to anynomus
-        $user = User::findOrFail($id);
-        $user->delete();
-        return redirect()->back()->with('success', 'User deleted successfully.');
-    }
-
-
-
 
     //! Products
     public function products()
@@ -138,99 +101,10 @@ class AdminController extends Controller
 
         return view('admin.pages.orders', compact('orders'));
     }
-    public function deleteOrder($id)
-    {
-        $order = Order::findOrFail($id);
-        $order->delete();
-        return redirect()->back()->with('success', 'Order deleted successfully.');
-    }
 
     public function orderDetails($id)
     {
         $order = Order::findOrFail($id);
         return view('admin.pages.orderDetails', compact('order'));
-    }
-
-
-
-    //! MAGASINS
-    public function magasins($filtre = null)
-    {
-        if (is_null($filtre)) {
-            $magasins = Magasin::with('user')->paginate(10);
-        } else if ($filtre === "demands") {
-            $magasins = Magasin::with('user')->where('status', 'firstOpening')->paginate(10); // Maybe me(Mus) changes it
-        } else {
-            return redirect()->route('admin.magasins');
-        }
-        return view('admin.pages.magasins', compact('magasins', 'filtre'));
-    }
-    public function approveMagasin($id)
-    {
-        $magasin = Magasin::findOrFail($id);
-        $magasin->update(['status' => 'active']);
-        return redirect()->back()->with('success', 'Magasin approved successfully.');
-    }
-    public function rejectMagasin($id)
-    {
-        $magasin = Magasin::findOrFail($id);
-        $magasin->user->magasin_id = null;
-        $magasin->user->save();
-        $magasin->delete();
-        return redirect()->route('admin.magasins', ['filtre' => 'demands'])->with('success', 'Magasin rejected and deleted successfully.');
-    }
-    public function deleteMagasin($id)
-    {
-        $magasin = Magasin::findOrFail($id);
-        $magasin->user->magasin_id = null;
-        $magasin->user->save();
-        $magasin->delete();
-
-        return redirect()->back()->with('success', 'Magasin deleted successfully.');
-    }
-    public function showEditMagasin($id)
-    {
-        $magasin = Magasin::findOrFail($id);
-        return view('admin.pages.edit_magasin', compact('magasin'));
-    }
-    public function updateMagasin(Request $request, $id)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,{$id}',
-            'phoneNumber' => 'required|string|max:255',
-            'location' => 'required|string|max:255',
-            'magasinPicture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'rate' => 'nullable|numeric|min:0|max:5',
-            'magasinOpen' => 'required|boolean',
-            'status' => 'required|in:active,inactive,blocked',
-        ]);
-
-        $magasin = Magasin::findOrFail($id);
-        $magasin->update($request->only(['name', 'email', 'phoneNumber', 'location', 'magasinOpen', 'rate', 'status']));
-
-        if ($request->hasFile('magasinPicture')) {
-            $path = $request->file('magasinPicture')->store('images/magasins');
-            $magasin->update(['magasinPicture' => $path]);
-        }
-
-        return redirect()->route('admin.magasins')->with('success', 'Magasin updated successfully.');
-    }
-    public function showRegister($id)
-    {
-        $magasin = Magasin::findOrFail($id);
-        $directory = 'demands/' . $magasin->user->id . '/' . $magasin->id . '/';
-        $files = Storage::disk('local')->files($directory);
-        if (empty($files)) {
-            abort(404);
-        }
-        $path = $files[0];
-        if (!Storage::disk('local')->exists($path)) {
-            abort(404);
-        }
-        $file = Storage::disk('local')->get($path);
-        $type = Storage::disk('local')->mimeType($path);
-
-        return Response::make($file, 200)->header("Content-Type", $type);
     }
 }
