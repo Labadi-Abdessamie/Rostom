@@ -26,9 +26,9 @@
                                 @endif
                                 <a class="wsus__pro_link"
                                     href="{{ route('frontend.product_details', ['id' => $categoryProduct->id]) }}">
-                                    <img src="{{ asset('frontend/images/mobile_1.jpg') }}" alt="product"
-                                        class="img-fluid w-100 img_1" />
-                                    <img src="{{ asset('frontend/images/mobile_2.jpg') }}" alt="product"
+                                    <img src="{{ asset('storage/products_images/' . $categoryProduct->id . '/' . $categoryProduct->principalImage) }}"
+                                        alt="product" class="img-fluid w-100 img_1" />
+                                    <img src="{{ asset('frontend/images/none.jpg') }}" alt="product"
                                         class="img-fluid w-100 img_2" />
                                 </a>
                                 <ul class="wsus__single_pro_icon">
@@ -71,14 +71,6 @@
                                         @endif
                                     </p>
                                     @livewire('add-to-cart', ['product' => $categoryProduct], key($categoryProduct->id))
-                                    {{--
-                                    <form action="{{ route('frontend.cart.add_item', ['id' => $categoryProduct->id]) }}"
-                                        method="POST">
-                                        @csrf
-                                        <button class="btn add_cart" type="submit">add to cart
-                                        </button>
-                                    </form>
-                                    --}}
                                 </div>
                             </div>
                         </div>

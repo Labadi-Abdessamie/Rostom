@@ -15,8 +15,8 @@
                     <div class="col-xl-4 col-lg-6">
                         <div class="wsus__hot_deals_offer">
                             <div class="wsus__hot_deals_img">
-                                <img src="{{ asset('frontend/images/pro0010.jpg') }}" alt="mobile"
-                                    class="img-fluid w-100">
+                                <img src="{{ asset('storage/products_images/' . $secondSliderProduct->id . '/' . $secondSliderProduct->principalImage) }}"
+                                    alt="mobile" class="img-fluid w-100">
                             </div>
                             <div class="wsus__hot_deals_text">
                                 <a class="wsus__hot_title"
@@ -99,9 +99,9 @@
                                 @endif
                                 <a class="wsus__pro_link"
                                     href="{{ route('frontend.product_details', ['id' => $regularProduct->id]) }}">
-                                    <img src="{{ asset('frontend/images/charger_2.jpg') }}" alt="product"
-                                        class="img-fluid w-100 img_1" />
-                                    <img src="{{ asset('frontend/images/charger_1.jpg') }}" alt="product"
+                                    <img src="{{ asset('storage/products_images/' . $regularProduct->id . '/' . $regularProduct->principalImage) }}"
+                                        alt="product" class="img-fluid w-100 img_1" />
+                                    <img src="{{ asset('frontend/images/none.jpg') }}" alt="product"
                                         class="img-fluid w-100 img_2" />
                                 </a>
                                 <ul class="wsus__single_pro_icon">
@@ -208,8 +208,8 @@
                             <a class="wsus__hot_deals__single"
                                 href="{{ route('frontend.product_details', ['id' => $randomProduct->id]) }} ">
                                 <div class="wsus__hot_deals__single_img">
-                                    <img src="{{ asset('frontend/images/pro4_4.jpg') }}" alt="bag"
-                                        class="img-fluid w-100">
+                                    <img src="{{ asset('storage/products_images/' . $randomProduct->id . '/' . $randomProduct->principalImage) }}"
+                                        alt="bag" class="img-fluid w-100">
                                 </div>
                                 <div class="wsus__hot_deals__single_text">
                                     <h5>{{ $randomProduct->name }}</h5>

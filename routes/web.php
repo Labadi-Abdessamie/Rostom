@@ -49,6 +49,7 @@ Route::group(['prefix' => '', 'as' => 'frontend.'], function () {
 route::middleware(['auth'])->group(function () {
     Route::get('dashboard', [MainController::class, 'dashboard'])->name('dashboard');
     Route::patch('/profile-update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('profile-update/password', [ProfileController::class, 'updatePassword'])->name('profile.update.password');
 });
 
 //Client route
@@ -110,8 +111,6 @@ route::middleware(['auth',  RoleMiddleware::class . ':vendor', StatusMiddleware:
 
         Route::get('contact', [VendorInterfaceController::class, 'contact'])->name('contact');
         Route::get('profile', [VendorInterfaceController::class, 'profile'])->name('profile');
-        Route::post('profile/update', [VendorInterfaceController::class, 'updateProfile'])->name('update_profile');
-        Route::post('profile/update/password', [VendorInterfaceController::class, 'updatePassword'])->name('update_password');
     });
 });
 
@@ -121,7 +120,6 @@ Route::middleware(['auth', RoleMiddleware::class . ':admin'])->group(function ()
     Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         Route::get('dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
         Route::get('profile', [AdminController::class, 'profile'])->name('profile');
-        //!Route::post('profile/update/password', [AdminController::class, 'updatePassword'])->name('update_password');
 
         //!GET ROUTES
         Route::get('customers/{type?}', [AdminController::class, 'customers'])->name('customers');

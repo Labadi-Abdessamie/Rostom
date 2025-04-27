@@ -17,7 +17,8 @@
                             <div class="col-xl-6 col-md-6">
                                 <div class="wsus__add_address_single">
                                     <label>Name <b>*</b></label>
-                                    <input type="text" name="name" placeholder="Name" value="{{ old('name') }}" required>
+                                    <input type="text" name="name" placeholder="Name" value="{{ old('name') }}"
+                                        required>
                                 </div>
                             </div>
 
@@ -25,7 +26,8 @@
                             <div class="col-xl-6 col-md-6">
                                 <div class="wsus__add_address_single">
                                     <label>Email</label>
-                                    <input type="email" name="email" placeholder="Email" value="{{ old('email') }}" required>
+                                    <input type="email" name="email" placeholder="Email" value="{{ old('email') }}"
+                                        required>
                                 </div>
                             </div>
 
@@ -33,7 +35,8 @@
                             <div class="col-xl-6 col-md-6">
                                 <div class="wsus__add_address_single">
                                     <label>Phone <b>*</b></label>
-                                    <input type="text" name="phoneNumber" placeholder="Phone" value="{{ old('phoneNumber') }}" maxlength="10" required>
+                                    <input type="text" name="phoneNumber" placeholder="Phone"
+                                        value="{{ old('phoneNumber') }}" maxlength="10" required>
                                 </div>
                             </div>
 
@@ -43,8 +46,10 @@
                                     <label for="addressType">Address Type <b>*</b></label>
                                     <select id="addressType" name="type" class="form-select" required>
                                         <option value="" disabled selected>Select Address Type</option>
-                                        <option value="billing" {{ old('type') == 'billing' ? 'selected' : '' }}>Billing</option>
-                                        <option value="shipping" {{ old('type') == 'shipping' ? 'selected' : '' }}>Shipping</option>
+                                        <option value="shipping" {{ old('type') == 'shipping' ? 'selected' : '' }}>Shipping
+                                        </option>
+                                        <option value="billing" {{ old('type') == 'billing' ? 'selected' : '' }}>Billing
+                                        </option>
                                     </select>
                                 </div>
                             </div>
@@ -61,7 +66,8 @@
                             <div class="col-xl-12">
                                 <div class="wsus__add_address_single">
                                     <label>
-                                        <input type="checkbox" name="principalAddress" value="1" {{ old('principalAddress') ? 'checked' : '' }}>
+                                        <input type="checkbox" name="principalAddress" value="1"
+                                            {{ old('principalAddress') ? 'checked' : '' }}>
                                         Set as primary address
                                     </label>
                                 </div>

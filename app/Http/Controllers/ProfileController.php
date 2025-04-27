@@ -52,7 +52,7 @@ class ProfileController extends Controller
         $user = Auth::user();
         $data = request()->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
+            'email' => 'required|email||lowercase|max:255',
             'phoneNumber' => 'nullable|string|max:10',
             'bio' => 'nullable|string|max:1000',
             'profilePicture' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
@@ -70,6 +70,25 @@ class ProfileController extends Controller
         $user->update($data);
 
         return redirect()->back()->with('success', 'Profile updated successfully.');
+    }
+
+    public function updatePassword(Request $request): RedirectResponse
+    {
+        $user = Auth::user();
+
+        $data = $request->validate([
+            'current_password' => 'required|string',
+            'new_password' => 'required|string|min:8|confirmed',
+        ]);
+
+        if (!Hash::check($data['current_password'], $user->password)) {
+            return redirect()->back()->with('error', 'Current password is incorrect.');
+        }
+
+        $user->update([
+            'password' => Hash::make($data['new_password'])
+        ]);
+        return redirect()->back()->with('success', 'Password updated successfully.');
     }
 
     /**

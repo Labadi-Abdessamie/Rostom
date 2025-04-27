@@ -23,12 +23,14 @@
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box">
-                    <div class="page-title-right">
-                        <ol class="breadcrumb m-0">
-                            <li class="breadcrumb-item"><a href="javascript: void(0);">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Reviews</li>
-                        </ol>
-                    </div>
+                    @if (false)
+                        <div class="page-title-right">
+                            <ol class="breadcrumb m-0">
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Dashboard</a></li>
+                                <li class="breadcrumb-item active">Reviews</li>
+                            </ol>
+                        </div>
+                    @endif
                     <h4 class="page-title">Reviews</h4>
                 </div>
             </div>
@@ -59,10 +61,12 @@
                                                 <td class="text-center">{{ $review->rate ?? 'N/A' }}</td>
                                                 <td>{{ $review->content ?? 'N/A' }}</td>
                                                 <td>
-                                                    <form action="{{ route('admin.delete_review', $review->id) }}" method="POST" style="display: inline;">
+                                                    <form action="{{ route('admin.delete_review', $review->id) }}"
+                                                        method="POST" style="display: inline;">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this review?')">Delete</button>
+                                                        <button type="submit" class="btn btn-danger"
+                                                            onclick="return confirm('Are you sure you want to delete this review?')">Delete</button>
                                                     </form>
                                                 </td>
                                             </tr>

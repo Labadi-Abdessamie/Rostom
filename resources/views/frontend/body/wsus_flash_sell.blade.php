@@ -28,9 +28,9 @@
                             @endif
                             <a class="wsus__pro_link"
                                 href="{{ route('frontend.product_details', ['id' => $sliderProduct->id]) }}">
-                                <img src="{{ asset('frontend/images/pro3.jpg') }}" alt="product"
-                                    class="img-fluid w-100 img_1" />
-                                <img src="{{ asset('frontend/images/pro3_3.jpg') }}" alt="product"
+                                <img src="{{ asset('storage/products_images/' . $sliderProduct->id . '/' . $sliderProduct->principalImage) }}"
+                                    alt="product" class="img-fluid w-100 img_1" />
+                                <img src="{{ asset('frontend/images/none.jpg') }}" alt="product"
                                     class="img-fluid w-100 img_2" />
                             </a>
                             <ul class="wsus__single_pro_icon">

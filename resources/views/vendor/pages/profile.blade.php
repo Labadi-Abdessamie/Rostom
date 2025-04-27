@@ -21,7 +21,6 @@
             </div>
         </div>
         <div class="section-body">
-
             <div class="row">
                 <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
                     @csrf
@@ -100,6 +99,45 @@
                         </div>
                         <div class="card-footer text-right">
                             <button class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </div>
+                </form>
+                <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    @method('PATCH')
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Edit Password</h4>
+                        </div>
+                        <div class="card-body row">
+                            <!-- Current Password -->
+                            <div class="form-group col-12">
+                                <input class="form-control" type="password" name="current_password"
+                                    placeholder="Current Password" required>
+                                @error('current_password')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <!-- New Password -->
+                            <div class="form-group col-md-6 col-12">
+                                <input class="form-control" type="password" name="new_password" placeholder="New Password"
+                                    required>
+                                @error('new_password')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <!-- Confirm New Password -->
+                            <div class="form-group col-md-6 col-12">
+                                <input class="form-control" type="password" name="new_password_confirmation"
+                                    placeholder="Confirm New Password" required>
+                                @error('new_password_confirmation')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <!-- Submit Button -->
+                        <div class="card-footer text-right">
+                            <button class="btn btn-primary">Change Password</button>
                         </div>
                     </div>
                 </form>

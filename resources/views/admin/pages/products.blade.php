@@ -8,13 +8,13 @@
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box">
-                        <div class="page-title-right">
-                            <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">UBold</a></li>
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">Ecommerce</a></li>
-                                <li class="breadcrumb-item active">Products</li>
-                            </ol>
-                        </div>
+                        @if (false)
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item active">Products</li>
+                                </ol>
+                            </div>
+                        @endif
                         <h4 class="page-title">Products</h4>
                     </div>
                 </div>
@@ -51,7 +51,7 @@
 
                                 <!-- Product Image -->
                                 <div class="bg-light">
-                                    <img src="{{ asset('storage/products_images/' . $product->id . '/' . $product->prinicpalImage) }}"
+                                    <img src="{{ asset('storage/products_images/' . $product->id . '/' . $product->principalImage) }}"
                                         alt="product-pic" class="img-fluid" />
                                 </div>
 

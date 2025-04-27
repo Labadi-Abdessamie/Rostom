@@ -7020,6 +7020,7 @@ footer {
 }
 
 .wsus__dashboard_order table {
+    width: 1400px;
     border: 1px solid #eee;
     margin: 0;
 }

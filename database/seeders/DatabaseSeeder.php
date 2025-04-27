@@ -22,6 +22,6 @@ class DatabaseSeeder extends Seeder
         //Magasin::factory(5)->create();
         //Category::factory(3)->create();
         //BagItem::factory(20)->create();
-        
+
     }
 }

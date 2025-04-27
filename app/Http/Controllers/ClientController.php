@@ -166,33 +166,6 @@ class ClientController extends Controller
     }
 
 
-    public function updatePassword(Request $request)
-    {
-        // Get the currently authenticated user
-        $user = Auth::user();
-
-        // Validate the incoming request data
-        $data = $request->validate([
-            'current_password' => 'required|string',  // Ensure the current password is provided
-            'new_password' => 'required|string|min:8|confirmed', // Ensure new password is confirmed
-        ]);
-
-        // Check if the provided current password matches the user's password in the database
-        if (!Hash::check($data['current_password'], $user->password)) {
-            // If not, return an error message
-            return redirect()->back()->with('error', 'Current password is incorrect.');
-        }
-
-        // Update the password only if the current password is correct
-        $user->update([
-            'password' => Hash::make($data['new_password']) // Hash the new password
-        ]);
-
-        // Redirect back with a success message
-        return redirect()->back()->with('success', 'Password updated successfully.');
-    }
-
-
     /*
     public function chat()
     {

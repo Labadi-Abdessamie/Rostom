@@ -52,8 +52,8 @@
                                 <a class="wsus__hot_deals__single"
                                     href="{{ route('frontend.product_details', ['id' => $monthlyProduct->id]) }} ">
                                     <div class="wsus__hot_deals__single_img">
-                                        <img src="{{ asset('frontend/images/pro8_8.jpg') }}" alt="bag"
-                                            class="img-fluid w-100">
+                                        <img src="{{ asset('storage/products_images/' . $monthlyProduct->id . '/' . $monthlyProduct->principalImage) }}"
+                                            alt="bag" class="img-fluid w-100">
                                     </div>
                                     <div class="wsus__hot_deals__single_text">
                                         <h5>{{ $monthlyProduct->name }}</h5>

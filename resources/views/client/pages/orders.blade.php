@@ -53,7 +53,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="9" class="text-center">No orders found.</td>
+                                        <td width="1400px" class="text-center">No orders found.</td>
                                     </tr>
                                 @endforelse
                             </tbody>

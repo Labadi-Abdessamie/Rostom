@@ -102,7 +102,7 @@ class ProductController extends Controller
     {
         $product = Product::whereHas('magasin', function ($query) {
             $query->where('status', 'active');
-        })->with('magasin')->findorFail($id);
+        })->with('magasin')->with('productImages')->findorFail($id);
 
         $reviews = Review::where('product_id', $id)->whereHas('user', function ($query) {
             $query->where('status', '!=', 'blocked');

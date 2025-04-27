@@ -23,8 +23,9 @@ class ProductFactory extends Factory
             'short_description' => fake()->text(),
             'actual_quantity' => fake()->randomNumber(3),
             'price' => fake()->randomFloat(2, 10, 500), // Price between 10 and 500
+            'principalImage' => "pro3.jpg",
             'category_id' => fake()->randomElement(Category::all('id')),
-            'magasin_id' => fake()->randomElement(Magasin::where('status', '!=', 'firstOpening')->get('id'))
+            'magasin_id' => fake()->randomElement(Magasin::where('status', 'active')->get('id'))
         ];
     }
 }
