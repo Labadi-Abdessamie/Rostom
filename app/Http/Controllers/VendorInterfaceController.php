@@ -53,9 +53,9 @@ class VendorInterfaceController extends Controller
         return view('vendor.pages.magasin_info');
     }
 
-    public function createProduct()
+    public function addProduct()
     {
-        return view('vendor.products.create');
+        return view('vendor.pages.add_product');
     }
 
     public function storeProduct(Request $request)
