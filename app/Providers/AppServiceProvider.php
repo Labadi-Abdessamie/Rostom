@@ -29,7 +29,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
 
-        View::share('website', [
+        $DefaultInformations = [
             'url' => 'youtube.com',
             'name' => 'rostom',
             'logo' => 'logo.png',
@@ -48,16 +48,12 @@ class AppServiceProvider extends ServiceProvider
             'products_number' => 0,
             'ordersDone_number' => 0,
             'rules_and_privacy' => 'rules.pdf'
-        ]);
-        /*
-        View::share('website', Cache::remember('website', 1, function () {
-            return Website::first();
-        }));*/
+        ];
 
         try {
             DB::connection()->getPdo();
 
-            if (Schema::hasTable('your_table_name')) {
+            if (Schema::hasTable('categories')) {
                 View::share('categories', Cache::remember('categories', 21600, function () {
                     return Category::WhereNull('parentId')->where('status', 'active')->with([
                         'childrens' => function ($query) {
@@ -73,8 +69,16 @@ class AppServiceProvider extends ServiceProvider
             } else {
                 View::share('categories', null);
             }
+            if (Schema::hasTable('websites')) {
+                View::share('website', Cache::remember('website', 1, function () {
+                    return Website::first();
+                }));
+            } else {
+                View::share('website', $DefaultInformations);
+            }
         } catch (\Exception $e) {
             View::share('categories', null);
+            View::share('website', $DefaultInformations);
         }
 
 
