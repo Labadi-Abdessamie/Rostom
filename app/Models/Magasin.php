@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\OrderItem;
+use App\Models\Product;
+use App\Models\Order;
 
 class Magasin extends Model
 
@@ -35,6 +38,10 @@ class Magasin extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function orderItems()
+{
+    return $this->hasManyThrough(OrderItem::class, Product::class);
+}
     public function products()
     {
         return $this->hasMany(Product::class);

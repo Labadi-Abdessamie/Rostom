@@ -10,10 +10,14 @@ class VendorInterfaceController extends Controller
 {
     public function dashboard()
     {
-        $vendor = Auth::user();
-        //$products = Product::where('vendor_id', $vendor->id)->paginate(10);
+        $user = Auth::user();
+        $totalProducts = Product::where('magasin_id', $user->magasin->id)->count();
+        $totalOrders = $user->orders()->count();
+        $topProducts = Product::where('magasin_id', $user->magasin->id)->withCount('orderItems')->orderBy('order_items_count', 'desc')->take(5)->get();
+        $totalEarnings = $user->orders()->sum('totalAmount');
+        $pendingOrders = $user->orders()->where('status', 'pending')->count();
 
-        return view('vendor.index'/*, compact('vendor', 'products')*/);
+        return view('vendor.index',compact('totalProducts','totalOrders','totalEarnings','pendingOrders','topProducts'));
     }
     public function profile()
     {
