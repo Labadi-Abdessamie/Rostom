@@ -22,7 +22,9 @@ class ProductController extends Controller
 
         $query = Product::whereHas('magasin', function ($q) {
             $q->where('status', 'active');
-        })->where('actual_quantity', '>', 0);
+        })->whereHas('category', function ($q) {
+            $q->where('status', 'active');
+        })->with('productImages');
 
         if ($categoryId) {
             $category = Category::find($categoryId);
@@ -102,6 +104,8 @@ class ProductController extends Controller
     {
         $product = Product::whereHas('magasin', function ($query) {
             $query->where('status', 'active');
+        })->whereHas('category', function ($q) {
+            $q->where('status', 'active');
         })->with('magasin')->with('productImages')->findorFail($id);
 
         $reviews = Review::where('product_id', $id)->whereHas('user', function ($query) {

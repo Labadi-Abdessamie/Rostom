@@ -6,8 +6,8 @@
 
 @section('content')
     <!--============================
-                                                                                                                                                                                                                                                                                                                    BREADCRUMB START
-                                                                                                                                                                                                                                                                                                                ==============================-->
+                                                                                                                                                                                                                                                                                                                                                            BREADCRUMB START
+                                                                                                                                                                                                                                                                                                                                                        ==============================-->
     <section id="wsus__breadcrumb">
         <div class="wsus_breadcrumb_overlay">
             <div class="container">
@@ -25,8 +25,8 @@
         </div>
     </section>
     <!--============================
-                                                                                                                                                                                                                                                                                                                    BREADCRUMB END
-                                                                                                                                                                                                                                                                                                                ==============================-->
+                                                                                                                                                                                                                                                                                                                                                            BREADCRUMB END
+                                                                                                                                                                                                                                                                                                                                                        ==============================-->
 
     {{--
     <!--==========================
@@ -83,8 +83,8 @@
 --}}
 
     <!--============================
-                                                                                                                                                                                                                                                                                                                  VENDORS DETAILA START
-                                                                                                                                                                                                                                                                                                                ==============================-->
+                                                                                                                                                                                                                                                                                                                                                          VENDORS DETAILA START
+                                                                                                                                                                                                                                                                                                                                                        ==============================-->
     <section id="wsus__product_page" class="wsus__vendor_details_page">
         <div class="container">
             <div class="row">
@@ -424,7 +424,14 @@
                                                             <del>$200</del>
                                                         @endif
                                                     </p>
-                                                    @livewire('add-to-cart', ['product' => $product->id])
+
+                                                    @if ($product->actual_quantity > 0)
+                                                        @livewire('add-to-cart', ['product' => $product->id])
+                                                    @else
+                                                        <button class="btn btn--danger bg-danger add_cart">
+                                                            Out of stock
+                                                        </button>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
@@ -483,7 +490,13 @@
                                                     <p class="list_description">{{ $product->short_description }}</p>
                                                     <ul class="wsus__single_pro_icon">
                                                         <li>
-                                                            @livewire('add-to-cart', ['product' => $product->id])
+                                                            @if ($product->actual_quantity > 0)
+                                                                @livewire('add-to-cart', ['product' => $product->id])
+                                                            @else
+                                                                <button class="btn btn--danger bg-danger add_cart">
+                                                                    Out of stock
+                                                                </button>
+                                                            @endif
                                                         </li>
                                                         <li class="cursor-pointer ms-2">
                                                             @livewire('add-to-wishlist', ['product' => $product], key($product->id))
@@ -530,6 +543,6 @@
         </div>
     </section>
     <!--============================
-                                                                                                                                                                                                            VENDORS DETAILA END
-                                                                                                                                                                                                        ==============================-->
+                                                                                                                                                                                                                                                    VENDORS DETAILA END
+                                                                                                                                                                                                                                                ==============================-->
 @endsection

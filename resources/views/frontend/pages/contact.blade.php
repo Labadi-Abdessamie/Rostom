@@ -6,8 +6,8 @@
 
 @section('content')
     <!--============================
-                                    BREADCRUMB START
-                                ==============================-->
+                                            BREADCRUMB START
+                                        ==============================-->
     <section id="wsus__breadcrumb">
         <div class="wsus_breadcrumb_overlay">
             <div class="container">
@@ -24,13 +24,13 @@
         </div>
     </section>
     <!--============================
-                                    BREADCRUMB END
-                                ==============================-->
+                                            BREADCRUMB END
+                                        ==============================-->
 
 
     <!--============================
-                                    CONTACT PAGE START
-                                ==============================-->
+                                            CONTACT PAGE START
+                                        ==============================-->
     <section id="wsus__contact">
         <div class="container">
             <div class="wsus__contact_area">
@@ -49,8 +49,7 @@
                                 <div class="wsus__contact_single">
                                     <i class="far fa-phone-alt"></i>
                                     <h5>phone number</h5>
-                                    <a
-                                        href="macallto:+213{{ $website->contact_phone }}">+213{{ $website->contact_phone }}</a>
+                                    <a href="callto:+213{{ $website->contact_phone }}">+213{{ $website->contact_phone }}</a>
                                     <span><i class="far fa-phone-alt"></i></span>
                                 </div>
                             </div>
@@ -114,6 +113,6 @@
         </div>
     </section>
     <!--============================
-                                    CONTACT PAGE END
-                                ==============================-->
+                                            CONTACT PAGE END
+                                        ==============================-->
 @endsection
