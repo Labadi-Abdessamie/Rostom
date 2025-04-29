@@ -104,6 +104,11 @@ route::middleware(['auth',  RoleMiddleware::class . ':vendor', StatusMiddleware:
 
         Route::get('profile', [VendorInterfaceController::class, 'profile'])->name('profile');
         Route::get('orders', [VendorInterfaceController::class, 'orders'])->name('orders');
+        Route::get('order-details/{id}', [VendorInterfaceController::class, 'orderDetails'])->name('order_details');
+
+        Route::post('order/{id}/update', [OrderController::class, 'update'])->name('order.update');
+
+
         Route::get('reviews', [VendorInterfaceController::class, 'reviews'])->name('reviews');
         Route::get('purchase-orders', [VendorInterfaceController::class, 'purchaseOrders'])->name('purchase_orders');
 

@@ -26,7 +26,7 @@
             <div class="col-lg-4 col-md-4 col-sm-12">
                 <div class="card card-statistic-2">
                     <div class="card-stats">
-                        
+
                     </div>
                     <div class="card-icon shadow-primary bg-primary">
                         <i class="fas fa-archive"></i>
@@ -72,7 +72,7 @@
                             <h4>Sales</h4>
                         </div>
                         <div class="card-body">
-                            {{ $totalOrders }}
+                            {{ $totalCompletedOrders }}
                         </div>
                     </div>
                 </div>
@@ -104,18 +104,21 @@
                                 <div>
                                     <div class="product-item">
                                         <div class="product-image">
-                                            <img alt="image" src="{{ asset('storage/' . $product->image) }}" class="img-fluid">
+                                            <img alt="image" src="{{ asset('storage/' . $product->image) }}"
+                                                class="img-fluid">
                                         </div>
                                         <div class="product-details">
                                             <div class="product-name">{{ $product->name }}</div>
                                             <div class="product-review">
                                                 @for ($i = 0; $i < 5; $i++)
-                                                    <i class="{{ $i < $product->rate_average ? 'fas' : 'far' }} fa-star"></i>
+                                                    <i
+                                                        class="{{ $i < $product->rate_average ? 'fas' : 'far' }} fa-star"></i>
                                                 @endfor
                                             </div>
                                             <div class="text-muted text-small">{{ $product->rate_count }} Counts</div>
                                             <div class="product-cta">
-                                                <a href="{{ route('frontend.product_details', ['id' => $product->id]) }}" class="btn btn-primary">Detail</a>
+                                                <a href="{{ route('frontend.product_details', ['id' => $product->id]) }}"
+                                                    class="btn btn-primary">Detail</a>
                                             </div>
                                         </div>
                                     </div>
@@ -126,6 +129,6 @@
                 </div>
             </div>
         </div>
-        
+
     </section>
 @endsection

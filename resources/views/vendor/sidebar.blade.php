@@ -2,10 +2,10 @@
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
             <a
-                href="{{ route('frontend.index') }}">{{ Auth::user()->magasin()->exists() ? Auth::user()->magasin->name : 'Magasin' }}</a>
+                href="{{ route('frontend.vendor_details', ['id' => Auth::user()->magasin->id]) }}">{{ Auth::user()->magasin()->exists() ? Auth::user()->magasin->name : 'Magasin' }}</a>
         </div>
         <div class="sidebar-brand sidebar-brand-sm">
-            <a href="index.html">St</a>
+            <a href="{{ route('frontend.vendor_details', ['id' => Auth::user()->magasin->id]) }}">MG</a>
         </div>
         <ul class="sidebar-menu">
             <li class="menu-header">Dashboard</li>

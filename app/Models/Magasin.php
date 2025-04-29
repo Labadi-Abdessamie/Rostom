@@ -40,9 +40,9 @@ class Magasin extends Model
         return $this->belongsTo(User::class);
     }
     public function orderItems()
-{
-    return $this->hasManyThrough(OrderItem::class, Product::class);
-}
+    {
+        return $this->hasManyThrough(OrderItem::class, Product::class);
+    }
     public function products()
     {
         return $this->hasMany(Product::class);
@@ -56,14 +56,14 @@ class Magasin extends Model
         return $this->hasMany(PurchaseOrder::class);
     }
     public function reviews(): HasManyThrough
-{
-    return $this->hasManyThrough(
-        Review::class,
-        Product::class,
-        'magasin_id',
-        'product_id',
-        'id', 
-        'id'
-    );
-}
+    {
+        return $this->hasManyThrough(
+            Review::class,
+            Product::class,
+            'magasin_id',
+            'product_id',
+            'id',
+            'id'
+        );
+    }
 }
