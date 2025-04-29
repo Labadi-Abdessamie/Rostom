@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\OrderItem;
 use App\Models\Product;
-use App\Models\Order;
+use App\Models\Review;
 
 class Magasin extends Model
 
@@ -54,4 +55,15 @@ class Magasin extends Model
     {
         return $this->hasMany(PurchaseOrder::class);
     }
+    public function reviews(): HasManyThrough
+{
+    return $this->hasManyThrough(
+        Review::class,
+        Product::class,
+        'magasin_id',
+        'product_id',
+        'id', 
+        'id'
+    );
+}
 }

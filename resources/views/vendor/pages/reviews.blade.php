@@ -14,8 +14,6 @@
     <script src="{{ asset('vendor/modules/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('vendor/modules/datatables/Select-1.2.4/js/dataTables.select.min.js') }}"></script>
     <script src="{{ asset('vendor/modules/jquery-ui/jquery-ui.min.js') }}"></script>
-
-    <!-- Page Specific JS File -->
     <script src="{{ asset('vendor/js/page/modules-datatables.js') }}"></script>
 @endsection
 
@@ -33,14 +31,15 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card">
+                        <div class="card-header">
+                            <h4>Total Reviews: {{ $totalReviews }} | Average Rating: {{ number_format($averageRating, 2) }}</h4>
+                        </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-striped" id="table-1">
                                     <thead>
                                         <tr>
-                                            <th class="text-center">
-                                                Id
-                                            </th>
+                                            <th class="text-center">Id</th>
                                             <th>Product Name</th>
                                             <th>Customer Name</th>
                                             <th>Rate</th>
@@ -49,20 +48,36 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>
-                                                1
-                                            </td>
-                                            <td>Create a mobile app</td>
-                                            <td>
-                                                DZ 50
-                                            </td>
-                                            <td class="text-center">
-                                                13
-                                            </td>
-                                            <td>4.5</td>
-                                            <td><a href="#" class="btn btn-secondary">Detail</a></td>
-                                        </tr>
+                                        @foreach ($reviews as $review)
+                                            <tr>
+                                                <td class="text-center">{{ $review->id }}</td>
+                                                <td>{{ $review->product->name ?? 'N/A' }}</td>
+                                                <td>{{ $review->user->name ?? 'Anonymous' }}</td>
+                                                <td class="text-center">
+                                                    @for ($i = 1; $i <= 5; $i++)
+                                                        @if ($i <= floor($review->rate))
+                                                            <i class="fas fa-star text-warning"></i>
+                                                        @elseif ($i - $review->rate < 1)
+                                                            <i class="fas fa-star-half-alt text-warning"></i>
+                                                        @else
+                                                            <i class="far fa-star text-warning"></i>
+                                                        @endif
+                                                    @endfor
+                                                    <small>({{ number_format($review->rate, 1) }})</small>
+                                                </td>
+                                                <td>{{ $review->content }}</td>
+                                                <td>
+                                                    <a href="{{ route('frontend.product_details', ['id' => $review->product->id]) }}" class="btn btn-secondary" target="_blank">
+                                                        Detail
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                        @if($reviews->isEmpty())
+                                            <tr>
+                                                <td colspan="6" class="text-center">No reviews found.</td>
+                                            </tr>
+                                        @endif
                                     </tbody>
                                 </table>
                             </div>
