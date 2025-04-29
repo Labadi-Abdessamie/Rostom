@@ -5,6 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Magasin;
+
+use App\Models\Order;
+
+
+
+
 
 class VendorInterfaceController extends Controller
 {
@@ -25,16 +32,39 @@ class VendorInterfaceController extends Controller
         return view('vendor.pages.profile', compact('vendor'));
     }
     public function products()
-    {
-        //$vendor = Auth::user();
-        return view('vendor.pages.products');
+{
+    $user = Auth::user();
+
+    
+    $magasin = Magasin::where('user_id', $user->id)->first();
+
+    if (!$magasin) {
+        
+        $products = collect(); 
+    } else {
+        
+        $products = Product::where('magasin_id', $magasin->id)->get();
     }
 
-    public function orders()
-    {
-        //$vendor = Auth::user();
-        return view('vendor.pages.orders');
-    }
+    return view('vendor.pages.products', compact('products'));
+}
+
+public function orders()
+{
+    $vendor = Auth::user();
+
+    $magasinId = $vendor->magasin->id;
+
+    $orders = Order::whereHas('orderItems.product', function ($query) use ($magasinId) {
+        $query->where('magasin_id', $magasinId);
+    })->with(['orderItems.product' => function ($query) use ($magasinId) {
+        $query->where('magasin_id', $magasinId);
+    }])->get();
+
+    $totalOrders = $orders->count();
+
+    return view('vendor.pages.orders', compact('orders', 'totalOrders'));
+}
 
     public function purchaseOrders()
     {
@@ -43,8 +73,14 @@ class VendorInterfaceController extends Controller
     }
     public function reviews()
     {
-        //$vendor = Auth::user();
-        return view('vendor.pages.reviews');
+$vendor = Auth::user();
+$magasin = Magasin::where('user_id', $vendor->id)->first();
+
+$reviews = $magasin->reviews()->with(['user', 'product'])->get();
+$totalReviews = $reviews->count();
+$averageRating = $reviews->avg('rate');
+
+return view('vendor.pages.reviews', compact('reviews', 'totalReviews', 'averageRating'));
     }
     public function contact()
     {

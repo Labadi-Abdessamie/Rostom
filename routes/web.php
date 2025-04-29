@@ -100,6 +100,7 @@ route::middleware(['auth',  RoleMiddleware::class . ':vendor', StatusMiddleware:
         Route::get('dashboard', [VendorInterfaceController::class, 'dashboard'])->name('dashboard');
         Route::get('products', [VendorInterfaceController::class, 'products'])->name('products');
         Route::get('add-product', [VendorInterfaceController::class, 'addProduct'])->name('add_product');
+        Route::delete('delete-product/{id}', [ProductController::class, 'destroy'])->name('delete_product');
 
         Route::get('profile', [VendorInterfaceController::class, 'profile'])->name('profile');
         Route::get('orders', [VendorInterfaceController::class, 'orders'])->name('orders');
