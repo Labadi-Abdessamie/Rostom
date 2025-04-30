@@ -70,6 +70,7 @@
                                             <th class="text-center">Quantity</th>
                                             <th class="text-right">Totals</th>
                                             <th class="text-center">Available</th>
+                                            <th class="text-center">Justification</th>
                                         </tr>
                                         @php
                                             $i = 0;
@@ -87,9 +88,20 @@
                                                     $total += $item->product->price * $item->quantity;
                                                 @endphp
                                                 <td class="text-center">
-                                                    <input type="checkbox" class="form-checkbox"
-                                                        name="{{ $item->id }}">
+                                                    <select class="form-control text-center" name="{{ $item->id }}"
+                                                        id="{{ $item->id }}">
+                                                        <option value="1"
+                                                            @if ($item->status == 'available' || $item->status == 'pending') selected @endif>Yes</option>
+                                                        <option value="0"
+                                                            @if ($item->status == 'notAvailable') selected @endif>No</option>
+                                                    </select>
+                                                    <!-- <input type="checkbox"> -->
                                                 </td>
+                                                <td class="text-center">
+                                                    <input class="form-control d-none" type="text" maxlength="80"
+                                                        name="Just-{{ $item->id }}" value="{{ $item->description }}">
+                                                </td>
+
                                             </tr>
                                         @endforeach
                                     </table>
@@ -152,4 +164,29 @@
             </div>
         </div>
     </section>
+@endsection
+
+
+@section('scripts')
+    <script>
+        $(document).ready(function() {
+            $('select').each(function() {
+                toggleTextInput($(this));
+            });
+
+            $('select').on('change', function() {
+                toggleTextInput($(this));
+            });
+
+            function toggleTextInput($select) {
+                const inputSelector = 'input[type="text"][name="Just-' + $select.attr('id') + '"]';
+
+                if ($select.val() != "0") {
+                    $(inputSelector).addClass('d-none');
+                } else {
+                    $(inputSelector).removeClass('d-none');
+                }
+            }
+        });
+    </script>
 @endsection

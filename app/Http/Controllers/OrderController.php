@@ -105,7 +105,28 @@ class OrderController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        return $request;
+        $data = $request->except('_token');
+
+        foreach ($data as $key => $value) {
+            if (is_numeric($key)) {
+                $status = $value;
+                $description = $data["Just-$key"] ?? null;
+
+                $item = OrderItem::findorFail($key);
+
+                if ($status) {
+                    $item->status = "available";
+                    $item->description = null;
+                } else {
+                    $item->status = "notAvailable";
+                    if ($description) {
+                        $item->description = $description;
+                    }
+                }
+                $item->save();
+            }
+        }
+        return redirect()->route('vendor.orders');
     }
 
     /**

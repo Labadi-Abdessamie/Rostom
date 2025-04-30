@@ -118,7 +118,8 @@
                                                                         class="badge badge-secondary">{{ ucfirst($order['status']) }}</span>
                                                                 @endif
                                                             </td>
-                                                            <td><a href="#" class="btn btn-secondary">Detail</a>
+                                                            <td><a href="{{ route('vendor.order_details', $order['id']) }}"
+                                                                    class="btn btn-secondary">Detail</a>
                                                             </td>
                                                         </tr>
                                                         {{-- @endforeach --}}

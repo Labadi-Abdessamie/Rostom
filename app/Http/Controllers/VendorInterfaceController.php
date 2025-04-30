@@ -8,10 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Magasin;
 
 use App\Models\Order;
-
-
-
-
+use App\Models\OrderItem;
 
 class VendorInterfaceController extends Controller
 {
@@ -32,12 +29,28 @@ class VendorInterfaceController extends Controller
                 })->values(),
             ];
         })->values();
-        $totalCompletedOrders = $totalOrders->where('status', 'delivered')->count();
+
+        $CompletedOrders = $totalOrders->where('status', 'delivered');
+        $totalCompletedOrders = $CompletedOrders->count();
 
         //$totalOrders = $vendor->orders()->count();
         $topProducts = Product::where('magasin_id', $vendor->magasin->id)->withCount('orderItems')->orderBy('order_items_count', 'desc')->take(5)->get();
-        $totalEarnings = $vendor->orders()->sum('totalAmount');
-        $pendingOrders = $vendor->orders()->where('status', 'pending')->count();
+
+        $totalEarnings = $vendor->magasin->orderItems()->where('status', 'available')->get();
+
+        $totalEarnings = 0;
+        foreach ($CompletedOrders as $order) {
+            $totalOrderEarning = 0;
+            foreach ($order['items'] as $item) {
+                $orderItem = OrderItem::with('product:id,price')->findorFail($item['id']);
+                if ($orderItem->status == 'available') {
+                    $totalOrderEarning += $orderItem->product->price * $orderItem->quantity;
+                }
+            }
+            $totalEarnings += $totalOrderEarning;
+        }
+
+        $pendingOrders = $totalOrders->where('status', 'pending')->count();
 
         return view('vendor.index', compact('totalProducts', 'totalCompletedOrders', 'totalEarnings', 'pendingOrders', 'topProducts'));
     }
@@ -77,6 +90,7 @@ class VendorInterfaceController extends Controller
                         'id' => $item->id,
                         'quantity' => $item->quantity,
                         'status' => $item->status,
+                        'description' => $item->description ?? '',
                         'product' => [
                             'id' => $item->product->id ?? null,
                             'name' => $item->product->name ?? null,
