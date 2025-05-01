@@ -76,6 +76,9 @@ route::middleware(['auth', RoleMiddleware::class . ':client'])->group(function (
         Route::get('address/add', [ClientController::class, 'addAddress'])->name('address.add');
         //-----------------------------------------//
 
+        Route::post('order/{id}/confirm', [OrderController::class, 'confirmOrder'])->name('confirm_order');
+        Route::post('order/{id}/cancel', [OrderController::class, 'cancelOrder'])->name('cancel_order');
+
         Route::post('profile/update/password', [ClientController::class, 'updatePassword'])->name('update_password');
 
         //Route::get('invoice', [ClientController::class, 'invoice'])->name('order_invoice');

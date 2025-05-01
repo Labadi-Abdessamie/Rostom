@@ -104,7 +104,8 @@
                                 <div>
                                     <div class="product-item">
                                         <div class="product-image">
-                                            <img alt="image" src="{{ asset('storage/' . $product->image) }}"
+                                            <img alt="image"
+                                                src="{{ asset('storage/products_images/' . $product->id . '/' . $product->principalImage) }}"
                                                 class="img-fluid">
                                         </div>
                                         <div class="product-details">

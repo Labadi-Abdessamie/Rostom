@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Magasin;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -126,6 +128,16 @@ class OrderController extends Controller
                 $item->save();
             }
         }
+        $order = Order::findorFail($id);
+
+        $pendingItems = $order->orderItems()->where('status', 'pending')->get();
+        if ($pendingItems->count() == 0) {
+            $order->status = 'confirmed';
+        } elseif ($pendingItems->count() < $order->orderItems->count()) {
+            $order->status = 'processing';
+        }
+        $order->save();
+
         return redirect()->route('vendor.orders');
     }
 
@@ -135,7 +147,36 @@ class OrderController extends Controller
     public function destroy(string $id)
     {
         $order = Order::findOrFail($id);
+        if ($order->status == 'delivered') {
+            return redirect()->back()->with('error', 'You can\'t delete this order.');
+        }
+        foreach ($order->items as $item) {
+            $item->delete();
+        }
         $order->delete();
         return redirect()->back()->with('success', 'Order deleted successfully.');
+    }
+
+    public function confirmOrder(string $id)
+    {
+        $order = Order::findOrFail($id);
+        $order->status = 'delivered';
+        $order->save();
+        foreach ($order->orderItems as $item) {
+            Product::findOrFail($item->product->id);
+            $item->product->actual_quantity -= $item->quantity;
+            $item->product->save();
+            Magasin::findOrFail($item->product->magasin->id);
+            $item->product->magasin->balance += $item->product->price * $item->quantity;
+            $item->product->magasin->save();
+        }
+        return redirect()->back()->with('message', 'Order confirmed successfully.');
+    }
+    public function cancelOrder(string $id)
+    {
+        $order = Order::findOrFail($id);
+        $order->status = 'cancelled';
+        $order->save();
+        return redirect()->back()->with('message', 'Order cancelled successfully.');
     }
 }
