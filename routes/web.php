@@ -44,6 +44,10 @@ Route::group(['prefix' => '', 'as' => 'frontend.'], function () {
     Route::get('compare', [MainController::class, 'compare'])->name('compare');
 
     Route::get('contact', [MainController::class, 'contact'])->name('contact');
+    Route::post('send-mail', [MainController::class, 'sendMail'])->name('send_mail');
+
+    Route::get('search', [MainController::class, 'search'])->name('search');
+    Route::get('search-vendor', [MainController::class, 'searchVendor'])->name('search_vendor');
 });
 
 route::middleware(['auth'])->group(function () {

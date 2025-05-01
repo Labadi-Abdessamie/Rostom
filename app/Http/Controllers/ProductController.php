@@ -18,43 +18,47 @@ class ProductController extends Controller
         $sort = $request->query('sort', null);
         $perPage = $request->query('number', 12);
 
-        $category = null;
+        $queryFilter = $request->query('name', null);
+        if ($queryFilter) {
+            $products = Product::where('name', 'like', '%' . $queryFilter . '%')->paginate(12);
+        } else {
+            $query = Product::whereHas('magasin', function ($q) {
+                $q->where('status', 'active');
+            })->whereHas('category', function ($q) {
+                $q->where('status', 'active');
+            })->with('productImages');
 
-        $query = Product::whereHas('magasin', function ($q) {
-            $q->where('status', 'active');
-        })->whereHas('category', function ($q) {
-            $q->where('status', 'active');
-        })->with('productImages');
-
-        if ($categoryId) {
-            $category = Category::find($categoryId);
-            if (!$category || $category->status !== 'active') {
-                return redirect()->route('frontend.products')
-                    ->with('message', 'This category is not active');
+            if ($categoryId) {
+                $category = Category::find($categoryId);
+                if (!$category || $category->status !== 'active') {
+                    return redirect()->route('frontend.products')
+                        ->with('message', 'This category is not active');
+                }
+                $query->where('category_id', $categoryId);
             }
-            $query->where('category_id', $categoryId);
+
+            switch ($sort) {
+                case 'rating':
+                    $query->orderByDesc('rate_average');
+                    break;
+                case 'latest':
+                    $query->orderByDesc('created_at');
+                    break;
+                case 'low_high':
+                    $query->orderBy('price');
+                    break;
+                case 'high_low':
+                    $query->orderByDesc('price');
+                    break;
+                default:
+                    $query->latest();
+                    break;
+            }
+            $products = $query->paginate($perPage)->appends($request->query());
         }
 
-        switch ($sort) {
-            case 'rating':
-                $query->orderByDesc('rate_average');
-                break;
-            case 'latest':
-                $query->orderByDesc('created_at');
-                break;
-            case 'low_high':
-                $query->orderBy('price');
-                break;
-            case 'high_low':
-                $query->orderByDesc('price');
-                break;
-            default:
-                $query->latest();
-                break;
-        }
-        $products = $query->paginate($perPage)->appends($request->query());
 
-        return view('frontend.pages.product_view', compact('products', 'category'));
+        return view('frontend.pages.product_view', compact('products', 'queryFilter'));
 
 
         //! Precedent code works without filters
@@ -118,18 +122,12 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
-    {
-        
-    }
+    public function edit(string $id) {}
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
-        
-    }
+    public function update(Request $request, string $id) {}
 
     /**
      * Remove the specified resource from storage.
