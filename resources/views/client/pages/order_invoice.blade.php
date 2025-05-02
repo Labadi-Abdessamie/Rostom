@@ -42,9 +42,9 @@
                                 <div class="col-xl-4 col-md-4">
                                     <div class="wsus__invoice_single text-md-end">
                                         <h5>Payment Details</h5>
-                                        <p>Payment Method: {{ ucfirst($order->paymentMethod) }}</p>
-                                        <p>Payment Status: {{ ucfirst($order->paymentStatus) }}</p>
-                                        <p>Order Status: {{ ucfirst($order->status) }}</p>
+                                        <p>Payment Method: <b>{{ ucfirst($order->paymentMethod) }}</b></p>
+                                        <p>Payment Status: <b>{{ ucfirst($order->paymentStatus) }}</b></p>
+                                        <p>Order Status: <b>{{ ucfirst($order->status) }}</b></p>
                                         <p>Date: {{ $order->created_at->format('Y-m-d') }}</p>
                                     </div>
                                 </div>
@@ -69,7 +69,7 @@
                                         @foreach ($orderItems as $item)
                                             <tr>
                                                 <td class="images">
-                                                    <img src="{{ asset($item->product->principalImage ?? 'images/default.jpg') }}"
+                                                    <img src="{{ asset('storage/products_images/' . $item->product->id . '/' . $item->product->principalImage ?? 'images/default.jpg') }}"
                                                         alt="product" class="img-fluid w-100">
                                                 </td>
                                                 <td class="name">
@@ -95,29 +95,35 @@
                                 </table>
                             </div>
                         </div>
-
-                        <form> {{-- ! For the last confirmation --}}
-                            <div class="wsus__invoice_footer">
-                                @php
-                                    $shipping_fee = 100;
-                                @endphp
-                                <p><span>Shipping Fee:</span> {{ number_format($shipping_fee, 2) }} DZD</p>
-                                <p><span>Total Amount:</span> {{ number_format($order->totalAmount, 2) }} DZD</p>
-                                @if (false)
-                                    <p><span>Tax:</span> {{ number_format($order->tax ?? 0, 2) }} DZD</p>
-                                    <p><span>Discount:</span> {{ number_format($order->discount ?? 0, 2) }} DZD</p>
-                                @endif
-                            </div>
-                            @if ($order->status == 'confirmed')
-                                <div class="text-center">
-                                    <button class="mt-2 btn btn-danger ">Confirm Order & Pay</button>
-                                </div>
-                            @else
-                                <div class="text-center">
-                                    <p class="mt-2 btn btn-danger ">Your order is {{ $order->status }}</p>
-                                </div>
+                        <div class="wsus__invoice_footer">
+                            @php
+                                $shipping_fee = 100;
+                            @endphp
+                            <p><span>Shipping Fee:</span> {{ number_format($shipping_fee, 2) }} DZD</p>
+                            <p><span>Total Amount:</span> {{ number_format($order->totalAmount, 2) }} DZD</p>
+                            @if (false)
+                                <p><span>Tax:</span> {{ number_format($order->tax ?? 0, 2) }} DZD</p>
+                                <p><span>Discount:</span> {{ number_format($order->discount ?? 0, 2) }} DZD</p>
                             @endif
-                        </form>
+                        </div>
+                        @if ($order->status == 'confirmed')
+                            <form action="{{ route('client.confirm_order', $order->id) }}" method="POST">
+                                @csrf
+                                <div class="text-center">
+                                    <button class="mt-2 btn btn-success ">Confirm Order & Pay</button>
+                                </div>
+                            </form>
+                            <form action="{{ route('client.cancel_order', $order->id) }}" method="POST">
+                                @csrf
+                                <div class="text-center">
+                                    <button class="mt-2 btn btn-danger ">Cancel Order</button>
+                                </div>
+                            </form>
+                        @else
+                            <div class="text-center alert">
+                                <p class="mt-2">Your order is <b>{{ $order->status }}</b></p>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>

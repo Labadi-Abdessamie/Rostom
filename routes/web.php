@@ -44,6 +44,10 @@ Route::group(['prefix' => '', 'as' => 'frontend.'], function () {
     Route::get('compare', [MainController::class, 'compare'])->name('compare');
 
     Route::get('contact', [MainController::class, 'contact'])->name('contact');
+    Route::post('send-mail', [MainController::class, 'sendMail'])->name('send_mail');
+
+    Route::get('search', [MainController::class, 'search'])->name('search');
+    Route::get('search-vendor', [MainController::class, 'searchVendor'])->name('search_vendor');
 });
 
 route::middleware(['auth'])->group(function () {
@@ -75,6 +79,9 @@ route::middleware(['auth', RoleMiddleware::class . ':client'])->group(function (
         Route::post('address/store', [ClientController::class, 'storeAddress'])->name('address.store');
         Route::get('address/add', [ClientController::class, 'addAddress'])->name('address.add');
         //-----------------------------------------//
+
+        Route::post('order/{id}/confirm', [OrderController::class, 'confirmOrder'])->name('confirm_order');
+        Route::post('order/{id}/cancel', [OrderController::class, 'cancelOrder'])->name('cancel_order');
 
         Route::post('profile/update/password', [ClientController::class, 'updatePassword'])->name('update_password');
 

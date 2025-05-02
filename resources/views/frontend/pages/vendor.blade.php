@@ -6,8 +6,8 @@
 
 @section('content')
     <!--============================
-                                                                                                                                                                                    BREADCRUMB START
-                                                                                                                                                                                ==============================-->
+                                                                                                                                                                                                    BREADCRUMB START
+                                                                                                                                                                                                ==============================-->
     <section id="wsus__breadcrumb">
         <div class="wsus_breadcrumb_overlay">
             <div class="container">
@@ -24,12 +24,12 @@
         </div>
     </section>
     <!--============================
-                                                         BREADCRUMB END
-                                                         ==============================-->
+                                                                         BREADCRUMB END
+                                                                         ==============================-->
 
     <!--============================
-                                                        VENDORS START
-                                                    ==============================-->
+                                                                        VENDORS START
+                                                                    ==============================-->
     <section id="wsus__product_page" class="wsus__vendors">
         <div class="container">
             <div class="row">
@@ -42,8 +42,10 @@
                         </span>
                     </div>
                     <div class="wsus__product_sidebar wsus__vendor_sidebar" id="sticky_sidebar">
-                        <form>
-                            <input type="text" placeholder="Search...">
+                        <form action="{{ route('frontend.search_vendor') }}">
+                            @csrf
+                            <input name="query" type="text" placeholder="Search..."
+                                value="{{ $queryFilter ? $queryFilter : '' }}">
                             <button class="common_btn" type="submit"><i class="far fa-search"></i></button>
                         </form>
                         <div class="wsus__vendor_sidebar_select">
@@ -175,6 +177,6 @@
         </div>
     </section>
     <!--============================
-                                                            VENDORS END
-                                                            ==============================-->
+                                                                            VENDORS END
+                                                                            ==============================-->
 @endsection

@@ -15,8 +15,9 @@ class VendorInterfaceController extends Controller
     public function dashboard()
     {
         $vendor = Auth::user();
+        //! 1
         $totalProducts = Product::where('magasin_id', $vendor->magasin->id)->count();
-
+        //! 2
         $totalOrderItems = $vendor->magasin->orderItems()->get();
         $totalOrders = $totalOrderItems->groupBy('order_id')->map(function ($items, $orderId) {
             return [
@@ -29,17 +30,39 @@ class VendorInterfaceController extends Controller
                 })->values(),
             ];
         })->values();
+        //! 3
+        $completedOrders = $totalOrders->where('status', 'delivered');
+        $totalCompletedOrders = $completedOrders->count();
 
-        $CompletedOrders = $totalOrders->where('status', 'delivered');
-        $totalCompletedOrders = $CompletedOrders->count();
+        //! 4
+        $orderItemIds = collect($completedOrders)
+            ->pluck('items')
+            ->flatten(1)
+            ->pluck('id');
+        $orderItems = OrderItem::whereIn('id', $orderItemIds)->where('status', 'available')->get();
+
+        $topProductData = $orderItems
+            ->groupBy('product_id')
+            ->map(function ($items) {
+                return $items->sum('quantity');
+            })
+            ->sortDesc()
+            ->take(5);
+
+        $topProducts = Product::whereIn('id', $topProductData->keys())->get()
+            ->sortByDesc(function ($product) use ($topProductData) {
+                return $topProductData[$product->id];
+            });
+
+
 
         //$totalOrders = $vendor->orders()->count();
-        $topProducts = Product::where('magasin_id', $vendor->magasin->id)->withCount('orderItems')->orderBy('order_items_count', 'desc')->take(5)->get();
+        //$topProducts = Product::where('magasin_id', $vendor->magasin->id)->withCount('orderItems')->orderBy('order_items_count', 'desc')->take(5)->get();
+        //$totalEarnings = $vendor->magasin->orderItems()->where('status', 'available')->get();
 
-        $totalEarnings = $vendor->magasin->orderItems()->where('status', 'available')->get();
-
+        //! 5
         $totalEarnings = 0;
-        foreach ($CompletedOrders as $order) {
+        foreach ($completedOrders as $order) {
             $totalOrderEarning = 0;
             foreach ($order['items'] as $item) {
                 $orderItem = OrderItem::with('product:id,price')->findorFail($item['id']);
@@ -49,7 +72,7 @@ class VendorInterfaceController extends Controller
             }
             $totalEarnings += $totalOrderEarning;
         }
-
+        //! 6
         $pendingOrders = $totalOrders->where('status', 'pending')->count();
 
         return view('vendor.index', compact('totalProducts', 'totalCompletedOrders', 'totalEarnings', 'pendingOrders', 'topProducts'));
@@ -67,7 +90,7 @@ class VendorInterfaceController extends Controller
         if (!$magasin) {
             $products = collect();
         } else {
-            $products = Product::where('magasin_id', $magasin->id)->get();
+            $products = Product::where('magasin_id', $magasin->id)->withSum('orderItems', 'quantity')->get();
         }
         return view('vendor.pages.products', compact('products'));
     }
@@ -127,7 +150,9 @@ class VendorInterfaceController extends Controller
         $order = Order::with('shippingAddress')->with('billingAddress')->findOrFail($id);
         $vendor = Auth::user();
 
-        $orderItems = $order->orderItems()->where('order_id', $id)->with('product')->get();
+        $orderItems = $order->orderItems()->where('order_id', $id)->whereHas('product', function ($query) use ($vendor) {
+            $query->where('magasin_id', $vendor->magasin->id);
+        })->with('product')->get();
 
         if ($orderItems->count() == 0) {
             return redirect()->back();

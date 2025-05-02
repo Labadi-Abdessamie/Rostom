@@ -2,22 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
 use App\Models\Magasin;
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 
 class VendorController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $vendors = Magasin::where('status', 'active')->inRandomOrder()->paginate(12);
+        $queryFilter = $request->query('name', null);
 
-        return view('frontend.pages.vendor', compact('vendors'));
+        if ($queryFilter) {
+            $vendors = Magasin::where('name', 'like', '%' . $queryFilter . '%')->paginate(12);
+        } else {
+            $vendors = Magasin::where('status', 'active')->inRandomOrder()->paginate(12);
+        }
+        return view('frontend.pages.vendor', compact('vendors', 'queryFilter'));
     }
 
     /**

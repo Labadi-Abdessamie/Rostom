@@ -6,8 +6,8 @@
 
 @section('content')
     <!--============================
-                                            BREADCRUMB START
-                                        ==============================-->
+                                                                                                    BREADCRUMB START
+                                                                                                ==============================-->
     <section id="wsus__breadcrumb">
         <div class="wsus_breadcrumb_overlay">
             <div class="container">
@@ -24,13 +24,13 @@
         </div>
     </section>
     <!--============================
-                                            BREADCRUMB END
-                                        ==============================-->
+                                                                                                    BREADCRUMB END
+                                                                                                ==============================-->
 
 
     <!--============================
-                                            CONTACT PAGE START
-                                        ==============================-->
+                                                                                                    CONTACT PAGE START
+                                                                                                ==============================-->
     <section id="wsus__contact">
         <div class="container">
             <div class="wsus__contact_area">
@@ -68,31 +68,32 @@
                     <div class="col-xl-8">
                         <div class="wsus__contact_question">
                             <h5>Send Us a Message</h5>
-                            <form>
+                            <form action="{{ route('frontend.send_mail') }}" method="POST">
+                                @csrf
                                 <div class="row">
                                     <div class="col-xl-12">
                                         <div class="wsus__con_form_single">
-                                            <input type="text" placeholder="Your Name">
+                                            <input name="name" type="text" placeholder="Your Name">
                                         </div>
                                     </div>
                                     <div class="col-xl-12">
                                         <div class="wsus__con_form_single">
-                                            <input type="email" placeholder="Email">
+                                            <input name="email" type="email" placeholder="Email">
                                         </div>
                                     </div>
                                     <div class="col-xl-6">
                                         <div class="wsus__con_form_single">
-                                            <input type="text" placeholder="Phone">
+                                            <input name="phone" type="text" placeholder="Phone">
                                         </div>
                                     </div>
                                     <div class="col-xl-6">
                                         <div class="wsus__con_form_single">
-                                            <input type="text" placeholder="Subject">
+                                            <input name="subject" type="text" placeholder="Subject">
                                         </div>
                                     </div>
                                     <div class="col-xl-12">
                                         <div class="wsus__con_form_single">
-                                            <textarea cols="3" rows="5" placeholder="Message"></textarea>
+                                            <textarea name="message" cols="3" rows="5" placeholder="Message"></textarea>
                                         </div>
                                         <button type="submit" class="common_btn">send now</button>
                                     </div>
@@ -113,6 +114,6 @@
         </div>
     </section>
     <!--============================
-                                            CONTACT PAGE END
-                                        ==============================-->
+                                                                                                    CONTACT PAGE END
+                                                                                                ==============================-->
 @endsection

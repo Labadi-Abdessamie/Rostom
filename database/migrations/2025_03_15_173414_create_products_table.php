@@ -23,8 +23,8 @@ return new class extends Migration
             $table->json('colorVar')->nullable();
             $table->double('rate_average')->default(0);
             $table->unsignedInteger('rate_count')->default(0);
-            $table->string('category_id');
-            $table->string('magasin_id');
+            $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('magasin_id');
             $table->timestamps();
         });
     }

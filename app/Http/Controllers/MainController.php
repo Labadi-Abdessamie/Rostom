@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\contactMail;
 use App\Models\Address;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Website;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Mail;
 
 class MainController extends Controller
 {
@@ -141,5 +145,45 @@ class MainController extends Controller
     public function contact()
     {
         return view('frontend.pages.contact');
+    }
+    public function sendMail(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email',
+            'phone' => 'required|string|max:10',
+            'subject' => 'required|string|max:50',
+            'message' => 'required|string|max:1024'
+        ]);
+        if (Website::first()) {
+            if (Website::first()->contact_email != null) {
+                Mail::to(Website::first()->contact_email)->queue(new contactMail($validated));
+                return redirect()->back()->with('message', 'Message sent successfully.')->with('alert-type', 'suceess');
+            }
+        } else {
+            return redirect()->back()->with('message', 'Can\'t send message.')->with('alert-type', 'error');
+        }
+    }
+    public function search(Request $request)
+    {
+        $validated = $request->validate([
+            'query' => 'nullable|string'
+        ]);
+        if ($validated['query']) {
+            $query = $validated['query'];
+            return redirect()->route('frontend.products', ['name' => $query]);
+        }
+        return redirect()->route('frontend.products');
+    }
+    public function searchVendor(Request $request)
+    {
+        $validated = $request->validate([
+            'query' => 'nullable|string'
+        ]);
+        if ($validated['query']) {
+            $query = $validated['query'];
+            return redirect()->route('frontend.vendor', ['name' => $query]);
+        }
+        return redirect()->route('frontend.vendor');
     }
 }

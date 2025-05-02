@@ -66,8 +66,16 @@
                             </form>
                         @endif
                         <div class="footer_payment">
-                            <p>We're using safe payment for :</p>
-                            <img src="{{ asset('frontend/images/credit2.png') }}" alt="card" class="img-fluid">
+                            <p>We're using safe payment :</p>
+                            <p>CashOnDelivery
+                                @if (false)
+                                    <img class="w-25" src="{{ asset('frontend/images/cashOnDelivery.png') }}"
+                                        alt="card">
+                                @endif
+                            </p>
+                            @if (false)
+                                <p>Edahabia</p>
+                            @endif
                         </div>
                     </div>
                 </div>

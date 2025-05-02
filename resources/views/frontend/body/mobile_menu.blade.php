@@ -86,14 +86,12 @@
                             <li><a href="{{ route('frontend.index') }}">home</a></li>
                             <li><a href="{{ route('frontend.products') }}">products</a></li>
                             <li><a href="{{ route('frontend.vendor') }}">vendors</a></li>
-
                             @if (Auth::user())
                                 @if (Auth::user()->role == 'client')
                                     <li><a href="{{ route('frontend.cart') }}">Cart</a></li>
                                 @endif
-                            @else
-                                <li><a href="{{ route('frontend.cart') }}">Cart</a></li>
                             @endif
+                            <li><a href="{{ route('frontend.contact') }}">Contact</a></li>
 
                             @if (false)
                                 <li><a href="index.html">home</a></li>

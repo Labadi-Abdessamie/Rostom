@@ -21,43 +21,72 @@ class ProductController extends Controller
         $sort = $request->query('sort', null);
         $perPage = $request->query('number', 12);
 
+        $queryFilter = $request->query('name', null);
+        if ($queryFilter) {
+            $products = Product::where('name', 'like', '%' . $queryFilter . '%')->paginate(12);
+        } else {
+            $query = Product::whereHas('magasin', function ($q) {
+                $q->where('status', 'active');
+            })->whereHas('category', function ($q) {
+                $q->where('status', 'active');
+            })->with('productImages');
+
+            if ($categoryId) {
+                $category = Category::find($categoryId);
+                if (!$category || $category->status !== 'active') {
+                    return redirect()->route('frontend.products')
+                        ->with('message', 'This category is not active');
+                }
+                $query->where('category_id', $categoryId);
+            }
+
+            switch ($sort) {
+                case 'rating':
+                    $query->orderByDesc('rate_average');
+                    break;
+                case 'latest':
+                    $query->orderByDesc('created_at');
+                    break;
+                case 'low_high':
+                    $query->orderBy('price');
+                    break;
+                case 'high_low':
+                    $query->orderByDesc('price');
+                    break;
+                default:
+                    $query->latest();
+                    break;
+            }
+            $products = $query->paginate($perPage)->appends($request->query());
+        }
+
+
+        return view('frontend.pages.product_view', compact('products', 'category'));
+        return view('frontend.pages.product_view', compact('products', 'queryFilter'));
+
+
+        //! Precedent code works without filters
+        /*
+        $categoryId = $request->query('category');
+
         $category = null;
-
-        $query = Product::whereHas('magasin', function ($q) {
-            $q->where('status', 'active');
-        })->whereHas('category', function ($q) {
-            $q->where('status', 'active');
-        })->with('productImages');
-
-        if ($categoryId) {
+        if (is_null($categoryId)) {
+            $products = Product::whereHas('magasin', function ($query) {
+                $query->where('status', 'active');
+            })->where('actual_quantity', '>', '0')->latest()->paginate(12);
+        } else {
             $category = Category::find($categoryId);
             if (!$category || $category->status !== 'active') {
                 return redirect()->route('frontend.products')
                     ->with('message', 'This category is not active');
             }
-            $query->where('category_id', $categoryId);
+            $products = Product::whereHas('magasin', function ($query) {
+                $query->where('status', 'active');
+            })->where('actual_quantity', '>', '0')->where('category_id', $categoryId)->latest()->paginate(12);
         }
-
-        switch ($sort) {
-            case 'rating':
-                $query->orderByDesc('rate_average');
-                break;
-            case 'latest':
-                $query->orderByDesc('created_at');
-                break;
-            case 'low_high':
-                $query->orderBy('price');
-                break;
-            case 'high_low':
-                $query->orderByDesc('price');
-                break;
-            default:
-                $query->latest();
-                break;
-        }
-        $products = $query->paginate($perPage)->appends($request->query());
 
         return view('frontend.pages.product_view', compact('products', 'category'));
+        */
     }
 
     /**
@@ -227,6 +256,7 @@ class ProductController extends Controller
             'currentSubSubcategoryId'
         ));
     }
+    public function edit(string $id) {}
 
     /**
      * Update the specified resource in storage.
@@ -270,6 +300,7 @@ class ProductController extends Controller
 
         return redirect()->route('vendor.products')->with('success', 'Product updated successfully!');
     }
+    public function update(Request $request, string $id) {}
 
     /**
      * Remove the specified resource from storage.

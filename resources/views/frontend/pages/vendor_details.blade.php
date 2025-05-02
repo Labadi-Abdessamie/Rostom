@@ -6,8 +6,8 @@
 
 @section('content')
     <!--============================
-                                                                                                                                                                                                                                                                                                                                                            BREADCRUMB START
-                                                                                                                                                                                                                                                                                                                                                        ==============================-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                            BREADCRUMB START
+                                                                                                                                                                                                                                                                                                                                                                                                                                        ==============================-->
     <section id="wsus__breadcrumb">
         <div class="wsus_breadcrumb_overlay">
             <div class="container">
@@ -25,8 +25,8 @@
         </div>
     </section>
     <!--============================
-                                                                                                                                                                                                                                                                                                                                                            BREADCRUMB END
-                                                                                                                                                                                                                                                                                                                                                        ==============================-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                            BREADCRUMB END
+                                                                                                                                                                                                                                                                                                                                                                                                                                        ==============================-->
 
     {{--
     <!--==========================
@@ -77,14 +77,16 @@
             </div>
         </div>
     </section>
-    <!--==========================
-                                        VENDOR REVIEW MODAL END
-                                        ===========================-->
+    ==========================
+        VENDOR REVIEW MODAL END
+    ===========================
 --}}
 
-    <!--============================
-                                                                                                                                                                                                                                                                                                                                                          VENDORS DETAILA START
-                                                                                                                                                                                                                                                                                                                                                        ==============================-->
+    {{--
+    ============================
+        VENDORS DETAILA START
+    ==============================
+    --}}
     <section id="wsus__product_page" class="wsus__vendor_details_page">
         <div class="container">
             <div class="row">
@@ -96,12 +98,21 @@
                             <div class="wsus__vendor_text_center">
                                 <h4>{{ $vendor->name }}</h4>
                                 <p class="wsus__vendor_rating">
-                                    @for ($i = 1; $i <= $vendor->rate; $i++)
-                                        <i class="fas fa-star"></i>
-                                    @endfor
-                                    @if ($vendor->rate != floor($vendor->rate))
-                                        <i class="fas fa-star-half-alt"></i>
+                                    @if ($vendor->rate == 0)
+                                        <i class="far fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                    @else
+                                        @for ($i = 1; $i <= $vendor->rate; $i++)
+                                            <i class="fas fa-star"></i>
+                                        @endfor
+                                        @if ($vendor->rate != floor($vendor->rate))
+                                            <i class="fas fa-star-half-alt"></i>
+                                        @endif
                                     @endif
+                                    <span class="text-white">({{ $vendor->rate_count }})</span>
                                 </p>
                                 <a href="callto:{{ $vendor->phoneNumber }}"><i class="far fa-phone-alt"></i>
                                     {{ $vendor->phoneNumber }}</a>
@@ -117,14 +128,22 @@
                                     @endif
                                 </p>
                                 <ul class="d-flex">
-                                    <li><a class="facebook" href="{{ $vendor->facebookLink }}"><i
-                                                class="fab fa-facebook-f"></i></a></li>
-                                    <li><a class="tiktok" href="{{ $vendor->tiktokLink }}"><i
-                                                class="fab fa-tiktok"></i></a></li>
-                                    <li><a class="whatsapp" href="{{ $vendor->whatsupLink }}"><i
-                                                class="fab fa-whatsapp"></i></a></li>
-                                    <li><a class="instagram" href="{{ $vendor->instagramLink }}"><i
-                                                class="fab fa-instagram"></i></a></li>
+                                    @if ($vendor->facebookLink)
+                                        <li><a class="facebook" href="{{ $vendor->facebookLink }}"><i
+                                                    class="fab fa-facebook-f"></i></a></li>
+                                    @endif
+                                    @if ($vendor->tiktokLink)
+                                        <li><a class="tiktok" href="{{ $vendor->tiktokLink }}"><i
+                                                    class="fab fa-tiktok"></i></a></li>
+                                    @endif
+                                    @if ($vendor->whatsupLink)
+                                        <li><a class="whatsapp" href="{{ $vendor->whatsupLink }}"><i
+                                                    class="fab fa-whatsapp"></i></a></li>
+                                    @endif
+                                    @if ($vendor->instagramLink)
+                                        <li><a class="instagram" href="{{ $vendor->instagramLink }}"><i
+                                                    class="fab fa-instagram"></i></a></li>
+                                    @endif
                                 </ul>
                                 @if (false)
                                     <a class="common_btn" href="#" data-bs-toggle="modal"
@@ -542,7 +561,9 @@
             </div>
         </div>
     </section>
-    <!--============================
-                                                                                                                                                                                                                                                    VENDORS DETAILA END
-                                                                                                                                                                                                                                                ==============================-->
 @endsection
+{{--
+    ============================
+        VENDORS DETAILA END
+    ==============================
+--}}

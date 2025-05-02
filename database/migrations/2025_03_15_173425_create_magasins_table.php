@@ -30,7 +30,7 @@ return new class extends Migration
             $table->string('instagramLink')->nullable();
             $table->string('tiktokLink')->nullable();
             $table->string('whatsupLink')->nullable();
-            $table->unsignedInteger('category_id');
+            $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('user_id');
             $table->timestamps();
         });
