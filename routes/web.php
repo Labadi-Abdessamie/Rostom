@@ -99,7 +99,10 @@ route::middleware(['auth',  RoleMiddleware::class . ':vendor', StatusMiddleware:
     Route::group(['prefix' => 'vendor', 'as' => 'vendor.'], function () {
         Route::get('dashboard', [VendorInterfaceController::class, 'dashboard'])->name('dashboard');
         Route::get('products', [VendorInterfaceController::class, 'products'])->name('products');
-        Route::get('add-product', [VendorInterfaceController::class, 'addProduct'])->name('add_product');
+        Route::get('add-product', [ProductController::class, 'create'])->name('add_product');
+        Route::post('store-product', [ProductController::class, 'store'])->name('store_product');
+        Route::get('edit-product/{id}', [ProductController::class, 'edit'])->name('edit_product');
+        Route::put('update-product/{id}', [ProductController::class, 'update'])->name('update_product');
         Route::delete('delete-product/{id}', [ProductController::class, 'destroy'])->name('delete_product');
 
         Route::get('profile', [VendorInterfaceController::class, 'profile'])->name('profile');

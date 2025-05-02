@@ -41,7 +41,7 @@
                             <table class="table table-striped" id="table-1">
                                 <thead>
                                     <tr>
-                                        <th class="text-center">ID</th>
+                                        <th class="text-center">N</th>
                                         <th>Image</th>
                                         <th>Name</th>
                                         <th>Price</th>
@@ -54,7 +54,7 @@
                                 <tbody>
                                     @forelse ($products as $product)
                                         <tr>
-                                            <td class="text-center">{{ $product->id }}</td>
+                                            <td class="text-center">{{ $loop->iteration }}</td> {{-- Enumeration --}}
                                             <td class="text-center">
                                                 @if ($product->principalImage)
                                                     <img src="{{ asset('storage/' . $product->principalImage) }}" alt="Product Image" width="50" height="50" style="object-fit: cover;">
@@ -83,11 +83,13 @@
                                                 <a href="{{ route('frontend.product_details', $product->id) }}" class="btn btn-info btn-sm mr-2" title="View Details">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
-
-                                                <a href="#" class="btn btn-primary btn-sm mr-2" title="Edit">
+                                
+                                                <a href="{{ route('vendor.edit_product', $product->id) }}" class="btn btn-primary btn-sm mr-2" title="Edit">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
+                                                    
 
+                                
                                                 <form action="{{ route('vendor.delete_product', $product->id) }}" method="POST" style="display: inline-block;">
                                                     @csrf
                                                     @method('DELETE')
@@ -103,6 +105,7 @@
                                         </tr>
                                     @endforelse
                                 </tbody>
+                                
                             </table>
                         </div>
                     </div>

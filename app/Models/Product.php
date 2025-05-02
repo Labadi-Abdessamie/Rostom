@@ -8,6 +8,20 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'name',
+        'short_description',
+        'long_description',
+        'actual_quantity',
+        'price',
+        'principalImage',
+        'sizeVar',
+        'colorVar',
+        'rate_average',
+        'rate_count',
+        'category_id',
+        'magasin_id',
+    ];
 
 
     public function magasin()
