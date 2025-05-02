@@ -84,7 +84,7 @@
                                             <table class="table table-striped" id="table-{{ $loop->index + 1 }}">
                                                 <thead>
                                                     <tr>
-                                                        <th>Order ID</th>
+                                                        <th>#</th>
                                                         <th>Products</th>
                                                         <th>Price</th>
                                                         <!-- <th>Quantity</th> -->
@@ -96,7 +96,7 @@
                                                     @forelse ($statusOrders as $order)
                                                         {{-- @foreach ($orders as $order) --}}
                                                         <tr>
-                                                            <td>{{ $order['id'] }}</td>
+                                                            <td>{{-- $order['id'] --}}{{ $loop->iteration }}</td>
                                                             <td>
                                                                 @foreach ($order['items'] as $item)
                                                                     {{ $item['product']['name'] }} ×

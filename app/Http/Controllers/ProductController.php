@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\Review;
 use Illuminate\Http\Request;
 use App\Models\Magasin;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
@@ -60,8 +61,6 @@ class ProductController extends Controller
             $products = $query->paginate($perPage)->appends($request->query());
         }
 
-
-        return view('frontend.pages.product_view', compact('products', 'category'));
         return view('frontend.pages.product_view', compact('products', 'queryFilter'));
 
 
@@ -94,30 +93,30 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $magasin = auth()->user()->magasin;
+        $magasin = Auth::user()->magasin;
         $magasinCategoryId = $magasin->category_id;
 
         // Get subcategories (i.e., children of the magasin's category)
         $subcategories = Category::where('parentId', $magasinCategoryId)
-                                ->where('status', 'active')
-                                ->get();
+            ->where('status', 'active')
+            ->get();
 
         // Get sub-subcategories (children of each subcategory)
         $categoryChildrenMap = [];
         foreach ($subcategories as $subcategory) {
             $children = Category::where('parentId', $subcategory->id)
-                                ->where('status', 'active')
-                                ->get(['id', 'name']);
-            
+                ->where('status', 'active')
+                ->get(['id', 'name']);
+
             if ($children->count() > 0) {
                 // Convert to array format that JavaScript can use easily
-                $childrenArray = $children->map(function($child) {
+                $childrenArray = $children->map(function ($child) {
                     return [
                         'id' => $child->id,
                         'name' => $child->name
                     ];
                 })->toArray();
-                
+
                 $categoryChildrenMap[$subcategory->id] = $childrenArray;
             }
         }
@@ -149,24 +148,26 @@ class ProductController extends Controller
         $product->name = $request->name;
         $product->short_description = $request->short_description;
         $product->long_description = $request->long_description;
-        $product->actual_quantity = $request->actual_quantity;
+        $product->actual_quantity = $request->actual_quantity ?? 0;
         $product->price = $request->price;
-        $product->magasin_id = auth()->user()->magasin->id;
-
-        if ($request->hasFile('principalImage')) {
-            $imagePath = $request->file('principalImage')->store('products', 'public');
-            $product->principalImage = $imagePath;
-        }
+        $product->magasin_id = Auth::user()->magasin->id;
 
         // If a sub-subcategory was selected, use it as the final category_id
-        $product->category_id = $request->filled('sub_subcategory_id') 
-            ? $request->sub_subcategory_id 
+        $product->category_id = $request->filled('sub_subcategory_id')
+            ? $request->sub_subcategory_id
             : $request->category_id;
 
         $product->rate_average = 0;
         $product->rate_count = 0;
 
         $product->save();
+
+        if ($request->hasFile('principalImage')) {
+            $imagePath = $request->file('principalImage')->store('products_images/' . $product->id, 'public');
+            $product->principalImage = basename($imagePath);
+            $product->save();
+        }
+
 
         return redirect()->route('vendor.products')->with('success', 'Product added successfully!');
     }
@@ -193,51 +194,51 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id)
+    public function edit(string $id)
     {
         $product = Product::findOrFail($id);
 
         // Get the magasin of the vendor
-        $vendor = auth()->user();
+        $vendor = Auth::user();
         $magasin = $vendor->magasin;
 
         // Get the main category id for this magasin
         $mainCategoryId = $magasin->category_id;
-        
+
         // Get subcategories (level 1) under the main category
         $subcategories = Category::where('parentId', $mainCategoryId)
-                                ->where('status', 'active')
-                                ->get();
-        
+            ->where('status', 'active')
+            ->get();
+
         // For editing, we need the structure of all sub-subcategories
         $categoryChildrenMap = [];
         foreach ($subcategories as $subcategory) {
             $children = Category::where('parentId', $subcategory->id)
-                                ->where('status', 'active')
-                                ->get(['id', 'name']);
-            
+                ->where('status', 'active')
+                ->get(['id', 'name']);
+
             if ($children->count() > 0) {
                 // Convert to array format that JavaScript can use easily
-                $childrenArray = $children->map(function($child) {
+                $childrenArray = $children->map(function ($child) {
                     return [
                         'id' => $child->id,
                         'name' => $child->name
                     ];
                 })->toArray();
-                
+
                 $categoryChildrenMap[$subcategory->id] = $childrenArray;
             }
         }
-        
+
         // Get the current product category info
         $productCategory = $product->category;
         $currentSubcategoryId = null;
         $currentSubSubcategoryId = null;
-        
+
         // Determine if the product's category is a sub-subcategory
         if ($productCategory && $productCategory->parentId) {
             $parentCategory = Category::find($productCategory->parentId);
-            
+
             // If the parent has a parent, we're dealing with a sub-subcategory
             if ($parentCategory && $parentCategory->parentId) {
                 $currentSubcategoryId = $parentCategory->id;
@@ -249,15 +250,13 @@ class ProductController extends Controller
         }
 
         return view('vendor.pages.edit_product', compact(
-            'product', 
-            'subcategories', 
+            'product',
+            'subcategories',
             'categoryChildrenMap',
             'currentSubcategoryId',
             'currentSubSubcategoryId'
         ));
     }
-    public function edit(string $id) {}
-
     /**
      * Update the specified resource in storage.
      */
@@ -286,21 +285,20 @@ class ProductController extends Controller
             if ($product->principalImage && Storage::disk('public')->exists($product->principalImage)) {
                 Storage::disk('public')->delete($product->principalImage);
             }
-            
+
             $imagePath = $request->file('principalImage')->store('products', 'public');
             $product->principalImage = $imagePath;
         }
 
         // If a sub-subcategory was selected, use it as the final category_id
-        $product->category_id = $request->filled('sub_subcategory_id') 
-            ? $request->sub_subcategory_id 
+        $product->category_id = $request->filled('sub_subcategory_id')
+            ? $request->sub_subcategory_id
             : $request->category_id;
 
         $product->save();
 
         return redirect()->route('vendor.products')->with('success', 'Product updated successfully!');
     }
-    public function update(Request $request, string $id) {}
 
     /**
      * Remove the specified resource from storage.
@@ -308,12 +306,12 @@ class ProductController extends Controller
     public function destroy(string $id)
     {
         $product = Product::findOrFail($id);
-        
-        
+
+
         if ($product->principalImage && Storage::disk('public')->exists($product->principalImage)) {
             Storage::disk('public')->delete($product->principalImage);
         }
-        
+
         $product->delete();
         return redirect()->back()->with('success', 'Product deleted successfully.');
     }

@@ -9,6 +9,7 @@
             <h1>Order details</h1>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item active"><a href="{{ route('vendor.dashboard') }}">Dashboard</a></div>
+                <div class="breadcrumb-item"><a href="{{ route('vendor.orders') }}">Orders</a></div>
                 <div class="breadcrumb-item">Order details</div>
             </div>
         </div>

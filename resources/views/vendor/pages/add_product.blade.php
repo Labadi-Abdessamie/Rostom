@@ -15,7 +15,7 @@
     <script>
         // Pass categoryChildrenMap from Laravel controller to JavaScript
         const categoryMap = @json($categoryChildrenMap);
-        
+
         console.log("Category Map:", categoryMap); // Debug to see the structure
 
         // Function to dynamically update sub-subcategories based on selected subcategory
@@ -29,7 +29,7 @@
 
             // If subcategory has sub-subcategories, populate them
             if (subcategoryId && categoryMap && categoryMap[subcategoryId] && categoryMap[subcategoryId].length > 0) {
-                categoryMap[subcategoryId].forEach(function (child) {
+                categoryMap[subcategoryId].forEach(function(child) {
                     const option = document.createElement("option");
                     option.value = child.id;
                     option.text = child.name;
@@ -38,7 +38,7 @@
 
                 // Show sub-subcategory dropdown
                 subSubCategoryWrapper.style.display = 'block';
-                
+
                 // Re-initialize selectric for the updated dropdown
                 if ($.fn.selectric) {
                     $(subSubCategorySelect).selectric('refresh');
@@ -49,7 +49,7 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             $.uploadPreview({
                 input_field: "#image-upload",
                 preview_box: "#image-preview",
@@ -80,7 +80,7 @@
 
             // Initialize selectric
             $('.selectric').selectric();
-            
+
             // Initial population check for sub-subcategory if a category is pre-selected
             setTimeout(updateSubSubCategories, 100); // Small delay to ensure DOM is ready
         });
@@ -91,6 +91,13 @@
     <section class="section">
         <div class="section-header">
             <h1>Add New Product</h1>
+            <div class="section-header-breadcrumb">
+                <div class="breadcrumb-item active"><a href="{{ route('vendor.dashboard') }}">Dashboard</a>
+                </div>
+                <div class="breadcrumb-item"><a href="{{ route('vendor.products') }}">Products</a>
+                </div>
+                <div class="breadcrumb-item">Add Product</div>
+            </div>
         </div>
 
         <div class="section-body">
@@ -101,7 +108,6 @@
                         <h4>Product Details</h4>
                     </div>
                     <div class="card-body">
-
                         <div class="form-group row mb-4">
                             <label class="col-form-label text-md-right col-12 col-md-3">Product Name</label>
                             <div class="col-sm-12 col-md-7">
@@ -119,7 +125,7 @@
                         <div class="form-group row mb-4">
                             <label class="col-form-label text-md-right col-12 col-md-3">Long Description</label>
                             <div class="col-sm-12 col-md-7">
-                                <textarea name="long_description" class="summernote-simple"></textarea>
+                                <textarea name="long_description" class="form-control"></textarea>
                             </div>
                         </div>
 
@@ -129,6 +135,7 @@
                                 <input type="number" name="actual_quantity" class="form-control" required>
                             </div>
                         </div>
+
 
                         <div class="form-group row mb-4">
                             <label class="col-form-label text-md-right col-12 col-md-3">Price</label>
@@ -147,7 +154,7 @@
                             </div>
                         </div>
 
-                        
+
                         <div class="form-group row mb-4">
                             <label class="col-form-label text-md-right col-12 col-md-3">Subcategory</label>
                             <div class="col-sm-12 col-md-7">
@@ -160,13 +167,13 @@
                             </div>
                         </div>
 
-                        
+
                         <div class="form-group row mb-4" id="sub_subcategory_wrapper" style="display: none;">
                             <label class="col-form-label text-md-right col-12 col-md-3">Sub-Subcategory</label>
                             <div class="col-sm-12 col-md-7">
                                 <select name="sub_subcategory_id" id="sub_subcategory_id" class="form-control selectric">
                                     <option value="">-- Select Sub-Subcategory --</option>
-                                    
+
                                 </select>
                             </div>
                         </div>

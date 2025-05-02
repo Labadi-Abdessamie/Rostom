@@ -14,10 +14,7 @@ use App\Http\Controllers\VendorController;
 use App\Http\Controllers\VendorInterfaceController;
 use App\Http\Middleware\RoleMiddleware;
 use App\Http\Middleware\StatusMiddleware;
-use App\Models\Product;
-use App\Models\User;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/cleareverything', function () {
@@ -50,14 +47,14 @@ Route::group(['prefix' => '', 'as' => 'frontend.'], function () {
     Route::get('search-vendor', [MainController::class, 'searchVendor'])->name('search_vendor');
 });
 
-route::middleware(['auth'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::get('dashboard', [MainController::class, 'dashboard'])->name('dashboard');
     Route::patch('/profile-update', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('profile-update/password', [ProfileController::class, 'updatePassword'])->name('profile.update.password');
 });
 
 //Client route
-route::middleware(['auth', RoleMiddleware::class . ':client'])->group(function () {
+Route::middleware(['auth', RoleMiddleware::class . ':client'])->group(function () {
     Route::get('check-out', [MainController::class, 'checkOut'])->name('frontend.check_out');
     Route::post('create_order', [OrderController::class, 'store'])->name('create_order');
 
@@ -95,38 +92,41 @@ route::middleware(['auth', RoleMiddleware::class . ':client'])->group(function (
 });
 
 //Vendor route
-route::middleware(['auth',  RoleMiddleware::class . ':vendor'])->group(function () {
+
+Route::middleware(['auth',  RoleMiddleware::class . ':vendor'])->group(function () {
+
     Route::group(['prefix' => 'vendor', 'as' => 'vendor.'], function () {
         Route::get('magasin/create', [MagasinController::class, 'create'])->name('magasin_create');
         Route::post('magasin/store', [MagasinController::class, 'store'])->name('magasin_store');
     });
-});
-
-route::middleware(['auth',  RoleMiddleware::class . ':vendor', StatusMiddleware::class])->group(function () {
-    Route::group(['prefix' => 'vendor', 'as' => 'vendor.'], function () {
-        Route::get('dashboard', [VendorInterfaceController::class, 'dashboard'])->name('dashboard');
-        Route::get('products', [VendorInterfaceController::class, 'products'])->name('products');
-        Route::get('add-product', [ProductController::class, 'create'])->name('add_product');
-        Route::post('store-product', [ProductController::class, 'store'])->name('store_product');
-        Route::get('edit-product/{id}', [ProductController::class, 'edit'])->name('edit_product');
-        Route::put('update-product/{id}', [ProductController::class, 'update'])->name('update_product');
-        Route::delete('delete-product/{id}', [ProductController::class, 'destroy'])->name('delete_product');
-
-        Route::get('profile', [VendorInterfaceController::class, 'profile'])->name('profile');
-        Route::get('orders', [VendorInterfaceController::class, 'orders'])->name('orders');
-        Route::get('order-details/{id}', [VendorInterfaceController::class, 'orderDetails'])->name('order_details');
-
-        Route::post('order/{id}/update', [OrderController::class, 'update'])->name('order.update');
 
 
-        Route::get('reviews', [VendorInterfaceController::class, 'reviews'])->name('reviews');
-        Route::get('purchase-orders', [VendorInterfaceController::class, 'purchaseOrders'])->name('purchase_orders');
+    Route::middleware([StatusMiddleware::class])->group(function () {
+        Route::group(['prefix' => 'vendor', 'as' => 'vendor.'], function () {
+            Route::get('profile', [VendorInterfaceController::class, 'profile'])->name('profile');
 
-        Route::get('magasin', [VendorInterfaceController::class, 'magasin'])->name('magasin');
+            Route::get('dashboard', [VendorInterfaceController::class, 'dashboard'])->name('dashboard');
+
+            Route::get('products', [VendorInterfaceController::class, 'products'])->name('products');
+            Route::get('add-product', [ProductController::class, 'create'])->name('add_product');
+            Route::post('store-product', [ProductController::class, 'store'])->name('store_product');
+            Route::get('edit-product/{id}', [ProductController::class, 'edit'])->name('edit_product');
+            Route::put('update-product/{id}', [ProductController::class, 'update'])->name('update_product');
+            Route::delete('delete-product/{id}', [ProductController::class, 'destroy'])->name('delete_product');
+
+            Route::get('orders', [VendorInterfaceController::class, 'orders'])->name('orders');
+            Route::get('order-details/{id}', [VendorInterfaceController::class, 'orderDetails'])->name('order_details');
+            Route::post('order/{id}/update', [OrderController::class, 'update'])->name('order.update');
 
 
-        Route::get('contact', [VendorInterfaceController::class, 'contact'])->name('contact');
-        Route::get('profile', [VendorInterfaceController::class, 'profile'])->name('profile');
+            Route::get('reviews', [VendorInterfaceController::class, 'reviews'])->name('reviews');
+            Route::get('purchase-orders', [VendorInterfaceController::class, 'purchaseOrders'])->name('purchase_orders');
+
+            Route::get('magasin', [VendorInterfaceController::class, 'magasin'])->name('magasin');
+
+
+            Route::get('contact', [VendorInterfaceController::class, 'contact'])->name('contact');
+        });
     });
 });
 

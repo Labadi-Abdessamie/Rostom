@@ -32,14 +32,15 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4>Total Reviews: {{ $totalReviews }} | Average Rating: {{ number_format($averageRating, 2) }}</h4>
+                            <h4>Total Reviews: {{ $totalReviews }} | Average Rating: {{ number_format($averageRating, 2) }}
+                            </h4>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-striped" id="table-1">
                                     <thead>
                                         <tr>
-                                            <th class="text-center">Id</th>
+                                            <th class="text-center">#</th>
                                             <th>Product Name</th>
                                             <th>Customer Name</th>
                                             <th>Rate</th>
@@ -50,7 +51,7 @@
                                     <tbody>
                                         @foreach ($reviews as $review)
                                             <tr>
-                                                <td class="text-center">{{ $review->id }}</td>
+                                                <td class="text-center">{{-- $review->id --}}{{ $loop->iteration }}</td>
                                                 <td>{{ $review->product->name ?? 'N/A' }}</td>
                                                 <td>{{ $review->user->name ?? 'Anonymous' }}</td>
                                                 <td class="text-center">
@@ -67,13 +68,14 @@
                                                 </td>
                                                 <td>{{ $review->content }}</td>
                                                 <td>
-                                                    <a href="{{ route('frontend.product_details', ['id' => $review->product->id]) }}" class="btn btn-secondary" target="_blank">
+                                                    <a href="{{ route('frontend.product_details', ['id' => $review->product->id]) }}"
+                                                        class="btn btn-secondary" target="_blank">
                                                         Detail
                                                     </a>
                                                 </td>
                                             </tr>
                                         @endforeach
-                                        @if($reviews->isEmpty())
+                                        @if ($reviews->isEmpty())
                                             <tr>
                                                 <td colspan="6" class="text-center">No reviews found.</td>
                                             </tr>
