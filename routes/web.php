@@ -9,6 +9,7 @@ use App\Http\Controllers\MainController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\VendorInterfaceController;
@@ -120,7 +121,15 @@ Route::middleware(['auth',  RoleMiddleware::class . ':vendor'])->group(function 
 
 
             Route::get('reviews', [VendorInterfaceController::class, 'reviews'])->name('reviews');
-            Route::get('purchase-orders', [VendorInterfaceController::class, 'purchaseOrders'])->name('purchase_orders');
+
+            Route::get('purchase-orders', [PurchaseOrderController::class, 'index'])->name('purchase_orders');
+            Route::get('purchase-orders/create', [PurchaseOrderController::class, 'create'])->name('purchase_order_add');
+            Route::post('purchase-orders', [PurchaseOrderController::class, 'store'])->name('purchase_orders.store');
+            Route::delete('purchase-orders/{id}', [PurchaseOrderController::class, 'destroy'])->name('purchase_orders.delete');
+            Route::get('purchase-orders/{id}', [PurchaseOrderController::class, 'show'])->name('purchase_orders.show');
+            Route::post('purchase-orders/{id}/confirm', [PurchaseOrderController::class, 'confirm'])->name('purchase_orders.confirm');
+            Route::post('purchase-orders/{id}/pay', [PurchaseOrderController::class, 'pay'])->name('purchase_orders.pay');
+            //Route::get('purchase-orders/{id}', [PurchaseOrderController::class, 'show'])->name('purchase_order_details');
 
             Route::get('magasin', [VendorInterfaceController::class, 'magasin'])->name('magasin');
 
