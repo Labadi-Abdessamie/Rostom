@@ -96,12 +96,10 @@ class ProductController extends Controller
         $magasin = Auth::user()->magasin;
         $magasinCategoryId = $magasin->category_id;
 
-        // Get subcategories (i.e., children of the magasin's category)
         $subcategories = Category::where('parentId', $magasinCategoryId)
             ->where('status', 'active')
             ->get();
 
-        // Get sub-subcategories (children of each subcategory)
         $categoryChildrenMap = [];
         foreach ($subcategories as $subcategory) {
             $children = Category::where('parentId', $subcategory->id)
@@ -109,7 +107,6 @@ class ProductController extends Controller
                 ->get(['id', 'name']);
 
             if ($children->count() > 0) {
-                // Convert to array format that JavaScript can use easily
                 $childrenArray = $children->map(function ($child) {
                     return [
                         'id' => $child->id,
@@ -121,7 +118,6 @@ class ProductController extends Controller
             }
         }
 
-        // Pass subcategories and categoryChildrenMap to the view
         return view('vendor.pages.add_product', [
             'subcategories' => $subcategories,
             'categoryChildrenMap' => $categoryChildrenMap,
@@ -152,7 +148,6 @@ class ProductController extends Controller
         $product->price = $request->price;
         $product->magasin_id = Auth::user()->magasin->id;
 
-        // If a sub-subcategory was selected, use it as the final category_id
         $product->category_id = $request->filled('sub_subcategory_id')
             ? $request->sub_subcategory_id
             : $request->category_id;
@@ -198,19 +193,15 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
 
-        // Get the magasin of the vendor
         $vendor = Auth::user();
         $magasin = $vendor->magasin;
 
-        // Get the main category id for this magasin
         $mainCategoryId = $magasin->category_id;
 
-        // Get subcategories (level 1) under the main category
         $subcategories = Category::where('parentId', $mainCategoryId)
             ->where('status', 'active')
             ->get();
 
-        // For editing, we need the structure of all sub-subcategories
         $categoryChildrenMap = [];
         foreach ($subcategories as $subcategory) {
             $children = Category::where('parentId', $subcategory->id)
@@ -218,7 +209,6 @@ class ProductController extends Controller
                 ->get(['id', 'name']);
 
             if ($children->count() > 0) {
-                // Convert to array format that JavaScript can use easily
                 $childrenArray = $children->map(function ($child) {
                     return [
                         'id' => $child->id,
@@ -230,21 +220,17 @@ class ProductController extends Controller
             }
         }
 
-        // Get the current product category info
         $productCategory = $product->category;
         $currentSubcategoryId = null;
         $currentSubSubcategoryId = null;
 
-        // Determine if the product's category is a sub-subcategory
         if ($productCategory && $productCategory->parentId) {
             $parentCategory = Category::find($productCategory->parentId);
 
-            // If the parent has a parent, we're dealing with a sub-subcategory
             if ($parentCategory && $parentCategory->parentId) {
                 $currentSubcategoryId = $parentCategory->id;
                 $currentSubSubcategoryId = $productCategory->id;
             } else {
-                // Otherwise, the product has a subcategory but no sub-subcategory
                 $currentSubcategoryId = $productCategory->id;
             }
         }
@@ -281,7 +267,6 @@ class ProductController extends Controller
         $product->price = $request->price;
 
         if ($request->hasFile('principalImage')) {
-            // Delete old image if it exists
             if ($product->principalImage && Storage::disk('public')->exists($product->principalImage)) {
                 Storage::disk('public')->delete($product->principalImage);
             }
@@ -290,7 +275,6 @@ class ProductController extends Controller
             $product->principalImage = $imagePath;
         }
 
-        // If a sub-subcategory was selected, use it as the final category_id
         $product->category_id = $request->filled('sub_subcategory_id')
             ? $request->sub_subcategory_id
             : $request->category_id;

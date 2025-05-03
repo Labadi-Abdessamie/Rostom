@@ -183,10 +183,30 @@ class VendorInterfaceController extends Controller
     }
     public function magasin()
     {
-        //$vendor = Auth::user();
-        return view('vendor.pages.magasin_info');
+        $magasin = Auth::user()->magasin;
+        $vendorName = Auth::user()->name;
+        return view('vendor.pages.magasin_info', compact('vendorName', 'magasin'));
     }
+}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
     public function addProduct()
     {
         return view('vendor.pages.add_product');
@@ -252,4 +272,4 @@ class VendorInterfaceController extends Controller
 
         return redirect()->route('vendor.dashboard')->with('success', 'Product deleted successfully!');
     }
-}
+    */
