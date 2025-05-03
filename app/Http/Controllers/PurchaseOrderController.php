@@ -121,18 +121,18 @@ public function confirm($id)
     $order->type = 'order'; 
     $order->save();
 
-    // Redirect back to the order details page with a success message
+    
     return redirect()->route('vendor.purchase_orders.show', $id)->with('success', 'Order has been confirmed.');
 }
 public function pay($id)
 {
     $order = PurchaseOrder::findOrFail($id);
 
-    // Update the product quantities
+    
     foreach ($order->purchaseOrderItems as $item) {
         $product = $item->product;
 
-        // Restock the products (add purchased quantity to the stock)
+        
         $product->actual_quantity += $item->quantity;
         $product->save();
     }
