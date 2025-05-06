@@ -97,30 +97,17 @@ class ProductController extends Controller
         $magasinCategoryId = $magasin->category_id;
 
         $subcategories = Category::where('parentId', $magasinCategoryId)
-            ->where('status', 'active')
-            ->get();
+            ->where('status', 'active')->get();
 
-        $categoryChildrenMap = [];
+        $finalCategories = [];
         foreach ($subcategories as $subcategory) {
-            $children = Category::where('parentId', $subcategory->id)
-                ->where('status', 'active')
-                ->get(['id', 'name']);
-
-            if ($children->count() > 0) {
-                $childrenArray = $children->map(function ($child) {
-                    return [
-                        'id' => $child->id,
-                        'name' => $child->name
-                    ];
-                })->toArray();
-
-                $categoryChildrenMap[$subcategory->id] = $childrenArray;
-            }
+            $finalCategories[$subcategory->id] = Category::where('parentId', $subcategory->id)
+                ->where('status', 'active')->get();
         }
 
         return view('vendor.pages.add_product', [
             'subcategories' => $subcategories,
-            'categoryChildrenMap' => $categoryChildrenMap,
+            'finalCategories' => $finalCategories
         ]);
     }
 
@@ -133,24 +120,23 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'short_description' => 'nullable|string|max:255',
             'long_description' => 'nullable|string',
-            'actual_quantity' => 'required|integer|min:0',
+            //'actual_quantity' => 'required|integer|min:0',
             'price' => 'required|numeric|min:0',
             'principalImage' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'category_id' => 'required|exists:categories,id',
-            'sub_subcategory_id' => 'nullable|exists:categories,id',
+            'category' => 'required|exists:categories,id',
+            'subcategory' => 'nullable|exists:categories,id',
         ]);
+
 
         $product = new Product();
         $product->name = $request->name;
         $product->short_description = $request->short_description;
         $product->long_description = $request->long_description;
-        $product->actual_quantity = $request->actual_quantity ?? 0;
+        $product->actual_quantity = 0;
         $product->price = $request->price;
         $product->magasin_id = Auth::user()->magasin->id;
 
-        $product->category_id = $request->filled('sub_subcategory_id')
-            ? $request->sub_subcategory_id
-            : $request->category_id;
+        $product->category_id = $request->subcategory ? $request->subcategory : $request->category;
 
         $product->rate_average = 0;
         $product->rate_count = 0;
@@ -199,34 +185,22 @@ class ProductController extends Controller
         $mainCategoryId = $magasin->category_id;
 
         $subcategories = Category::where('parentId', $mainCategoryId)
-            ->where('status', 'active')
-            ->get();
+            ->where('status', 'active')->get();
 
-        $categoryChildrenMap = [];
+        $finalCategories = [];
         foreach ($subcategories as $subcategory) {
-            $children = Category::where('parentId', $subcategory->id)
-                ->where('status', 'active')
-                ->get(['id', 'name']);
-
-            if ($children->count() > 0) {
-                $childrenArray = $children->map(function ($child) {
-                    return [
-                        'id' => $child->id,
-                        'name' => $child->name
-                    ];
-                })->toArray();
-
-                $categoryChildrenMap[$subcategory->id] = $childrenArray;
-            }
+            $finalCategories[$subcategory->id] = Category::where('parentId', $subcategory->id)
+                ->where('status', 'active')->get();
         }
 
+
         $productCategory = $product->category;
+
         $currentSubcategoryId = null;
         $currentSubSubcategoryId = null;
 
-        if ($productCategory && $productCategory->parentId) {
+        if ($productCategory->parentId) {
             $parentCategory = Category::find($productCategory->parentId);
-
             if ($parentCategory && $parentCategory->parentId) {
                 $currentSubcategoryId = $parentCategory->id;
                 $currentSubSubcategoryId = $productCategory->id;
@@ -235,10 +209,11 @@ class ProductController extends Controller
             }
         }
 
+
         return view('vendor.pages.edit_product', compact(
             'product',
             'subcategories',
-            'categoryChildrenMap',
+            'finalCategories',
             'currentSubcategoryId',
             'currentSubSubcategoryId'
         ));
@@ -252,18 +227,18 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'short_description' => 'nullable|string|max:255',
             'long_description' => 'nullable|string',
-            'actual_quantity' => 'required|integer|min:0',
+            //'actual_quantity' => 'required|integer|min:0',
             'price' => 'required|numeric|min:0',
             'principalImage' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'category_id' => 'required|exists:categories,id',
-            'sub_subcategory_id' => 'nullable|exists:categories,id',
+            'category' => 'required|exists:categories,id',
+            'subcategory' => 'nullable|exists:categories,id',
         ]);
 
         $product = Product::findOrFail($id);
         $product->name = $request->name;
         $product->short_description = $request->short_description;
         $product->long_description = $request->long_description;
-        $product->actual_quantity = $request->actual_quantity;
+        //$product->actual_quantity = $request->actual_quantity;
         $product->price = $request->price;
 
         if ($request->hasFile('principalImage')) {
@@ -275,9 +250,9 @@ class ProductController extends Controller
             $product->principalImage = $imagePath;
         }
 
-        $product->category_id = $request->filled('sub_subcategory_id')
-            ? $request->sub_subcategory_id
-            : $request->category_id;
+        $product->category = $request->subcategory ? $request->subcategory : $request->category;
+
+
 
         $product->save();
 

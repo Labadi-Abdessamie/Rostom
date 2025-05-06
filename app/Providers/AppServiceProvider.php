@@ -54,7 +54,7 @@ class AppServiceProvider extends ServiceProvider
             DB::connection()->getPdo();
 
             if (Schema::hasTable('categories')) {
-                View::share('categories', Cache::remember('categories', 21600, function () {
+                View::share('categories', Cache::remember('categories', 1, function () {
                     return Category::WhereNull('parentId')->where('status', 'active')->with([
                         'childrens' => function ($query) {
                             $query->where('status', 'active')

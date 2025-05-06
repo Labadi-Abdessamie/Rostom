@@ -5,6 +5,32 @@
 @section('styles')
     <link rel="stylesheet" href="{{ asset('vendor/modules/bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/modules/font-awesome/css/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/modules/summernote/summernote-bs4.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/modules/jquery-selectric/selectric.css') }}">
+@endsection
+
+@section('scripts')
+    <script src="{{ asset('vendor/modules/summernote/summernote-bs4.js') }}"></script>
+    <script src="{{ asset('vendor/modules/jquery-selectric/jquery.selectric.min.js') }}"></script>
+    <script src="{{ asset('vendor/modules/upload-preview/assets/js/jquery.uploadPreview.min.js') }}"></script>
+    <script>
+        $('#category_id').selectric({
+            onChange: function(element) {
+                if (element.value != "") {
+                    $('#subcategory_wrapper').removeClass('d-none');
+                    $('option').each(function() {
+                        if ($(this).hasClass(element.value)) {
+                            $(this).removeClass('d-none');
+                        } else {
+                            $(this).addClass('d-none');
+                        }
+                    });
+                } else {
+                    $('#subcategory_wrapper').addClass('d-none');
+                }
+            }
+        });
+    </script>
 @endsection
 
 @section('content')
@@ -37,6 +63,16 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
+                                <div class="form-group">
+                                    <label for="short_description">Short Description</label>
+                                    <input type="text" name="short_description" class="form-control"
+                                        value="{{ old('short_description', $product->short_description) }}" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="long_description">Long Description</label>
+                                    <textarea name="long_description" class="form-control">{{ old('long_description', $product->long_description) }}</textarea>
+                                </div>
 
                                 <div class="form-group">
                                     <label for="price">Price</label>
@@ -48,6 +84,7 @@
                                     @enderror
                                 </div>
 
+                                {{--
                                 <div class="form-group">
                                     <label for="quantity">Quantity</label>
                                     <input type="number" name="quantity" id="quantity"
@@ -57,6 +94,7 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
+                                --}}
 
                                 <div class="form-group">
                                     <label for="principalImage">Product Image</label>
@@ -74,6 +112,31 @@
                                             alt="Current Product Image" width="150">
                                     </div>
                                 @endif
+                                <div class="form-group">
+                                    <label class="col-form-label text-md-right col-12 col-md-3">Subcategory</label>
+                                    <select name="category" id="category_id" class="form-control selectric" required>
+                                        <option value="">-- Select Subcategory --</option>
+                                        @foreach ($subcategories as $subcategory)
+                                            <option value="{{ $subcategory->id }}"
+                                                @if ($currentSubcategoryId == $subcategory->id) selected @endif>{{ $subcategory->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group " id="subcategory_wrapper">
+                                    <label class="col-form-label text-md-right col-12 col-md-3">Final Category</label>
+                                    <select name="subcategory" id="subcategory_id" class="form-control" required>
+                                        <option value="">-- Select Category --</option>
+                                        @foreach ($finalCategories as $key => $finalCategory)
+                                            @foreach ($finalCategory as $category)
+                                                <option class="{{ $key }} d-none" value="{{ $category->id }}"
+                                                    @if ($currentSubSubcategoryId == $category->id) selected @endif>
+                                                    {{ $category->name }}
+                                                </option>
+                                            @endforeach
+                                        @endforeach
+                                    </select>
+                                </div>
 
                                 <div class="form-group">
                                     <button type="submit" class="btn btn-primary">Update Product</button>

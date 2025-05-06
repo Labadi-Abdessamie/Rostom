@@ -21,6 +21,7 @@ return new class extends Migration
             $table->unsignedInteger('position');
             $table->enum('status', ['active', 'inactive'])->default('inactive'); //? active more better
             $table->enum('type', ['normal', 'cooldown'])->default('normal');
+            $table->date('cooldown')->nullable();
             $table->timestamps();
         });
     }

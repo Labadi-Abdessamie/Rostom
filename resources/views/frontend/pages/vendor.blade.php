@@ -6,8 +6,8 @@
 
 @section('content')
     <!--============================
-                                                                                                                                                                                                    BREADCRUMB START
-                                                                                                                                                                                                ==============================-->
+                                                                                                                                                                                                                BREADCRUMB START
+                                                                                                                                                                                                            ==============================-->
     <section id="wsus__breadcrumb">
         <div class="wsus_breadcrumb_overlay">
             <div class="container">
@@ -24,12 +24,12 @@
         </div>
     </section>
     <!--============================
-                                                                         BREADCRUMB END
-                                                                         ==============================-->
+                                                                                     BREADCRUMB END
+                                                                                     ==============================-->
 
     <!--============================
-                                                                        VENDORS START
-                                                                    ==============================-->
+                                                                                    VENDORS START
+                                                                                ==============================-->
     <section id="wsus__product_page" class="wsus__vendors">
         <div class="container">
             <div class="row">
@@ -119,8 +119,8 @@
                         @foreach ($vendors as $vendor)
                             <div class="col-xl-6 col-md-6">
                                 <div class="wsus__vendor_single">
-                                    <img src="{{ asset('frontend/images/vendor_1.jpg') }}" alt="vendor"
-                                        class="img-fluid w-100">
+                                    <img src="{{ asset('storage/magasins_images/' . $vendor->id . '/' . $vendor->magasinPicture) }}"
+                                        alt="vendor" class="img-fluid w-100">
                                     <div class="wsus__vendor_text">
                                         <div class="wsus__vendor_text_center">
                                             <h4>{{ $vendor->name }}</h4>
@@ -177,6 +177,6 @@
         </div>
     </section>
     <!--============================
-                                                                            VENDORS END
-                                                                            ==============================-->
+                                                                                        VENDORS END
+                                                                                        ==============================-->
 @endsection

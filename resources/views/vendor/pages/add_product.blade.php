@@ -12,42 +12,24 @@
     <script src="{{ asset('vendor/modules/jquery-selectric/jquery.selectric.min.js') }}"></script>
     <script src="{{ asset('vendor/modules/upload-preview/assets/js/jquery.uploadPreview.min.js') }}"></script>
 
+
     <script>
-        // Pass categoryChildrenMap from Laravel controller to JavaScript
-        const categoryMap = @json($categoryChildrenMap);
-
-        console.log("Category Map:", categoryMap); // Debug to see the structure
-
-        // Function to dynamically update sub-subcategories based on selected subcategory
-        function updateSubSubCategories() {
-            const subcategoryId = document.getElementById("category_id").value;
-            const subSubCategorySelect = document.getElementById("sub_subcategory_id");
-            const subSubCategoryWrapper = document.getElementById("sub_subcategory_wrapper");
-
-            // Clear any existing options in sub-subcategory dropdown
-            subSubCategorySelect.innerHTML = '<option value="">-- Select Sub-Subcategory --</option>';
-
-            // If subcategory has sub-subcategories, populate them
-            if (subcategoryId && categoryMap && categoryMap[subcategoryId] && categoryMap[subcategoryId].length > 0) {
-                categoryMap[subcategoryId].forEach(function(child) {
-                    const option = document.createElement("option");
-                    option.value = child.id;
-                    option.text = child.name;
-                    subSubCategorySelect.appendChild(option);
-                });
-
-                // Show sub-subcategory dropdown
-                subSubCategoryWrapper.style.display = 'block';
-
-                // Re-initialize selectric for the updated dropdown
-                if ($.fn.selectric) {
-                    $(subSubCategorySelect).selectric('refresh');
+        $('#category_id').selectric({
+            onChange: function(element) {
+                if (element.value != "") {
+                    $('#subcategory_wrapper').removeClass('d-none');
+                    $('option').each(function() {
+                        if ($(this).hasClass(element.value)) {
+                            $(this).removeClass('d-none');
+                        } else {
+                            $(this).addClass('d-none');
+                        }
+                    });
+                } else {
+                    $('#subcategory_wrapper').addClass('d-none');
                 }
-            } else {
-                // Hide sub-subcategory dropdown if no sub-subcategories exist
-                subSubCategoryWrapper.style.display = 'none';
             }
-        }
+        });
 
         document.addEventListener('DOMContentLoaded', function() {
             $.uploadPreview({
@@ -60,7 +42,6 @@
                 success_callback: null
             });
 
-            // Initialize summernote
             $('.summernote-simple').summernote({
                 height: 150,
                 toolbar: [
@@ -75,14 +56,10 @@
                 ]
             });
 
-            // Listen for category change to update sub-subcategory options
-            document.getElementById("category_id").addEventListener("change", updateSubSubCategories);
+            //document.getElementById("category_id").addEventListener("change", updateSubCategories);
 
-            // Initialize selectric
-            $('.selectric').selectric();
-
-            // Initial population check for sub-subcategory if a category is pre-selected
-            setTimeout(updateSubSubCategories, 100); // Small delay to ensure DOM is ready
+            //$('.selectric').selectric();
+            //setTimeout(updateSubSubCategories, 100);
         });
     </script>
 @endsection
@@ -128,19 +105,20 @@
                                 <textarea name="long_description" class="form-control"></textarea>
                             </div>
                         </div>
-
+                        {{--
                         <div class="form-group row mb-4">
                             <label class="col-form-label text-md-right col-12 col-md-3">Quantity</label>
                             <div class="col-sm-12 col-md-7">
                                 <input type="number" name="actual_quantity" class="form-control" required>
                             </div>
                         </div>
-
+                        --}}
 
                         <div class="form-group row mb-4">
                             <label class="col-form-label text-md-right col-12 col-md-3">Price</label>
                             <div class="col-sm-12 col-md-7">
-                                <input type="number" step="0.01" name="price" class="form-control" required>
+                                <input type="number" step="0.01" name="price" class="form-control" min="1"
+                                    required>
                             </div>
                         </div>
 
@@ -158,7 +136,7 @@
                         <div class="form-group row mb-4">
                             <label class="col-form-label text-md-right col-12 col-md-3">Subcategory</label>
                             <div class="col-sm-12 col-md-7">
-                                <select name="category_id" id="category_id" class="form-control selectric" required>
+                                <select name="category" id="category_id" class="form-control selectric" required>
                                     <option value="">-- Select Subcategory --</option>
                                     @foreach ($subcategories as $subcategory)
                                         <option value="{{ $subcategory->id }}">{{ $subcategory->name }}</option>
@@ -166,17 +144,21 @@
                                 </select>
                             </div>
                         </div>
-
-
-                        <div class="form-group row mb-4" id="sub_subcategory_wrapper" style="display: none;">
-                            <label class="col-form-label text-md-right col-12 col-md-3">Sub-Subcategory</label>
+                        <div class="form-group row mb-4 " id="subcategory_wrapper">
+                            <label class="col-form-label text-md-right col-12 col-md-3">Final Category</label>
                             <div class="col-sm-12 col-md-7">
-                                <select name="sub_subcategory_id" id="sub_subcategory_id" class="form-control selectric">
-                                    <option value="">-- Select Sub-Subcategory --</option>
-
+                                <select name="subcategory" id="subcategory_id" class="form-control" required>
+                                    <option value="">-- Select Category --</option>
+                                    @foreach ($finalCategories as $key => $finalCategory)
+                                        @foreach ($finalCategory as $category)
+                                            <option class="{{ $key }} d-none" value="{{ $category->id }}">
+                                                {{ $category->name }}</option>
+                                        @endforeach
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
+
 
                         <div class="form-group row mb-4">
                             <div class="col-sm-12 col-md-7 offset-md-3">

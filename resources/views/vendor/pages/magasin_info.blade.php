@@ -133,8 +133,6 @@
                                 <div class="row">
                                     <div class="form-group col-12">
                                         <label>Magasin Picture</label>
-                                        <img src="{{ asset('storage/magasins_images/' . $magasin->id . '/' . $magasin->magasinPicture) }}"
-                                            alt="Magasin_Picture">
                                         <input type="file" name="magasinPicture" class="form-control-file">
                                     </div>
                                 </div>
