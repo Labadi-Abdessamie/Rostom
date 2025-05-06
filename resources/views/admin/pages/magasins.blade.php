@@ -60,7 +60,7 @@
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>
-                                                    <img src="{{ asset('storage/' . $magasin->magasinPicture) }}"
+                                                    <img src="{{ asset('storage/magasins_images' . $magasin->id . '/' . $magasin->magasinPicture) }}"
                                                         alt="Image" class="rounded-circle" width="40" height="40">
                                                 </td>
                                                 <td>{{ $magasin->name }}</td>
