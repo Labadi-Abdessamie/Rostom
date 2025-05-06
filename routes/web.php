@@ -132,6 +132,10 @@ Route::middleware(['auth',  RoleMiddleware::class . ':vendor'])->group(function 
             //Route::get('purchase-orders/{id}', [PurchaseOrderController::class, 'show'])->name('purchase_order_details');
 
             Route::get('magasin', [VendorInterfaceController::class, 'magasin'])->name('magasin');
+            Route::get('magasin/edit/{id}', [MagasinController::class, 'edit'])->name('edit_magasin');
+
+
+            Route::post('magasin/update/{id}', [MagasinController::class, 'update'])->name('update_magasin');
 
 
             Route::get('contact', [VendorInterfaceController::class, 'contact'])->name('contact');
