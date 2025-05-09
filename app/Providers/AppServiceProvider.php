@@ -54,7 +54,7 @@ class AppServiceProvider extends ServiceProvider
             DB::connection()->getPdo();
 
             if (Schema::hasTable('categories')) {
-                View::share('categories', Cache::remember('categories', 1, function () {
+                View::share('categories', Cache::remember('categories', 43200, function () {
                     return Category::WhereNull('parentId')->where('status', 'active')->with([
                         'childrens' => function ($query) {
                             $query->where('status', 'active')
@@ -70,7 +70,7 @@ class AppServiceProvider extends ServiceProvider
                 View::share('categories', null);
             }
             if (Schema::hasTable('websites')) {
-                View::share('website', Cache::remember('website', 1, function () use ($DefaultInformations) {
+                View::share('website', Cache::remember('website', 43200, function () use ($DefaultInformations) {
                     return Website::first() ?? (object) $DefaultInformations;
                 }));
             } else {

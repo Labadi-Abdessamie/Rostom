@@ -6,7 +6,6 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Review;
 use Illuminate\Http\Request;
-use App\Models\Magasin;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -265,10 +264,14 @@ class ProductController extends Controller
     public function destroy(string $id)
     {
         $product = Product::findOrFail($id);
-
-
-        if ($product->principalImage && Storage::disk('public')->exists($product->principalImage)) {
-            Storage::disk('public')->delete($product->principalImage);
+        if ($product->orderItems()->count() > 0) {
+            return redirect()->back()->with('error', 'You can\'t delete this product.');
+        }
+        if (!empty($product->principalImage)) {
+            $path = 'products_images/' . $product->id . '/' . $product->principalImage;
+            if (Storage::disk('public')->exists($path)) {
+                Storage::disk('public')->delete($path);
+            }
         }
 
         $product->delete();

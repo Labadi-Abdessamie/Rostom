@@ -66,6 +66,9 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @php
+                                            $total = 0;
+                                        @endphp
                                         @foreach ($orderItems as $item)
                                             <tr>
                                                 <td class="images">
@@ -90,6 +93,11 @@
                                                     {{ number_format($item->product->price * $item->quantity, 2) }} DZD
                                                 </td>
                                             </tr>
+                                            @if ($item->status == 'pending' || $item->status == 'available')
+                                                @php
+                                                    $total += $item->product->price * $item->quantity;
+                                                @endphp
+                                            @endif
                                         @endforeach
                                     </tbody>
                                 </table>
@@ -100,7 +108,7 @@
                                 $shipping_fee = 100;
                             @endphp
                             <p><span>Shipping Fee:</span> {{ number_format($shipping_fee, 2) }} DZD</p>
-                            <p><span>Total Amount:</span> {{ number_format($order->totalAmount, 2) }} DZD</p>
+                            <p><span>Total Amount:</span> {{ number_format($total, 2) }} DZD</p>
                             @if (false)
                                 <p><span>Tax:</span> {{ number_format($order->tax ?? 0, 2) }} DZD</p>
                                 <p><span>Discount:</span> {{ number_format($order->discount ?? 0, 2) }} DZD</p>

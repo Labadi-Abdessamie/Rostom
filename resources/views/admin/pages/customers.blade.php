@@ -56,7 +56,7 @@
                                             <th>Email</th>
                                             <th>Phone</th>
                                             <th>Bio</th>
-                                            <th>Role</th>
+                                            <th>Status</th>
                                             <th style="width: 75px;">Action</th>
                                         </tr>
                                     </thead>

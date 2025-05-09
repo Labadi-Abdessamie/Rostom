@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\CategoryController;
@@ -70,12 +71,12 @@ Route::middleware(['auth', RoleMiddleware::class . ':client'])->group(function (
         Route::get('profile', [ClientController::class, 'profile'])->name('profile');
         Route::put(('profile/update'), [ClientController::class, 'update'])->name('profile.update');
         //-----------------------------------------//
-        Route::get('address', [ClientController::class, 'address'])->name('address');
-        Route::get('address/{id}/edit', [ClientController::class, 'editAddress'])->name('address.edit');
-        Route::put('address/{id}', [ClientController::class, 'updateAddress'])->name('address.update');
-        Route::delete('address/{id}', [ClientController::class, 'deleteAddress'])->name('address.delete');
-        Route::post('address/store', [ClientController::class, 'storeAddress'])->name('address.store');
-        Route::get('address/add', [ClientController::class, 'addAddress'])->name('address.add');
+        Route::get('address', [AddressController::class, 'index'])->name('address');
+        Route::get('address/add', [AddressController::class, 'create'])->name('address.add');
+        Route::post('address/store', [AddressController::class, 'store'])->name('address.store');
+        Route::get('address/{id}/edit', [AddressController::class, 'edit'])->name('address.edit');
+        Route::put('address/{id}', [AddressController::class, 'update'])->name('address.update');
+        Route::delete('address/{id}', [AddressController::class, 'destroy'])->name('address.delete');
         //-----------------------------------------//
 
         Route::post('order/{id}/confirm', [OrderController::class, 'confirmOrder'])->name('confirm_order');

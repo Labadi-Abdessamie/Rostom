@@ -143,7 +143,30 @@ class ProfileController extends Controller
     {
         //! add here to change the pending orders to cancelled and the reviews to anynomus
         $user = User::findOrFail($id);
-        $user->delete();
+        if ($user->role == "client") {
+            foreach ($user->reviews as $review) {
+                $review->delete();
+            }
+            foreach ($user->orders as $order) {
+                if ($order->status == "pending") {
+                    $order->status = "cancelled";
+                    $order->save();
+                }
+            }
+            foreach ($user->bags as $bag) {
+                $bag->delete();
+            }
+            /*
+            foreach ($user->addresses as $address) {
+                $address->delete();
+            }
+            */
+        } else if ($user->role == "vendor") {
+            $user->magasin->status = "inactive";
+            $user->magasin->save();
+        }
+        $user->status = "inactive";
+        $user->save();
         return redirect()->back()->with('success', 'User deleted successfully.');
     }
 }

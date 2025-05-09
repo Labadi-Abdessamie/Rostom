@@ -79,11 +79,14 @@ class CategoryController extends Controller
         $category = Category::with('childrens.childrens')->findOrFail($id);
         foreach ($category->childrens as $child) {
             foreach ($child->childrens as $grandChild) {
-                $grandChild->delete();
+                $grandChild->status = 'inactive';
+                $grandChild->save();
             }
-            $child->delete();
+            $child->status = 'inactive';
+            $child->save();
         }
-        $category->delete();
+        $category->status = 'inactive';
+        $category->save();
         return redirect()->back()->with('success', 'Category deleted successfully.');
     }
 }

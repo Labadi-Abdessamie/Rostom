@@ -144,11 +144,7 @@ class PurchaseOrderController extends Controller
     {
 
         $order = PurchaseOrder::findOrFail($id);
-
-
         $order->delete();
-
-
         return redirect()->route('vendor.purchase_orders')->with('success', 'Purchase order deleted successfully.');
     }
 }

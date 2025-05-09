@@ -46,8 +46,8 @@
                                 <tr class="d-flex item">
                                     <td class="wsus__pro_img">
                                         <a href="{{ route('frontend.product_details', ['id' => $key]) }}">
-                                            <img src="{{ asset('frontend/images/pro9_9.jpg') }}" alt="product"
-                                                class="img-fluid w-100"></a>
+                                            <img src="{{ asset('storage/products_images/' . $key . '/' . $item['product']['image']) }}"
+                                                alt="product" class="img-fluid w-100"></a>
                                     </td>
 
                                     <td class="wsus__pro_name">

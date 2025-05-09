@@ -129,80 +129,70 @@ class MagasinController extends Controller
         if (Auth::user()->role == "admin") {
             return view('admin.pages.edit_magasin', compact('magasin'));
         } else if (Auth::user()->role == "vendor" && $magasin->user_id == Auth::user()->id) {
-            return view('vendor.pages.edit_magasin', compact('magasin', ));
+            return view('vendor.pages.edit_magasin', compact('magasin',));
         }
     }
-    
+
 
     public function destroy($id)
     {
         $magasin = Magasin::findOrFail($id);
         $magasin->user->magasin_id = null;
         $magasin->user->save();
-        $magasin->delete();
+        $magasin->status = 'inactive';
+        $magasin->save();
 
-        return redirect()->back()->with('success', 'Magasin deleted successfully.');
+        return redirect()->back()->with('success', 'Magasin disabled successfully.');
     }
 
     public function update(Request $request, $id)
-{
-    // Find the magasin by ID
-    $magasin = Magasin::findOrFail($id);
+    {
+        $magasin = Magasin::findOrFail($id);
 
-    // Validate incoming data
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:magasins,email,' . $magasin->id,
-        'phoneNumber' => 'required|string|max:20',
-        'location' => 'required|string|max:255',
-        'bio' => 'nullable|string',
-        'magasinPicture' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        'vitrineVideo' => 'nullable|mimes:mp4,mov,avi,mkv|max:10240',
-        'facebookLink' => 'nullable|url',
-        'instagramLink' => 'nullable|url',
-        'tiktokLink' => 'nullable|url',
-        'whatsupLink' => 'nullable|url',
-        'magasinOpen' => 'required|boolean',
-    ]);
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:magasins,email,' . $magasin->id,
+            'phoneNumber' => 'required|string|max:20',
+            'location' => 'required|string|max:255',
+            'bio' => 'nullable|string',
+            'magasinPicture' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'vitrineVideo' => 'nullable|mimes:mp4,mov,avi,mkv|max:10240',
+            'facebookLink' => 'nullable|url',
+            'instagramLink' => 'nullable|url',
+            'tiktokLink' => 'nullable|url',
+            'whatsupLink' => 'nullable|url',
+            'magasinOpen' => 'required|boolean',
+        ]);
 
-    // Update the magasin details
-    $magasin->name = $request->name;
-    $magasin->email = $request->email;
-    $magasin->phoneNumber = $request->phoneNumber;
-    $magasin->location = $request->location;
-    $magasin->bio = $request->bio;
-    $magasin->facebookLink = $request->facebookLink;
-    $magasin->instagramLink = $request->instagramLink;
-    $magasin->tiktokLink = $request->tiktokLink;
-    $magasin->whatsupLink = $request->whatsupLink;
-    $magasin->magasinOpen = $request->magasinOpen;
+        $magasin->name = $request->name;
+        $magasin->email = $request->email;
+        $magasin->phoneNumber = $request->phoneNumber;
+        $magasin->location = $request->location;
+        $magasin->bio = $request->bio;
+        $magasin->facebookLink = $request->facebookLink;
+        $magasin->instagramLink = $request->instagramLink;
+        $magasin->tiktokLink = $request->tiktokLink;
+        $magasin->whatsupLink = $request->whatsupLink;
+        $magasin->magasinOpen = $request->magasinOpen;
 
-    // Handle the magasinPicture upload
-    if ($request->hasFile('magasinPicture')) {
-        // Delete the old picture if it exists
-        if ($magasin->magasinPicture && Storage::exists('public/' . $magasin->magasinPicture)) {
-            Storage::delete('public/' . $magasin->magasinPicture);
+        if ($request->hasFile('magasinPicture')) {
+            if ($magasin->magasinPicture && Storage::exists('public/' . $magasin->magasinPicture)) {
+                Storage::delete('public/' . $magasin->magasinPicture);
+            }
+
+            $magasin->magasinPicture = $request->file('magasinPicture')->store('magasinPictures', 'public');
         }
 
-        // Store the new picture
-        $magasin->magasinPicture = $request->file('magasinPicture')->store('magasinPictures', 'public');
-    }
+        if ($request->hasFile('vitrineVideo')) {
+            if ($magasin->vitrineVideo && Storage::exists('public/' . $magasin->vitrineVideo)) {
+                Storage::delete('public/' . $magasin->vitrineVideo);
+            }
 
-    // Handle the vitrineVideo upload
-    if ($request->hasFile('vitrineVideo')) {
-        // Delete the old video if it exists
-        if ($magasin->vitrineVideo && Storage::exists('public/' . $magasin->vitrineVideo)) {
-            Storage::delete('public/' . $magasin->vitrineVideo);
+            $magasin->vitrineVideo = $request->file('vitrineVideo')->store('vitrineVideos', 'public');
         }
 
-        // Store the new video
-        $magasin->vitrineVideo = $request->file('vitrineVideo')->store('vitrineVideos', 'public');
+        $magasin->save();
+
+        return redirect()->route('vendor.magasin', $magasin->id)->with('success', 'Magasin updated successfully!');
     }
-
-    // Save the updated magasin data
-    $magasin->save();
-
-    // Redirect back with success message
-    return redirect()->route('vendor.magasin', $magasin->id)->with('success', 'Magasin updated successfully!');
-}
 }
