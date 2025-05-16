@@ -26,6 +26,7 @@ Route::get('/cleareverything', function () {
     echo 'View cleared<br>';
     $clearconfig = Artisan::call('config:clear');
     echo 'Config cleared<br>';
+    return redirect()->back();
 });
 
 //Frontend route

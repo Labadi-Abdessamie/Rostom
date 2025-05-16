@@ -1,13 +1,13 @@
 @extends('frontend.master')
 
 @section('title')
-    ATLAS MALL || Contact
+    {{ $website->name }} || Contact
 @endsection
 
 @section('content')
     <!--============================
-                                                                                                    BREADCRUMB START
-                                                                                                ==============================-->
+                                                                                                        BREADCRUMB START
+                                                                                                    ==============================-->
     <section id="wsus__breadcrumb">
         <div class="wsus_breadcrumb_overlay">
             <div class="container">
@@ -24,13 +24,13 @@
         </div>
     </section>
     <!--============================
-                                                                                                    BREADCRUMB END
-                                                                                                ==============================-->
+                                                                                                        BREADCRUMB END
+                                                                                                    ==============================-->
 
 
     <!--============================
-                                                                                                    CONTACT PAGE START
-                                                                                                ==============================-->
+                                                                                                        CONTACT PAGE START
+                                                                                                    ==============================-->
     <section id="wsus__contact">
         <div class="container">
             <div class="wsus__contact_area">
@@ -114,6 +114,6 @@
         </div>
     </section>
     <!--============================
-                                                                                                    CONTACT PAGE END
-                                                                                                ==============================-->
+                                                                                                        CONTACT PAGE END
+                                                                                                    ==============================-->
 @endsection

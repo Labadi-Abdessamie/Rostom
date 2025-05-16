@@ -15,12 +15,13 @@
                             <div class="col-xl-6 mb-4">
                                 <div class="wsus__dashboard_review_item">
                                     <div class="wsus__dash_rev_img">
-                                        <img src="{{ asset($review->product->principalImage ?? 'images/default.jpg') }}"
+                                        <img src="{{ asset('storage/products_images/' . $review->product->id . '/' . $review->product->principalImage) }}"
                                             alt="product" class="img-fluid w-100">
                                     </div>
                                     <div class="wsus__dash_rev_text">
                                         <h5>{{ $review->product->name ?? 'Product Deleted' }}
-                                            <span>{{ $review->created_at->format('d-m-Y') }}</span></h5>
+                                            <span>{{ $review->created_at->format('d-m-Y') }}</span>
+                                        </h5>
                                         <p class="wsus__dash_review">
                                             @for ($i = 1; $i <= 5; $i++)
                                                 @if ($i <= $review->rate)

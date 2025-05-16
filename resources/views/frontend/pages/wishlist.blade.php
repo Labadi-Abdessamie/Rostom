@@ -1,13 +1,13 @@
 @extends('frontend.master')
 
 @section('title')
-    ATLAS MALL || Wishlist
+    {{ $website->name }} || Wishlist
 @endsection
 
 @section('content')
     <!--============================
-                    BREADCRUMB START
-                ==============================-->
+                            BREADCRUMB START
+                        ==============================-->
     <section id="wsus__breadcrumb">
         <div class="wsus_breadcrumb_overlay">
             <div class="container">
@@ -24,17 +24,17 @@
         </div>
     </section>
     <!--============================
-                    BREADCRUMB END
-                ==============================-->
+                            BREADCRUMB END
+                        ==============================-->
 
 
     <!--============================
-                    CART VIEW PAGE START
-                ==============================-->
+                            CART VIEW PAGE START
+                        ==============================-->
     <section id="wsus__cart_view">
         @livewire('wishlist')
     </section>
     <!--============================
-                    CART VIEW PAGE END
-                ==============================-->
+                            CART VIEW PAGE END
+                        ==============================-->
 @endsection

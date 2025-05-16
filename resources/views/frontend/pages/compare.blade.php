@@ -228,7 +228,7 @@ ATLAS MALL || Product Compare
 @extends('frontend.master')
 
 @section('title')
-    ATLAS MALL || Product Compare
+    {{ $website->name }} || Product Compare
 @endsection
 
 @section('content')

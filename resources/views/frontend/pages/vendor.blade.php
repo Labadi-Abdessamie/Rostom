@@ -1,13 +1,13 @@
 @extends('frontend.master')
 
 @section('title')
-    ATLAS MALL || Vendors
+    {{ $website->name }} || Vendors
 @endsection
 
 @section('content')
     <!--============================
-                                                                                                                                                                                                                BREADCRUMB START
-                                                                                                                                                                                                            ==============================-->
+                                                                                                                                                                                                                    BREADCRUMB START
+                                                                                                                                                                                                                ==============================-->
     <section id="wsus__breadcrumb">
         <div class="wsus_breadcrumb_overlay">
             <div class="container">
@@ -24,12 +24,12 @@
         </div>
     </section>
     <!--============================
-                                                                                     BREADCRUMB END
-                                                                                     ==============================-->
+                                                                                         BREADCRUMB END
+                                                                                         ==============================-->
 
     <!--============================
-                                                                                    VENDORS START
-                                                                                ==============================-->
+                                                                                        VENDORS START
+                                                                                    ==============================-->
     <section id="wsus__product_page" class="wsus__vendors">
         <div class="container">
             <div class="row">
@@ -177,6 +177,6 @@
         </div>
     </section>
     <!--============================
-                                                                                        VENDORS END
-                                                                                        ==============================-->
+                                                                                            VENDORS END
+                                                                                            ==============================-->
 @endsection

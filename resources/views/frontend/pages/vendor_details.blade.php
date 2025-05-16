@@ -1,7 +1,7 @@
 @extends('frontend.master')
 
 @section('title')
-    ATLAS MALL || Vendor Details
+{{ $website->name }} || Vendor Details
 @endsection
 
 @section('content')
