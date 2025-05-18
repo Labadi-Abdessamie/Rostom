@@ -225,10 +225,9 @@
 
                 <form action="{{ route('logout') }} " id="signout" method="POST">
                     @csrf
-                    <a onclick="document.getElementById('signout').submit();"
-                        class="dropdown-item has-icon text-danger cursor-pointer">
+                    <button class="btn dropdown-item has-icon text-danger cursor-pointer" type="submit">
                         <i class="fas fa-sign-out-alt"></i> Log out
-                    </a>
+                    </button>
                 </form>
             </div>
         </li>

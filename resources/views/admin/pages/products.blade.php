@@ -92,7 +92,7 @@
 
                                         <div class="col-auto">
                                             <div class="product-price-tag">
-                                                ${{ $product->price }}
+                                                DZ {{ $product->price }}
                                             </div>
                                         </div>
                                     </div> <!-- end row -->

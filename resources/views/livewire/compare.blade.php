@@ -6,7 +6,8 @@
         </td>
         @foreach ($this->items as $key => $product)
             <td class="wsus__compare_img">
-                <img src="{{ asset($product['image']) }}" alt="product" class="img-fluid w-100">
+                <img src="{{ asset('storage/products_images/' . $key . '/' . $product['image']) }}" alt="product"
+                    class="img-fluid w-100">
             </td>
         @endforeach
     </tr>
@@ -55,7 +56,7 @@
         </td>
         @foreach ($this->items as $key => $product)
             <td class="wsus__compare_text">
-                <p class="wsus__compare_price">${{ $product['price'] }}</p>
+                <p class="wsus__compare_price">DZ {{ $product['price'] }}</p>
             </td>
         @endforeach
     </tr>
