@@ -48,7 +48,11 @@
                                 </P>
                                 <ul>
                                     <li>
-                                        @livewire('add-to-cart', ['product' => $secondSliderProduct], key($secondSliderProduct->id))
+                                        @if ($secondSliderProduct->actual_quantity > 0)
+                                            @livewire('add-to-cart', ['product' => $secondSliderProduct], key($secondSliderProduct->id))
+                                        @else
+                                            <button class="btn btn--danger bg-danger add_cart">Out of stock</button>
+                                        @endif
                                     </li>
                                     <li class="cursor-pointer">
                                         @livewire('add-to-wishlist', ['product' => $secondSliderProduct], key($secondSliderProduct->id))
@@ -146,7 +150,11 @@
                                             <del>$ 50</del>
                                         @endif
                                     </p>
-                                    @livewire('add-to-cart', ['product' => $regularProduct], key($regularProduct->id))
+                                    @if ($regularProduct->actual_quantity > 0)
+                                        @livewire('add-to-cart', ['product' => $regularProduct], key($regularProduct->id))
+                                    @else
+                                        <button class="btn btn--danger bg-danger add_cart">Out of stock</button>
+                                    @endif
                                 </div>
                             </div>
                         </div>

@@ -76,7 +76,12 @@
                                         <del>$200</del>
                                     @endif
                                 </p>
-                                @livewire('add-to-cart', ['product' => $sliderProduct], key($sliderProduct->id))
+                                @if ($sliderProduct->actual_quantity > 0)
+                                    @livewire('add-to-cart', ['product' => $sliderProduct], key($sliderProduct->id))
+                                @else
+                                    <button class="btn btn--danger bg-danger add_cart">Out of stock</button>
+                                @endif
+                                {{-- @livewire('add-to-cart', ['product' => $sliderProduct], key($sliderProduct->id)) --}}
                                 {{-- <livewire:cart :item_Id="$sliderProduct->id" :actionType="'addItem'" /> --}}
                             </div>
                         </div>

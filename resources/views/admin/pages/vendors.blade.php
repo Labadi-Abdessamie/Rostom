@@ -67,6 +67,7 @@
                                     id="products-datatable">
                                     <thead>
                                         <tr>
+                                            <th class="d-none">#</th>
                                             <th>#</th>
                                             <th>Vendor</th>
                                             <th>Email</th>
@@ -79,6 +80,7 @@
                                     <tbody>
                                         @foreach ($vendors as $vendor)
                                             <tr>
+                                                <td class="d-none"></td>
                                                 <td>{{ $loop->iteration + ($vendors->currentPage() - 1) * $vendors->perPage() }}
                                                 </td>
                                                 <td class="table-user">
