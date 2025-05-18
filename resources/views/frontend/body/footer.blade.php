@@ -86,7 +86,7 @@
                 <div class="row">
                     <div class="col-xl-12">
                         <div class="wsus__copyright d-flex justify-content-center">
-                            <p>Copyright © 2023 -
+                            <p>Copyright ©
                                 <script>
                                     document.write(new Date().getFullYear())
                                 </script> {{ $website->name }}. All Rights Reserved.

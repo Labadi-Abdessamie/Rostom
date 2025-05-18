@@ -37,7 +37,20 @@ class ProductController extends Controller
                     return redirect()->route('frontend.products')
                         ->with('message', 'This category is not active');
                 }
-                $query->where('category_id', $categoryId);
+
+
+                $subCategoryIds = Category::where('parentId', $categoryId)
+                    ->where('status', 'active')
+                    ->pluck('id')
+                    ->toArray();
+                $subSubCategoryIds = Category::whereIn('parentId', $subCategoryIds)
+                    ->where('status', 'active')
+                    ->pluck('id')
+                    ->toArray();
+
+                $allCategoryIds = array_merge([$categoryId], $subCategoryIds, $subSubCategoryIds);
+
+                $query->whereIn('category_id', $allCategoryIds);
             }
 
             switch ($sort) {

@@ -31,13 +31,13 @@ class AppServiceProvider extends ServiceProvider
 
         $DefaultInformations = [
             'url' => 'youtube.com',
-            'name' => 'rostom',
+            'name' => 'TiarShop',
             'logo' => 'logo.png',
             'favicon' => 'favicon.png',
             'description' => 'Platform E-commerce Multi-vendors',
-            'owner' => 'Rostom',
+            'owner' => 'TiarShop',
             'language' => 'en',
-            'contact_email' => 'support@rostom.com',
+            'contact_email' => 'support@tiarshop.com',
             'contact_phone' => '798841989',
             'social_media_links' => '{
                 "facebook" : "facebook.com",

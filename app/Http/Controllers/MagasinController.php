@@ -62,9 +62,12 @@ class MagasinController extends Controller
         $magasin->user_id = Auth::id();
 
         //$magasin->status = 'firstOpening'; //! by ddefault
+        $magasin->save();
 
         if ($request->hasFile('magasinPicture')) {
-            $magasin->magasinPicture = $request->file('magasinPicture')->store('magasin_pictures', 'public');
+            $file = $request->file('magasinPicture');
+            $path = $file->store('magasins_images' . $magasin->id, 'public');
+            $magasin->magasinPicture = basename($path);
         }
 
         if ($request->hasFile('vitrineVideo')) {

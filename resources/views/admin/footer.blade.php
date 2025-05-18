@@ -5,13 +5,13 @@
             <div class="col-md-6">
                 <script>
                     document.write(new Date().getFullYear())
-                </script> &copy; UBold theme by <a href="">Coderthemes</a>
+                </script> &copy; {{ $website->name }}
             </div>
             <div class="col-md-6">
                 <div class="text-md-end footer-links d-none d-sm-block">
-                    <a href="javascript:void(0);">About Us</a>
-                    <a href="javascript:void(0);">Help</a>
-                    <a href="javascript:void(0);">Contact Us</a>
+                    <a href="{{ route('frontend.contact') }}">About Us</a>
+                    <a href="{{ route('frontend.contact') }}">Help</a>
+                    <a href="{{ route('frontend.contact') }}">Contact Us</a>
                 </div>
             </div>
         </div>

@@ -1,13 +1,13 @@
 @extends('frontend.master')
 
 @section('title')
-{{ $website->name }} || Vendor Details
+    {{ $website->name }} || Vendor Details
 @endsection
 
 @section('content')
     <!--============================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                    BREADCRUMB START
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                ==============================-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            BREADCRUMB START
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ==============================-->
     <section id="wsus__breadcrumb">
         <div class="wsus_breadcrumb_overlay">
             <div class="container">
@@ -25,8 +25,8 @@
         </div>
     </section>
     <!--============================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                    BREADCRUMB END
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                ==============================-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            BREADCRUMB END
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ==============================-->
 
     {{--
     <!--==========================
@@ -174,7 +174,9 @@
                                     data-bs-parent="#accordionExample">
                                     <div class="accordion-body">
                                         <ul>
-                                            <li><a href="#">Accessories</a></li>
+                                            @foreach ($vendor->category->childrens as $child)
+                                                <li><a href="#">{{ $child->name }}</a></li>
+                                            @endforeach ()
 
                                         </ul>
                                     </div>
@@ -190,10 +192,22 @@
                                 <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo"
                                     data-bs-parent="#accordionExample">
                                     <div class="accordion-body">
-                                        <div class="price_ranger">
-                                            <input type="hidden" id="slider_range" class="flat-slider" />
-                                            <button type="submit" class="common_btn">filter</button>
+                                        <div class="d-flex align-items-center gap-2 mb-3">
+                                            <label class="form-label mb-0" for="min">Min:</label>
+                                            <input class="form-control" type="number" name="min" id="min"
+                                                min="0" style="max-width: 120px;">
                                         </div>
+                                        <div class="d-flex align-items-center gap-2 mb-3">
+                                            <label class="form-label mb-0" for="max">Max:</label>
+                                            <input class="form-control" type="number" name="max" id="max"
+                                                max="0" style="max-width: 120px;">
+                                        </div>
+                                        @if (false)
+                                            <div class="price_ranger">
+                                                <input type="hidden" id="slider_range" class="flat-slider">
+                                            </div>
+                                        @endif
+                                        <button type="submit" class="common_btn">filter</button>
                                     </div>
                                 </div>
                             </div>
