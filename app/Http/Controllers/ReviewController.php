@@ -12,10 +12,10 @@ class ReviewController extends Controller
 {
     public function store(Request $request)
     {
+
         $request->validate([
             'rating' => ['required', 'min:1', 'max:5'],
             'content' => ['required', 'min:2', 'max:255'],
-            //'image' => []
         ]);
 
         $review = Review::create([
@@ -25,18 +25,35 @@ class ReviewController extends Controller
             'product_id' => $request->product_id,
         ]);
 
+
         $product = Product::findorFail($request->product_id);
         $product->rate_average = ($product->rate_average + $request->rating) / ($product->rate_count + 1);
         $product->rate_count++;
         $product->save();
 
         //! save the picture
-        /*
-        ReviewImage::create([
-            'path' =>'',
-            'review_id' => $review->id
-        ]);
-        */
+        if ($request->hasFile('image')) {
+            $files = $request->file('image');
+
+            if (!is_array($files)) {
+                $files = [$files];
+            }
+
+            foreach ($files as $file) {
+                if ($file->isValid()) {
+                    $path = $file->store('reviews', 'public');
+                    $basename = basename($path);
+
+                    ReviewImage::create([
+                        'path' => $basename,
+                        'review_id' => $review->id
+                    ]);
+                }
+            }
+        }
+
+
+
         return redirect()->back();
     }
     public function update(Request $request, $id)

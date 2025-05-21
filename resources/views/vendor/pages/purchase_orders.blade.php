@@ -49,12 +49,14 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="#not-fully-payed-orders" id="not-fully-payed-orders-tab"
                                         data-bs-toggle="pill" data-bs-target="#not-fully-payed-orders" role="tab"
-                                        aria-controls="not-fully-payed-orders" aria-selected="false">Not Fully Payed</a>
+                                        aria-controls="not-fully-payed-orders" aria-selected="false">Not Fully Payed<span
+                                            class="badge badge-primary">{{ $notFullyPayedOrders->count() }}</span></a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="#debt-orders" id="debt-orders-tab" data-bs-toggle="pill"
                                         data-bs-target="#debt-orders" role="tab" aria-controls="debt-orders"
-                                        aria-selected="false">Debt</a>
+                                        aria-selected="false">Debt<span
+                                            class="badge badge-primary">{{ $debtOrders->count() }}</span></a>
                                 </li>
                             </ul>
                         </div>
