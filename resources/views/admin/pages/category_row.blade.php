@@ -13,7 +13,7 @@
         {{ $category->status }}
     </td>
     <td>
-        {{ $category->created_at->format('d/m/Y') }}
+        {{ $category->created_at ? $category->created_at->format('d/m/y') : 'N/A' }}
     </td>
     <td>
         <div class="d-flex">

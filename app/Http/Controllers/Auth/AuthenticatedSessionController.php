@@ -90,9 +90,9 @@ class AuthenticatedSessionController extends Controller
         switch ($user->role) {
             case "client":
             case "vendor":
-                if (is_null($user->email_verified_at)) {
+                /*if (is_null($user->email_verified_at)) {
                     return redirect()->route('verification.notice');
-                }
+                }*/
                 break;
             case "admin":
                 break;
