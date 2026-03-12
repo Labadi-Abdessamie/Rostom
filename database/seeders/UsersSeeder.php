@@ -19,19 +19,23 @@ class UsersSeeder extends Seeder
             'name' => 'Admin demo',
             'email' => 'admin@demo.com',
             'password' => Hash::make('admin'),
+            'status' => 'active',
             'role' => 'admin']);
+            
 
         //Vendor
          User::create([
             'name' => 'Vendor demo',
             'email' => 'vendor@demo.com',
             'password' => Hash::make('vendor'),
+            'status' => 'active',
             'role' => 'vendor']);
 
         //Client
         User::create([
         'name' => 'Client Demo',
         'email' => 'client@demo.com',
+        'status' => 'active',
         'password' => Hash::make('client'),
         'role' => 'client'
     ]);
