@@ -20,8 +20,20 @@ class categoryFactory extends Factory
         return [
             'status' => 'active',
             'name' => fake()->word(),
-            //'parentId' => NULL,
-            'parentId' => fake()->randomElement(Category::all())
+            'parentId' => NULL,
+            //'parentId' => fake()->randomElement(Category::all())
         ];
+    }
+    public function child()
+    {
+        return $this->state(function (array $attributes) {
+    $parentCategory = Category::whereNull('parentId')
+        ->inRandomOrder()
+        ->first();
+
+    return [
+        'parentId' => $parentCategory ? $parentCategory->id : null,
+    ];
+});
     }
 }

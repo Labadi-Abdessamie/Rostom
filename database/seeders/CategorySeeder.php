@@ -13,6 +13,9 @@ class CategorySeeder extends Seeder
      */
     public function run(): void
     {
-        Category::factory(3)->create();
+        //create main cateogries
+        Category::factory()->count(5)->create();
+        //Create subcategories
+        Category::factory()->count(10)->child()->create();
     }
 }
