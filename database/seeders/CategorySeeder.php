@@ -15,6 +15,7 @@ class CategorySeeder extends Seeder
     {
         //create main cateogries
         Category::factory()->count(5)->create();
+        
         //Create subcategories
         Category::factory()->count(10)->child()->create();
     }
