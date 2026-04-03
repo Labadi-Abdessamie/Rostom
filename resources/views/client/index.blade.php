@@ -1,242 +1,712 @@
 @extends('client.master')
 
 @section('title')
-    My Dashboard
+    Dashboard
 @endsection
 
+@push('styles')
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+@endpush
+
 @section('content')
-<div class="row">
-    <div class="col-xl-9 col-xxl-10 col-lg-9 ms-auto">
-        <div class="dashboard_content" style="background: #f8f9fa;">
-            
-            <!-- Welcome Section with User Profile -->
-            <div class="corporate-welcome" style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); border-radius: 10px; padding: 40px; color: white; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-                <div class="row align-items-center">
-                    <div class="col-md-8">
-                        <h1 style="font-size: 28px; font-weight: 700; margin: 0 0 10px 0;">Welcome, {{ Auth::user()->name }} 👋</h1>
-                        <p style="font-size: 14px; opacity: 0.9; margin: 0;">{{ date('l, F j, Y') }} - Here's your dashboard summary</p>
-                    </div>
-                    <div class="col-md-4 text-end">
-                        <img src="{{ Auth::user()->profilePicture ? asset('storage/profile_pictures/' . Auth::id() . '/' . Auth::user()->profilePicture) : asset('frontend/images/No_Image.png') }}" 
-                            alt="Profile" style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid white; object-fit: cover;">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Key Statistics Row -->
-            <div class="stats-grid mb-4">
-                <h2 style="font-size: 18px; font-weight: 700; color: #2c3e50; margin-bottom: 20px;">Your Statistics</h2>
-                <div class="row">
-                    <!-- Total Orders -->
-                    <div class="col-lg-3 col-md-6 mb-3">
-                        <div class="stat-box" style="background: white; border-radius: 8px; padding: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-left: 4px solid #e74c3c;">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <p style="margin: 0; font-size: 12px; color: #7f8c8d; font-weight: 600; text-transform: uppercase;">Total Orders</p>
-                                    <h3 style="margin: 10px 0 0 0; font-size: 36px; font-weight: 700; color: #2c3e50;">{{ App\Models\Order::where('user_id', Auth::id())->count() }}</h3>
-                                </div>
-                                <div style="font-size: 32px; color: #e74c3c; opacity: 0.2;"><i class="fas fa-shopping-cart"></i></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Wishlist Items -->
-                    <div class="col-lg-3 col-md-6 mb-3">
-                        <div class="stat-box" style="background: white; border-radius: 8px; padding: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-left: 4px solid #e91e63;">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <p style="margin: 0; font-size: 12px; color: #7f8c8d; font-weight: 600; text-transform: uppercase;">Wishlist</p>
-                                    <h3 style="margin: 10px 0 0 0; font-size: 36px; font-weight: 700; color: #2c3e50;">{{ App\Models\Bag::where('user_id', Auth::id())->where('type', 'wishlist')->count() }}</h3>
-                                </div>
-                                <div style="font-size: 32px; color: #e91e63; opacity: 0.2;"><i class="fas fa-heart"></i></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Reviews -->
-                    <div class="col-lg-3 col-md-6 mb-3">
-                        <div class="stat-box" style="background: white; border-radius: 8px; padding: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-left: 4px solid #f39c12;">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <p style="margin: 0; font-size: 12px; color: #7f8c8d; font-weight: 600; text-transform: uppercase;">Reviews</p>
-                                    <h3 style="margin: 10px 0 0 0; font-size: 36px; font-weight: 700; color: #2c3e50;">{{ App\Models\Review::where('user_id', Auth::id())->count() }}</h3>
-                                </div>
-                                <div style="font-size: 32px; color: #f39c12; opacity: 0.2;"><i class="fas fa-star"></i></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Addresses -->
-                    <div class="col-lg-3 col-md-6 mb-3">
-                        <div class="stat-box" style="background: white; border-radius: 8px; padding: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-left: 4px solid #16a085;">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <p style="margin: 0; font-size: 12px; color: #7f8c8d; font-weight: 600; text-transform: uppercase;">Addresses</p>
-                                    <h3 style="margin: 10px 0 0 0; font-size: 36px; font-weight: 700; color: #2c3e50;">{{ App\Models\Address::where('user_id', Auth::id())->count() }}</h3>
-                                </div>
-                                <div style="font-size: 32px; color: #16a085; opacity: 0.2;"><i class="fas fa-map-marker-alt"></i></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Quick Navigation Section -->
-            <div class="quick-nav-section mb-4">
-                <h2 style="font-size: 18px; font-weight: 700; color: #2c3e50; margin-bottom: 20px;">Quick Navigation</h2>
-                <div class="row">
-                    <div class="col-lg-3 col-md-6 mb-3">
-                        <a href="{{ route('client.orders') }}" class="nav-card" style="background: white; border-radius: 8px; padding: 30px; text-align: center; text-decoration: none; color: #2c3e50; display: block; transition: all 0.3s; border-top: 3px solid #3498db; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                            <div style="font-size: 40px; margin-bottom: 12px; color: #3498db;"><i class="fas fa-list-ul"></i></div>
-                            <h5 style="margin: 0 0 8px 0; font-weight: 600; font-size: 16px;">View Orders</h5>
-                            <p style="margin: 0; font-size: 12px; color: #7f8c8d;">Manage your orders</p>
-                        </a>
-                    </div>
-
-                    <div class="col-lg-3 col-md-6 mb-3">
-                        <a href="{{ route('client.wishlist') }}" class="nav-card" style="background: white; border-radius: 8px; padding: 30px; text-align: center; text-decoration: none; color: #2c3e50; display: block; transition: all 0.3s; border-top: 3px solid #e91e63; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                            <div style="font-size: 40px; margin-bottom: 12px; color: #e91e63;"><i class="fas fa-heart"></i></div>
-                            <h5 style="margin: 0 0 8px 0; font-weight: 600; font-size: 16px;">Wishlist</h5>
-                            <p style="margin: 0; font-size: 12px; color: #7f8c8d;">Your saved items</p>
-                        </a>
-                    </div>
-
-                    <div class="col-lg-3 col-md-6 mb-3">
-                        <a href="{{ route('client.reviews') }}" class="nav-card" style="background: white; border-radius: 8px; padding: 30px; text-align: center; text-decoration: none; color: #2c3e50; display: block; transition: all 0.3s; border-top: 3px solid #f39c12; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                            <div style="font-size: 40px; margin-bottom: 12px; color: #f39c12;"><i class="fas fa-pen-fancy"></i></div>
-                            <h5 style="margin: 0 0 8px 0; font-weight: 600; font-size: 16px;">My Reviews</h5>
-                            <p style="margin: 0; font-size: 12px; color: #7f8c8d;">Your reviews & ratings</p>
-                        </a>
-                    </div>
-
-                    <div class="col-lg-3 col-md-6 mb-3">
-                        <a href="{{ route('client.address') }}" class="nav-card" style="background: white; border-radius: 8px; padding: 30px; text-align: center; text-decoration: none; color: #2c3e50; display: block; transition: all 0.3s; border-top: 3px solid #16a085; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                            <div style="font-size: 40px; margin-bottom: 12px; color: #16a085;"><i class="fas fa-location-dot"></i></div>
-                            <h5 style="margin: 0 0 8px 0; font-weight: 600; font-size: 16px;">Addresses</h5>
-                            <p style="margin: 0; font-size: 12px; color: #7f8c8d;">Manage addresses</p>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Profile Card Section -->
-            <div class="profile-info-section mb-4">
-                <h2 style="font-size: 18px; font-weight: 700; color: #2c3e50; margin-bottom: 20px;">Account Information</h2>
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div class="info-card" style="background: white; border-radius: 8px; padding: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                            <h5 style="margin: 0 0 15px 0; font-weight: 600; color: #2c3e50; border-bottom: 2px solid #e74c3c; padding-bottom: 10px;">Personal Details</h5>
-                            <div class="info-row mb-3">
-                                <span style="color: #7f8c8d; font-size: 13px;">Name:</span>
-                                <span style="color: #2c3e50; font-weight: 500;">{{ Auth::user()->name }}</span>
-                            </div>
-                            <div class="info-row mb-3">
-                                <span style="color: #7f8c8d; font-size: 13px;">Email:</span>
-                                <span style="color: #2c3e50; font-weight: 500;">{{ Auth::user()->email }}</span>
-                            </div>
-                            <div class="info-row">
-                                <span style="color: #7f8c8d; font-size: 13px;">Member Since:</span>
-                                <span style="color: #2c3e50; font-weight: 500;">{{ Auth::user()->created_at->format('M d, Y') }}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-6">
-                        <div class="info-card" style="background: white; border-radius: 8px; padding: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                            <h5 style="margin: 0 0 15px 0; font-weight: 600; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px;">Quick Actions</h5>
-                            <a href="{{ route('client.profile') }}" class="action-btn" style="display: inline-block; background: #3498db; color: white; padding: 8px 16px; border-radius: 5px; text-decoration: none; font-size: 13px; margin-bottom: 8px; margin-right: 8px; transition: all 0.3s;">
-                                <i class="fas fa-user"></i> Edit Profile
-                            </a>
-                            <a href="{{ route('client.address') }}" class="action-btn" style="display: inline-block; background: #16a085; color: white; padding: 8px 16px; border-radius: 5px; text-decoration: none; font-size: 13px; margin-bottom: 8px; margin-right: 8px; transition: all 0.3s;">
-                                <i class="fas fa-map-marker"></i> Manage Addresses
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Timeline Activity Section -->
-            <div class="activity-timeline">
-                <h2 style="font-size: 18px; font-weight: 700; color: #2c3e50; margin-bottom: 20px;">Recent Activity</h2>
-                <div style="background: white; border-radius: 8px; padding: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                    @php
-                        $recentOrders = App\Models\Order::where('user_id', Auth::id())->latest()->take(5)->get();
-                    @endphp
-                    
-                    @if($recentOrders->count() > 0)
-                        <div class="timeline">
-                            @foreach($recentOrders as $order)
-                            <div class="timeline-item" style="padding: 15px 0; border-bottom: 1px solid #ecf0f1; display: flex; gap: 15px;">
-                                <div style="width: 12px; height: 12px; background: #e74c3c; border-radius: 50%; margin-top: 3px; flex-shrink: 0;"></div>
-                                <div>
-                                    <p style="margin: 0; font-weight: 600; color: #2c3e50; font-size: 14px;">Order #{{ $order->id }}</p>
-                                    <p style="margin: 5px 0 0 0; color: #7f8c8d; font-size: 12px;">Placed {{ $order->created_at->diffForHumans() }}</p>
-                                </div>
-                            </div>
-                            @endforeach
-                        </div>
-                    @else
-                        <p style="text-align: center; color: #7f8c8d; padding: 20px 0; margin: 0;">No orders yet. Start shopping to see your activity here!</p>
-                    @endif
-                </div>
-            </div>
-
-        </div>
-    </div>
-</div>
-
 <style>
-    /* Professional Dashboard Styles */
-    .dashboard_content {
-        padding: 20px;
+    * {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
 
-    .stat-box {
+    .dashboard_content {
+        background: linear-gradient(135deg, #f5f7fa 0%, #f0f2f7 100%);
+        min-height: 100vh;
+        padding: 50px 30px;
+    }
+
+    /* ===== HEADER & WELCOME SECTION ===== */
+    .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 45px;
+        padding-bottom: 30px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .welcome-section {
+        flex: 1;
+    }
+
+    .welcome-section h1 {
+        font-family: 'Poppins', sans-serif;
+        font-size: 44px;
+        font-weight: 800;
+        color: #1e293b;
+        margin: 0 0 8px 0;
+        letter-spacing: -0.8px;
+    }
+
+    .welcome-section p {
+        font-size: 15px;
+        color: #64748b;
+        margin: 0;
+        font-weight: 500;
+    }
+
+    .header-actions {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+    }
+
+    .notification-bell {
+        width: 44px;
+        height: 44px;
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #64748b;
+        font-size: 18px;
         transition: all 0.3s ease;
     }
 
-    .stat-box:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 15px rgba(0,0,0,0.12) !important;
+    .notification-bell:hover {
+        background: #f8fafc;
+        border-color: #cbd5e1;
+        transform: translateY(-2px);
     }
 
-    .nav-card {
-        transition: all 0.3s ease !important;
+    .user-avatar {
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 18px;
+        cursor: pointer;
+        transition: all 0.3s ease;
     }
 
-    .nav-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.15) !important;
-    }
-
-    .nav-card:hover > div:first-child {
-        transform: scale(1.1);
-    }
-
-    .action-btn:hover {
-        opacity: 0.9;
+    .user-avatar:hover {
         transform: scale(1.05);
+        box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);
+    }
+
+    /* ===== STATS CARDS ===== */
+    .stats-section {
+        margin-bottom: 50px;
+    }
+
+    .stats-title {
+        font-family: 'Poppins', sans-serif;
+        font-size: 18px;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 24px;
+        letter-spacing: -0.3px;
+    }
+
+    .stat-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 28px;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, transparent 0%, #14b8a6 100%);
+    }
+
+    .stat-card:hover {
+        border-color: #cbd5e1;
+        box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+        transform: translateY(-8px);
+    }
+
+    .stat-card:nth-child(2)::before {
+        background: linear-gradient(90deg, transparent 0%, #3b82f6 100%);
+    }
+
+    .stat-card:nth-child(3)::before {
+        background: linear-gradient(90deg, transparent 0%, #8b5cf6 100%);
+    }
+
+    .stat-card:nth-child(4)::before {
+        background: linear-gradient(90deg, transparent 0%, #ec4899 100%);
+    }
+
+    .stat-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
+    .stat-info h3 {
+        font-family: 'Poppins', sans-serif;
+        font-size: 48px;
+        font-weight: 800;
+        color: #1e293b;
+        margin: 0 0 8px 0;
+    }
+
+    .stat-info p {
+        font-size: 13px;
+        color: #94a3b8;
+        margin: 0;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+    }
+
+    .stat-icon-box {
+        width: 64px;
+        height: 64px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        background: linear-gradient(135deg, #e0f2fe 0%, #e0f8f9 100%);
+        color: #14b8a6;
+    }
+
+    .stat-card:nth-child(2) .stat-icon-box {
+        background: linear-gradient(135deg, #dbeafe 0%, #e0f2fe 100%);
+        color: #3b82f6;
+    }
+
+    .stat-card:nth-child(3) .stat-icon-box {
+        background: linear-gradient(135deg, #ede9fe 0%, #f3e8ff 100%);
+        color: #8b5cf6;
+    }
+
+    .stat-card:nth-child(4) .stat-icon-box {
+        background: linear-gradient(135deg, #fbf0f9 0%, #fce7f3 100%);
+        color: #ec4899;
+    }
+
+    /* ===== QUICK ACTIONS ===== */
+    .quick-actions-section {
+        margin-bottom: 50px;
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 26px;
+    }
+
+    .action-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 36px 24px;
+        text-align: center;
+        text-decoration: none;
+        color: inherit;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        display: block;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .action-card::before {
+        content: '';
+        position: absolute;
+        top: -100%;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(20, 184, 166, 0.1) 0%, transparent 100%);
+        transition: all 0.5s ease;
+    }
+
+    .action-card:hover::before {
+        top: 0;
+        left: 0;
+    }
+
+    .action-card:hover {
+        border-color: #cbd5e1;
+        transform: translateY(-12px);
+        box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+    }
+
+    .action-inner {
+        position: relative;
+        z-index: 1;
+    }
+
+    .action-icon {
+        font-size: 48px;
+        margin-bottom: 18px;
+        display: inline-block;
+        width: 72px;
+        height: 72px;
+        background: linear-gradient(135deg, #e0f2fe 0%, #e0f8f9 100%);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #14b8a6;
+        margin: 0 auto 18px;
+        transition: all 0.3s ease;
+    }
+
+    .action-card:hover .action-icon {
+        transform: scale(1.1) rotate(5deg);
+    }
+
+    .action-card:nth-child(2) .action-icon {
+        background: linear-gradient(135deg, #dbeafe 0%, #e0f2fe 100%);
+        color: #3b82f6;
+    }
+
+    .action-card:nth-child(3) .action-icon {
+        background: linear-gradient(135deg, #ede9fe 0%, #f3e8ff 100%);
+        color: #8b5cf6;
+    }
+
+    .action-card:nth-child(4) .action-icon {
+        background: linear-gradient(135deg, #fbf0f9 0%, #fce7f3 100%);
+        color: #ec4899;
+    }
+
+    .action-title {
+        font-family: 'Poppins', sans-serif;
+        font-size: 18px;
+        font-weight: 700;
+        color: #1e293b;
+        margin: 0 0 6px 0;
+    }
+
+    .action-desc {
+        font-size: 13px;
+        color: #94a3b8;
+        margin: 0;
+    }
+
+    /* ===== ACCOUNT INFORMATION ===== */
+    .account-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 36px;
+        margin-bottom: 30px;
+        transition: all 0.3s ease;
+    }
+
+    .account-card:hover {
+        border-color: #cbd5e1;
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+    }
+
+    .card-title {
+        font-family: 'Poppins', sans-serif;
+        font-size: 18px;
+        font-weight: 700;
+        color: #1e293b;
+        margin: 0 0 28px 0;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .card-title i {
+        color: #14b8a6;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 28px;
+    }
+
+    .info-item {
+        padding: 20px;
+        background: #f8fafc;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        transition: all 0.3s ease;
+    }
+
+    .info-item:hover {
+        background: #f1f5f9;
+        border-color: #cbd5e1;
+    }
+
+    .info-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        color: #94a3b8;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 10px;
+    }
+
+    .info-label i {
+        color: #14b8a6;
+        font-size: 13px;
+    }
+
+    .info-value {
+        font-family: 'Poppins', sans-serif;
+        font-size: 18px;
+        font-weight: 700;
+        color: #1e293b;
+        word-break: break-word;
+    }
+
+    /* ===== TIMELINE / RECENT ACTIVITY ===== */
+    .timeline-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 36px;
+        transition: all 0.3s ease;
+    }
+
+    .timeline-card:hover {
+        border-color: #cbd5e1;
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+    }
+
+    .timeline {
+        position: relative;
+    }
+
+    .timeline-item {
+        padding: 24px 0;
+        padding-left: 40px;
+        position: relative;
+        border-left: 2px solid #e2e8f0;
     }
 
     .timeline-item:last-child {
-        border-bottom: none !important;
+        border-left-color: transparent;
     }
 
-    /* Responsive */
+    .timeline-item::before {
+        content: '';
+        position: absolute;
+        left: -8px;
+        top: 26px;
+        width: 14px;
+        height: 14px;
+        background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
+        border-radius: 50%;
+        box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.1);
+    }
+
+    .timeline-item h5 {
+        font-family: 'Poppins', sans-serif;
+        font-size: 16px;
+        font-weight: 700;
+        color: #1e293b;
+        margin: 0 0 6px 0;
+    }
+
+    .timeline-item p {
+        font-size: 13px;
+        color: #94a3b8;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .timeline-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 12px;
+        background: linear-gradient(135deg, #e0f2fe 0%, #e0f8f9 100%);
+        color: #14b8a6;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+        .dashboard-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .info-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
     @media (max-width: 768px) {
-        .corporate-welcome {
-            padding: 25px !important;
-            text-align: center;
+        .dashboard_content {
+            padding: 30px 20px;
         }
 
-        .corporate-welcome .text-end {
-            text-align: center !important;
-            margin-top: 15px;
+        .dashboard-header {
+            margin-bottom: 30px;
         }
 
-        .nav-card {
-            padding: 20px !important;
+        .welcome-section h1 {
+            font-size: 32px;
+        }
+
+        .header-actions {
+            width: 100%;
+            justify-content: flex-end;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .actions-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .account-card, .timeline-card {
+            padding: 24px;
+        }
+
+        .stat-info h3 {
+            font-size: 36px;
+        }
+
+        .welcome-section p {
+            font-size: 13px;
         }
     }
 </style>
+
+<!-- Dashboard Header with Welcome & Actions -->
+<div class="row">
+    <div class="col-xl-9 col-xxl-10 col-lg-9 ms-auto">
+        <div class="dashboard_content">
+            <div class="dashboard-header">
+                <div class="welcome-section">
+                    <h1>Welcome back, {{ Auth::user()->name }}! 👋</h1>
+                    <p>{{ date('l, F j, Y') }} — Dashboard Overview</p>
+                </div>
+                <div class="header-actions">
+                    <div class="notification-bell" title="Notifications">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <div class="user-avatar" title="{{ Auth::user()->name }}">
+                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                    </div>
+                </div>
+            </div>
+            <!-- Performance Stats Section -->
+            <div class="stats-section">
+                <h2 class="stats-title"><i class="fas fa-chart-line"></i> Performance Overview</h2>
+                <div class="row stats-grid">
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="stat-card">
+                            <div class="stat-content">
+                                <div class="stat-info">
+                                    <h3>{{ App\Models\Order::where('user_id', Auth::id())->count() }}</h3>
+                                    <p>Total Orders</p>
+                                </div>
+                                <div class="stat-icon-box">
+                                    <i class="fas fa-shopping-bag"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="stat-card">
+                            <div class="stat-content">
+                                <div class="stat-info">
+                                    <h3>{{ App\Models\Bag::where('user_id', Auth::id())->where('type', 'wishlist')->count() }}</h3>
+                                    <p>Wishlist Items</p>
+                                </div>
+                                <div class="stat-icon-box">
+                                    <i class="fas fa-heart"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="stat-card">
+                            <div class="stat-content">
+                                <div class="stat-info">
+                                    <h3>{{ App\Models\Review::where('user_id', Auth::id())->count() }}</h3>
+                                    <p>Reviews</p>
+                                </div>
+                                <div class="stat-icon-box">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="stat-card">
+                            <div class="stat-content">
+                                <div class="stat-info">
+                                    <h3>{{ App\Models\Address::where('user_id', Auth::id())->count() }}</h3>
+                                    <p>Addresses</p>
+                                </div>
+                                <div class="stat-icon-box">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions Section -->
+            <div class="quick-actions-section">
+                <div class="section-header">
+                    <h2 class="stats-title"><i class="fas fa-zap"></i> Quick Access</h2>
+                </div>
+                <div class="row actions-grid">
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <a href="{{ route('client.orders') }}" class="action-card">
+                            <div class="action-inner">
+                                <div class="action-icon">
+                                    <i class="fas fa-box"></i>
+                                </div>
+                                <h5 class="action-title">My Orders</h5>
+                                <p class="action-desc">View & track orders</p>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <a href="{{ route('client.wishlist') }}" class="action-card">
+                            <div class="action-inner">
+                                <div class="action-icon">
+                                    <i class="fas fa-heart"></i>
+                                </div>
+                                <h5 class="action-title">Wishlist</h5>
+                                <p class="action-desc">Saved items</p>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <a href="{{ route('client.reviews') }}" class="action-card">
+                            <div class="action-inner">
+                                <div class="action-icon">
+                                    <i class="fas fa-pen-fancy"></i>
+                                </div>
+                                <h5 class="action-title">Reviews</h5>
+                                <p class="action-desc">Written reviews</p>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <a href="{{ route('client.address') }}" class="action-card">
+                            <div class="action-inner">
+                                <div class="action-icon">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <h5 class="action-title">Addresses</h5>
+                                <p class="action-desc">Manage addresses</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Account Information Card -->
+            <div class="account-card">
+                <h3 class="card-title">
+                    <i class="fas fa-user-circle"></i>
+                    Account Information
+                </h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">
+                            <i class="fas fa-user"></i>
+                            Full Name
+                        </div>
+                        <div class="info-value">{{ Auth::user()->name }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">
+                            <i class="fas fa-envelope"></i>
+                            Email Address
+                        </div>
+                        <div class="info-value">{{ Auth::user()->email }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">
+                            <i class="fas fa-calendar"></i>
+                            Member Since
+                        </div>
+                        <div class="info-value">{{ Auth::user()->created_at->format('M d, Y') }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">
+                            <i class="fas fa-circle-check"></i>
+                            Account Status
+                        </div>
+                        <div class="info-value" style="color: #14b8a6;">{{ ucfirst(Auth::user()->status) }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Orders Timeline -->
+            @php
+                $recentOrders = App\Models\Order::where('user_id', Auth::id())->latest()->take(8)->get();
+            @endphp
+
+            @if($recentOrders->count() > 0)
+            <div class="timeline-card">
+                <h3 class="card-title">
+                    <i class="fas fa-history"></i>
+                    Recent Orders
+                </h3>
+                <div class="timeline">
+                    @foreach($recentOrders as $order)
+                    <div class="timeline-item">
+                        <h5>Order #{{ $order->id }}</h5>
+                        <p>
+                            {{ $order->created_at->diffForHumans() }}
+                            <span class="timeline-badge">{{ number_format($order->totalAmount, 2) }} DZD</span>
+                        </p>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+            @endif
+        </div>
+    </div>
+</div>
 @endsection
