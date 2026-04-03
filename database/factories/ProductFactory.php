@@ -18,14 +18,20 @@ class ProductFactory extends Factory
      */
     public function definition(): array
     {
+        $productImages = [
+            'pro1.jpg', 'pro2.jpg', 'pro3.jpg', 'pro4.jpg', 'pro5.jpg',
+            'electronics1.jpg', 'electronics2.jpg', 'fashion1.jpg', 'fashion2.jpg',
+            'home1.jpg', 'home2.jpg', 'beauty1.jpg', 'beauty2.jpg'
+        ];
+
         return [
-            'name' => fake()->sentence(1),
-            'short_description' => fake()->text(),
-            'actual_quantity' => fake()->randomNumber(3),
-            'price' => fake()->randomFloat(2, 10, 500), // Price between 10 and 500
-            'principalImage' => "pro3.jpg",
-            'category_id' => fake()->randomElement(Category::all('id')),
-            'magasin_id' => fake()->randomElement(Magasin::where('status', 'active')->get('id'))
+            'name' => fake()->words(3, true),
+            'short_description' => fake()->sentence(10),
+            'actual_quantity' => fake()->randomNumber(2),
+            'price' => fake()->randomFloat(2, 5, 1000),
+            'principalImage' => fake()->randomElement($productImages),
+            'category_id' => fake()->randomElement(Category::whereNull('parentId')->pluck('id')->toArray() ?: [1]),
+            'magasin_id' => fake()->randomElement(Magasin::where('status', 'active')->pluck('id')->toArray() ?: [1])
         ];
     }
 }

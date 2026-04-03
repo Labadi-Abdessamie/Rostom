@@ -20,6 +20,8 @@ class Magasin extends Model
         'vitrineVideo',
         'bio',
         'location',
+        'latitude',
+        'longitude',
         'magasinOpen',
         'rate',
         'rate_count',

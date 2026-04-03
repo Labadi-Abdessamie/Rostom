@@ -4,6 +4,15 @@
 
 @section('styles')
     <link rel="stylesheet" href="{{ asset('vendor/modules/bootstrap-social/bootstrap-social.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <style>
+        #locationMap {
+            height: 400px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -27,6 +36,12 @@
                     <p><strong>Email:</strong> {{ $magasin->email }}</p>
                     <p><strong>Phone Number:</strong> {{ $magasin->phoneNumber }}</p>
                     <p><strong>Location:</strong> {{ $magasin->location }}</p>
+                    
+                    @if ($magasin->latitude && $magasin->longitude)
+                        <p><strong>Magasin Location on Map:</strong></p>
+                        <div id="locationMap"></div>
+                    @endif
+                    
                     <p><strong>Bio:</strong> {!! $magasin->bio !!}</p>
 
                     @if ($magasin->magasinPicture)
@@ -133,4 +148,24 @@
                 </div>
             @endif
     </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            @if ($magasin->latitude && $magasin->longitude)
+                const map = L.map('locationMap').setView([{{ $magasin->latitude }}, {{ $magasin->longitude }}], 15);
+                
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors',
+                    maxZoom: 19,
+                    minZoom: 2
+                }).addTo(map);
+                
+                L.marker([{{ $magasin->latitude }}, {{ $magasin->longitude }}])
+                    .addTo(map)
+                    .bindPopup('<strong>{{ $magasin->name }}</strong><br>{{ $magasin->location }}')
+                    .openPopup();
+            @endif
+        });
+    </script>
 @endsection

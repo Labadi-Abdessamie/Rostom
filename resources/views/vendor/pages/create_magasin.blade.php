@@ -10,6 +10,21 @@
             </div>
         @endif
 
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+        <style>
+            #locationMap {
+                height: 400px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                margin-top: 10px;
+            }
+            .map-info {
+                font-size: 12px;
+                color: #666;
+                margin-top: 5px;
+            }
+        </style>
+
         <form action="{{ route('vendor.magasin_store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
@@ -52,6 +67,18 @@
             <div class="mb-3">
                 <label>Location:</label>
                 <input type="text" name="location" class="form-control" required>
+                <div class="map-info">Click on the map to set your magasin's exact location</div>
+            </div>
+
+            <!-- Hidden fields for latitude and longitude -->
+            <input type="hidden" name="latitude" id="latitude">
+            <input type="hidden" name="longitude" id="longitude">
+
+            <!-- OpenStreetMap -->
+            <div class="mb-3">
+                <label>Magasin Location on Map</label>
+                <div id="locationMap"></div>
+                <p class="map-info" id="coordsDisplay">No location selected yet. Click on the map to select.</p>
             </div>
 
             <div class="mb-3">
@@ -88,4 +115,54 @@
             <button type="submit" class="btn btn-primary">Create Magasin</button>
         </form>
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize variables
+            let map;
+            let marker;
+            const latitudeInput = document.getElementById('latitude');
+            const longitudeInput = document.getElementById('longitude');
+            const coordsDisplay = document.getElementById('coordsDisplay');
+            
+            // Default location (center of your country - adjust as needed)
+            const defaultLat = 35.8; // Algeria center
+            const defaultLng = 3.0;
+            
+            // Initialize map
+            map = L.map('locationMap').setView([defaultLat, defaultLng], 10);
+            
+            // Add OpenStreetMap tiles
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 19,
+                minZoom: 2
+            }).addTo(map);
+            
+            // Handle map clicks
+            map.on('click', function(e) {
+                const lat = e.latlng.lat;
+                const lng = e.latlng.lng;
+                
+                // Remove existing marker
+                if (marker) {
+                    map.removeLayer(marker);
+                }
+                
+                // Add new marker
+                marker = L.marker([lat, lng])
+                    .addTo(map)
+                    .bindPopup('Selected Location<br>Lat: ' + lat.toFixed(6) + '<br>Lng: ' + lng.toFixed(6))
+                    .openPopup();
+                
+                // Update hidden inputs
+                latitudeInput.value = lat;
+                longitudeInput.value = lng;
+                
+                // Update display
+                coordsDisplay.textContent = 'Selected Location: ' + lat.toFixed(6) + ', ' + lng.toFixed(6);
+            });
+        });
+    </script>
 @endsection
