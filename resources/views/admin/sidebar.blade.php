@@ -111,6 +111,12 @@
                         <span> Orders </span>
                     </a>
                 </li>
+                <li>
+                    <a href="{{ route('admin.reports') }}">
+                        <i class="mdi mdi-chart-bar"></i>
+                        <span> Reports </span>
+                    </a>
+                </li>
                 @if (false)
                     <li>
                         <a href="apps-file-manager.html">

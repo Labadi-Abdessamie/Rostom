@@ -2,397 +2,279 @@
 
 @section('title', 'Admin || Dashboard')
 
-
 @section('styles')
-    <!-- Plugins css -->
-    <link href="{{ asset('assets/libs/flatpickr/flatpickr.min.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ asset('assets/libs/selectize/css/selectize.bootstrap3.css') }}" rel="stylesheet" type="text/css" />
+<style>
+.adm-stat-card {
+    border-radius: 16px;
+    border: none;
+    padding: 22px 20px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,.08);
+}
+.adm-stat-card .stat-icon-wrap {
+    width: 56px; height: 56px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; flex-shrink: 0;
+}
+.adm-stat-card .stat-label { font-size: .78rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; opacity: .7; }
+.adm-stat-card .stat-value { font-size: 1.75rem; font-weight: 800; line-height: 1.1; margin: 2px 0; }
+.adm-stat-card .stat-sub   { font-size: .78rem; opacity: .6; }
+.adm-stat-card .card-bg-ico { position: absolute; right: -10px; bottom: -10px; font-size: 5rem; opacity: .07; }
+
+.bg-grad-blue   { background: linear-gradient(135deg,#4f46e5,#6d28d9); color:#fff; }
+.bg-grad-teal   { background: linear-gradient(135deg,#0891b2,#0e7490); color:#fff; }
+.bg-grad-green  { background: linear-gradient(135deg,#059669,#047857); color:#fff; }
+.bg-grad-amber  { background: linear-gradient(135deg,#d97706,#b45309); color:#fff; }
+.bg-grad-rose   { background: linear-gradient(135deg,#e11d48,#be123c); color:#fff; }
+.bg-grad-slate  { background: linear-gradient(135deg,#475569,#334155); color:#fff; }
+
+.adm-section-card { border-radius: 16px; border: none; box-shadow: 0 4px 20px rgba(0,0,0,.06); }
+.adm-section-card .card-header {
+    background: transparent; border-bottom: 1px solid #f1f5f9;
+    padding: 16px 20px; font-weight: 700; font-size: .95rem;
+    display: flex; align-items: center; justify-content: space-between;
+}
+.adm-table thead th { background: #f8fafc; font-size: .78rem; text-transform: uppercase; letter-spacing: .05em; color: #64748b; border: none; padding: 10px 14px; }
+.adm-table tbody tr:hover { background: #f8fafc; }
+.adm-table td { vertical-align: middle; padding: 10px 14px; border-color: #f1f5f9; }
+
+.status-badge { padding: 4px 10px; border-radius: 20px; font-size: .75rem; font-weight: 600; }
+.sb-pending    { background:#fef9c3; color:#854d0e; }
+.sb-delivered  { background:#dcfce7; color:#166534; }
+.sb-processing { background:#dbeafe; color:#1e40af; }
+.sb-cancelled  { background:#fee2e2; color:#991b1b; }
+</style>
 @endsection
 
 @section('scripts')
-    <!-- Plugins js-->
-    <script src="{{ asset('assets/libs/flatpickr/flatpickr.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/apexcharts/apexcharts.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/selectize/js/standalone/selectize.min.js') }}"></script>
-    <!-- Dashboar 1 init js-->
-    <script src="{{ asset('assets/js/pages/dashboard-1.init.js') }}"></script>
+<script src="{{ asset('assets/libs/apexcharts/apexcharts.min.js') }}"></script>
+<script>
+(function(){
+    // -- Monthly Revenue Chart --
+    var revenueLabels  = @json($chartLabels);
+    var revenueData    = @json($revenueByMonth);
+
+    new ApexCharts(document.querySelector('#revenueChart'), {
+        chart: { type: 'bar', height: 280, toolbar: { show: false }, fontFamily: 'inherit' },
+        series: [{ name: 'Revenue (DZD)', data: revenueData }],
+        xaxis: { categories: revenueLabels, labels: { style: { colors: '#94a3b8', fontSize: '12px' } } },
+        yaxis: { labels: { formatter: v => new Intl.NumberFormat('fr-DZ',{notation:'compact'}).format(v)+' DZD', style: { colors: '#94a3b8' } } },
+        colors: ['#4f46e5'],
+        fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: .85, opacityTo: .4, stops: [0,100] } },
+        dataLabels: { enabled: false },
+        plotOptions: { bar: { borderRadius: 6, columnWidth: '50%' } },
+        grid: { borderColor: '#f1f5f9' },
+        tooltip: { y: { formatter: v => new Intl.NumberFormat('fr-DZ').format(v) + ' DZD' } }
+    }).render();
+
+    // -- Order Status Donut --
+    var statusLabels = @json(array_keys($orderStatusBreakdown));
+    var statusData   = @json(array_values($orderStatusBreakdown));
+
+    new ApexCharts(document.querySelector('#statusChart'), {
+        chart: { type: 'donut', height: 280, fontFamily: 'inherit' },
+        series: statusData,
+        labels: statusLabels,
+        colors: ['#f59e0b','#4f46e5','#10b981','#ef4444'],
+        legend: { position: 'bottom', fontSize: '13px' },
+        dataLabels: { enabled: true },
+        plotOptions: { pie: { donut: { size: '65%' } } },
+        tooltip: { y: { formatter: v => v + ' orders' } }
+    }).render();
+})();
+</script>
 @endsection
 
 @section('content')
-    <!-- ============================================================== -->
-    <!-- Start Page Content here -->
-    <!-- ============================================================== -->
+<div class="content">
+    <div class="container-fluid">
 
-    <div class="content">
+        {{-- Page Header --}}
+        <div class="row mb-3">
+            <div class="col-12 d-flex align-items-center justify-content-between flex-wrap gap-2">
+                <div>
+                    <h3 class="page-title mb-0">Dashboard</h3>
+                    <p class="text-muted mb-0" style="font-size:.85rem;">Welcome back — here's what's happening.</p>
+                </div>
+                <a href="{{ route('admin.reports') }}" class="btn btn-primary btn-sm">
+                    <i class="mdi mdi-chart-bar me-1"></i> Reports &amp; Export
+                </a>
+            </div>
+        </div>
 
-        <!-- Start Content-->
-        <div class="container-fluid">
+        {{-- ===== STAT CARDS ROW 1 ===== --}}
+        <div class="row g-3 mb-4">
+            <div class="col-md-6 col-xl-2">
+                <div class="card adm-stat-card bg-grad-blue mb-0">
+                    <div class="stat-icon-wrap" style="background:rgba(255,255,255,.15)"><i class="mdi mdi-account-group"></i></div>
+                    <div><div class="stat-label">Clients</div><div class="stat-value">{{ $totalClients }}</div><div class="stat-sub">Active</div></div>
+                    <i class="mdi mdi-account-group card-bg-ico"></i>
+                </div>
+            </div>
+            <div class="col-md-6 col-xl-2">
+                <div class="card adm-stat-card bg-grad-teal mb-0">
+                    <div class="stat-icon-wrap" style="background:rgba(255,255,255,.15)"><i class="mdi mdi-store"></i></div>
+                    <div><div class="stat-label">Vendors</div><div class="stat-value">{{ $totalVendors }}</div><div class="stat-sub">Active</div></div>
+                    <i class="mdi mdi-store card-bg-ico"></i>
+                </div>
+            </div>
+            <div class="col-md-6 col-xl-2">
+                <div class="card adm-stat-card bg-grad-green mb-0">
+                    <div class="stat-icon-wrap" style="background:rgba(255,255,255,.15)"><i class="mdi mdi-package-variant-closed"></i></div>
+                    <div><div class="stat-label">Products</div><div class="stat-value">{{ $totalProducts }}</div><div class="stat-sub">Listed</div></div>
+                    <i class="mdi mdi-package-variant-closed card-bg-ico"></i>
+                </div>
+            </div>
+            <div class="col-md-6 col-xl-2">
+                <div class="card adm-stat-card bg-grad-amber mb-0">
+                    <div class="stat-icon-wrap" style="background:rgba(255,255,255,.15)"><i class="mdi mdi-domain"></i></div>
+                    <div><div class="stat-label">Magasins</div><div class="stat-value">{{ $totalActiveMagasins }}</div><div class="stat-sub">of {{ $totalMagasins }} total</div></div>
+                    <i class="mdi mdi-domain card-bg-ico"></i>
+                </div>
+            </div>
+            <div class="col-md-6 col-xl-2">
+                <div class="card adm-stat-card bg-grad-rose mb-0">
+                    <div class="stat-icon-wrap" style="background:rgba(255,255,255,.15)"><i class="mdi mdi-star"></i></div>
+                    <div><div class="stat-label">Reviews</div><div class="stat-value">{{ $totalReviews }}</div><div class="stat-sub">{{ number_format($avgRating,1) }} / 5 avg</div></div>
+                    <i class="mdi mdi-star card-bg-ico"></i>
+                </div>
+            </div>
+            <div class="col-md-6 col-xl-2">
+                <div class="card adm-stat-card bg-grad-slate mb-0">
+                    <div class="stat-icon-wrap" style="background:rgba(255,255,255,.15)"><i class="mdi mdi-cart-outline"></i></div>
+                    <div><div class="stat-label">Orders</div><div class="stat-value">{{ $totalOrders }}</div><div class="stat-sub">{{ $pendingOrders }} pending</div></div>
+                    <i class="mdi mdi-cart-outline card-bg-ico"></i>
+                </div>
+            </div>
+        </div>
 
-            <!-- start page title -->
-            <div class="row">
-                <div class="col-12">
-                    <div class="page-title-box">
-                        <div class="page-title-right">
-
-                        </div>
-                        <h3 class="page-title">Dashboard</h3>
+        {{-- ===== CHARTS ROW ===== --}}
+        <div class="row g-3 mb-4">
+            <div class="col-xl-8">
+                <div class="card adm-section-card h-100">
+                    <div class="card-header">
+                        <span><i class="mdi mdi-chart-bar me-1 text-primary"></i>Monthly Revenue (DZD) — Last 6 Months</span>
+                        <a href="{{ route('admin.reports') }}" class="btn btn-xs btn-outline-primary">Full Report</a>
+                    </div>
+                    <div class="card-body">
+                        <div id="revenueChart"></div>
                     </div>
                 </div>
             </div>
-            <!-- end page title -->
+            <div class="col-xl-4">
+                <div class="card adm-section-card h-100">
+                    <div class="card-header">
+                        <span><i class="mdi mdi-chart-donut me-1 text-primary"></i>Order Status</span>
+                    </div>
+                    <div class="card-body">
+                        <div id="statusChart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-            <div class="row">
-                <div class="col-md-6 col-xl-3">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div
-                                    class="avatar-lg rounded-circle bg-info text-white d-flex align-items-center justify-content-center shadow-sm">
-                                    <i class="fe-users font-24"></i>
-                                </div>
-                                <div class="ms-3">
-                                    <h4 class="mb-0 text-dark">{{ $totalClients }}</h4>
-                                    <p class="text-muted mb-0">Total Clients</p>
-                                </div>
-                            </div>
-                        </div>
+        {{-- ===== TABLES ROW ===== --}}
+        <div class="row g-3 mb-4">
+            <div class="col-xl-5">
+                <div class="card adm-section-card">
+                    <div class="card-header">
+                        <span><i class="mdi mdi-star-outline me-1 text-warning"></i>Top Rated Magasins</span>
                     </div>
-                </div>
-                <div class="col-md-6 col-xl-3">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div
-                                    class="avatar-lg rounded-circle bg-primary text-white d-flex align-items-center justify-content-center shadow-sm">
-                                    <i class="fe-users font-24"></i>
-                                </div>
-                                <div class="ms-3">
-                                    <h4 class="mb-0 text-dark">{{ $totalVendors }}</h4>
-                                    <p class="text-muted mb-0">Total Vendors</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-xl-3">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div
-                                    class="avatar-lg rounded-circle bg-success text-white d-flex align-items-center justify-content-center shadow-sm">
-                                    <i class="fe-shopping-cart font-24"></i>
-                                </div>
-                                <div class="ms-3">
-                                    <h4 class="mb-0 text-dark">{{ $totalProducts }}</h4>
-                                    <p class="text-muted mb-0">Total Products</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-xl-3">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div
-                                    class="avatar-lg rounded-circle bg-danger text-white d-flex align-items-center justify-content-center shadow-sm">
-                                    <i class="fe-settings font-24"></i>
-                                </div>
-                                <div class="ms-3">
-                                    <h4 class="mb-0 text-dark">{{ $totalAdmins }}</h4>
-                                    <p class="text-muted mb-0">Total Admins</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6 col-xl-3">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div
-                                    class="avatar-lg rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center shadow-sm">
-                                    <i class="fe-home font-24"></i>
-                                </div>
-                                <div class="ms-3">
-                                    <h4 class="mb-0 text-dark">{{ $totalMagasins }}</h4>
-                                    <p class="text-muted mb-0">Total Magasins</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6 col-xl-3">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div
-                                    class="avatar-lg rounded-circle bg-light text-dark d-flex align-items-center justify-content-center shadow-sm">
-                                    <i class="fe-shopping-cart font-24"></i>
-                                </div>
-                                <div class="ms-3">
-                                    <h4 class="mb-0 text-dark">{{ $totalActiveMagasins }}</h4>
-                                    <p class="text-muted mb-0">Active Magasins</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6 col-xl-3">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div
-                                    class="avatar-lg rounded-circle bg-warning text-white d-flex align-items-center justify-content-center shadow-sm">
-                                    <i class="fe-star font-24"></i>
-                                </div>
-                                <div class="ms-3">
-                                    <h4 class="mb-0 text-dark">{{ $totalReviews }}</h4>
-                                    <p class="text-muted mb-0">Total Reviews</p>
-                                </div>
-                            </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table adm-table mb-0">
+                                <thead><tr><th>#</th><th>Magasin</th><th>Rating</th><th></th></tr></thead>
+                                <tbody>
+                                    @foreach ($topMagasinsRating as $i => $magasin)
+                                    <tr>
+                                        <td class="text-muted">{{ $i+1 }}</td>
+                                        <td>
+                                            <div style="font-weight:600;">{{ $magasin->name }}</div>
+                                            <small class="text-muted">Since {{ $magasin->created_at->format('Y') }}</small>
+                                        </td>
+                                        <td><span class="status-badge sb-delivered">{{ number_format($magasin->rate,1) }} ⭐</span></td>
+                                        <td><a href="{{ route('frontend.vendor_details', $magasin->id) }}" class="btn btn-xs btn-light"><i class="mdi mdi-eye"></i></a></td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- end of the cards-->
-
-
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="card">
-                        <div class="card-body">
-                            @if (false)
-                                <div class="dropdown float-end">
-                                    <a href="#" class="dropdown-toggle arrow-none card-drop" data-bs-toggle="dropdown"
-                                        aria-expanded="false">
-                                        <i class="mdi mdi-dots-vertical"></i>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-end">
-                                        <!-- item-->
-                                        <a href="javascript:void(0);" class="dropdown-item">Sales Report</a>
-                                        <!-- item-->
-                                        <a href="javascript:void(0);" class="dropdown-item">Export Report</a>
-                                        <!-- item-->
-                                        <a href="javascript:void(0);" class="dropdown-item">Profit</a>
-                                        <!-- item-->
-                                        <a href="javascript:void(0);" class="dropdown-item">Action</a>
-                                    </div>
-                                </div>
-                            @endif
-
-                            <h4 class="header-title mb-0">Average Rating</h4>
-
-                            @php
-                                $percent = round(($avgRating / 5) * 100);
-                                $circleCircumference = 377;
-                                $dashOffset = $circleCircumference - ($circleCircumference * $percent) / 100;
-                            @endphp
-
-                            <div class="widget-chart text-center" dir="ltr">
-
-                                <!-- Cercle de satisfaction -->
-                                <div class="position-relative d-inline-block mt-0" style="width: 140px; height: 140px;">
-                                    <svg width="140" height="140">
-                                        <circle cx="70" cy="70" r="60" stroke="#e6e6e6" stroke-width="10"
-                                            fill="none" />
-                                        <circle cx="70" cy="70" r="60" stroke="#28a745" stroke-width="10"
-                                            fill="none" stroke-dasharray="{{ $circleCircumference }}"
-                                            stroke-dashoffset="{{ $dashOffset }}" stroke-linecap="round"
-                                            transform="rotate(-90 70 70)" />
-                                    </svg>
-                                    <div class="position-absolute top-50 start-50 translate-middle">
-                                        <strong>Satisfaction</strong><br>
-                                        <span class="text-muted">{{ $percent }}%</span>
-                                    </div>
-                                </div>
-
-                                <!-- Textes -->
-                                <h5 class="text-muted mt-0">Average customer rating</h5>
-                                <h2>{{ number_format($avgRating, 1) }} / 5 ⭐</h2>
-
-                                <p class="text-muted w-75 mx-auto sp-line-2">
-                                    Based on reviews from customers.
-                                </p>
-                                @if (false)
-                                    <!-- maybe i add the function to test only on year / month / last week -->
-                                    <div class="row mt-3">
-                                        <div class="col-4">
-                                            <p class="text-muted font-15 mb-1 text-truncate">Target</p>
-                                            <h4><i class="fe-arrow-up text-success me-1"></i>95%</h4>
-                                        </div>
-                                        <div class="col-4">
-                                            <p class="text-muted font-15 mb-1 text-truncate">Last week</p>
-                                            <h4><i class="fe-arrow-up text-success me-1"></i>88%</h4>
-                                        </div>
-                                        <div class="col-4">
-                                            <p class="text-muted font-15 mb-1 text-truncate">Last month</p>
-                                            <h4><i class="fe-arrow-down text-danger me-1"></i>85%</h4>
-                                        </div>
-                                    </div>
-                                @endif
-                            </div>
-
-                        </div>
-                    </div> <!-- end card -->
-                </div> <!-- end col-->
-
-                <div class="col-lg-8">
-                    <div class="card">
-                        <div class="card-body pb-2">
-                            <div class="float-end d-none d-md-inline-block">
-                                <div class="btn-group mb-2">
-                                    <button type="button" class="btn btn-xs btn-light">Today</button>
-                                    <button type="button" class="btn btn-xs btn-light">Weekly</button>
-                                    <button type="button" class="btn btn-xs btn-secondary">Monthly</button>
-                                </div>
-                            </div>
-
-                            <h4 class="header-title mb-3">Sales Analytics</h4>
-
-                            <div dir="ltr">
-                                <div id="sales-analytics" class="mt-4" data-colors="#1abc9c,#4a81d4"></div>
-                            </div>
-                        </div>
-                    </div> <!-- end card -->
-                </div> <!-- end col-->
-            </div>
-            <!-- end row -->
-
-            <div class="row">
-                <div class="col-xl-6">
-                    <div class="card">
-                        <div class="card-body">
-                            @if (false)
-                                <div class="dropdown float-end">
-                                    <a href="#" class="dropdown-toggle arrow-none card-drop"
-                                        data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="mdi mdi-dots-vertical"></i>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-end">
-                                        <!-- item-->
-                                        <a href="javascript:void(0);" class="dropdown-item">Edit Report</a>
-                                        <!-- item-->
-                                        <a href="javascript:void(0);" class="dropdown-item">Export Report</a>
-                                        <!-- item-->
-                                        <a href="javascript:void(0);" class="dropdown-item">Action</a>
-                                    </div>
-                                </div>
-                            @endif
-
-                            <h4 class="header-title mb-3">Top 5 Magasins</h4>
-
-                            <div class="table-responsive">
-                                <table class="table table-borderless table-hover table-nowrap table-centered m-0">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>Magasin</th>
-                                            <th>Rating</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($topMagasinsRating as $magasin)
-                                            <tr>
-                                                <td>
-                                                    <h5 class="m-0 fw-normal">{{ $magasin->name }}</h5>
-                                                    <p class="mb-0 text-muted"><small>Member Since
-                                                            {{ $magasin->created_at->format('Y') }}</small></p>
-                                                </td>
-
-                                                <td>
-                                                    <span class="badge bg-success">{{ number_format($magasin->rate, 1) }}
-                                                        ⭐</span>
-                                                </td>
-
-                                                <td>
-                                                    <a href="{{ route('frontend.vendor_details', $magasin->id) }}"
-                                                        class="btn btn-xs btn-light"><i class="mdi mdi-eye"></i></a>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
+            <div class="col-xl-7">
+                <div class="card adm-section-card">
+                    <div class="card-header">
+                        <span><i class="mdi mdi-fire me-1 text-danger"></i>Best Selling Products</span>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table adm-table mb-0">
+                                <thead><tr><th>#</th><th>Product</th><th>Sold</th><th>Price</th><th></th></tr></thead>
+                                <tbody>
+                                    @foreach ($bestSellingProducts as $i => $product)
+                                    <tr>
+                                        <td class="text-muted">{{ $i+1 }}</td>
+                                        <td style="font-weight:600;">{{ $product->name }}</td>
+                                        <td>{{ $product->order_items_count }} units</td>
+                                        <td>{{ number_format($product->price) }} DZD</td>
+                                        <td><a href="{{ route('frontend.product_details', $product->id) }}" class="btn btn-xs btn-light"><i class="mdi mdi-eye"></i></a></td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                </div> <!-- end col -->
-
-                <div class="col-xl-6">
-                    <div class="card">
-                        <div class="card-body">
-                            @if (false)
-                                <div class="dropdown float-end">
-                                    <a href="#" class="dropdown-toggle arrow-none card-drop"
-                                        data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="mdi mdi-dots-vertical"></i>
-                                    </a>
-
-                                    <div class="dropdown-menu dropdown-menu-end">
-                                        <!-- item-->
-                                        <a href="javascript:void(0);" class="dropdown-item">Edit Report</a>
-                                        <!-- item-->
-                                        <a href="javascript:void(0);" class="dropdown-item">Export Report</a>
-                                        <!-- item-->
-                                        <a href="javascript:void(0);" class="dropdown-item">Action</a>
-                                    </div>
-                                </div>
-                            @endif
-
-                            <h4 class="header-title mb-3">Best Selling Products</h4>
-
-                            <div class="table-responsive">
-                                <table class="table table-borderless table-nowrap table-hover table-centered m-0">
-
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>Product Name</th>
-                                            <th>Quantity Sold</th>
-                                            <th>Status</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($bestSellingProducts as $product)
-                                            <tr>
-                                                <td>
-                                                    <h5 class="m-0 fw-normal">{{ $product->name }}</h5>
-                                                </td>
-
-                                                <td>
-                                                    {{ $product->orderItems->sum('quantity') }} Units
-                                                </td>
-
-                                                <td>
-                                                    <span class="badge bg-soft-success text-success">Available</span>
-                                                </td>
-
-                                                <td>
-                                                    <a href="{{ route('frontend.product_details', $product->id) }}"
-                                                        class="btn btn-xs btn-light">
-                                                        <i class="mdi mdi-eye"></i>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div> <!-- end .table-responsive-->
-                        </div>
-                    </div> <!-- end card-->
-                </div> <!-- end col -->
-
+                </div>
             </div>
-            <!-- end row -->
+        </div>
 
-        </div> <!-- container -->
+        {{-- ===== RECENT ORDERS ===== --}}
+        <div class="row g-3">
+            <div class="col-12">
+                <div class="card adm-section-card">
+                    <div class="card-header">
+                        <span><i class="mdi mdi-cart-outline me-1 text-primary"></i>Recent Orders</span>
+                        <a href="{{ route('admin.orders') }}" class="btn btn-xs btn-outline-primary">View All</a>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table adm-table mb-0">
+                                <thead><tr><th>#</th><th>Customer</th><th>Amount</th><th>Payment</th><th>Status</th><th>Date</th><th></th></tr></thead>
+                                <tbody>
+                                    @foreach ($latestOrders as $order)
+                                    @php
+                                        $sbClass = match($order->status) {
+                                            'delivered' => 'sb-delivered',
+                                            'processing' => 'sb-processing',
+                                            'cancelled' => 'sb-cancelled',
+                                            default => 'sb-pending',
+                                        };
+                                    @endphp
+                                    <tr>
+                                        <td class="text-muted">#{{ $order->id }}</td>
+                                        <td style="font-weight:600;">{{ $order->user->name ?? 'N/A' }}</td>
+                                        <td>{{ number_format($order->totalAmount) }} DZD</td>
+                                        <td>{{ ucfirst($order->paymentMethod ?? '-') }}</td>
+                                        <td><span class="status-badge {{ $sbClass }}">{{ ucfirst($order->status) }}</span></td>
+                                        <td>{{ $order->created_at->format('d M Y') }}</td>
+                                        <td><a href="{{ route('admin.order_details', $order->id) }}" class="btn btn-xs btn-light"><i class="mdi mdi-eye"></i></a></td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    </div> <!-- content -->
-
-    <!-- ============================================================== -->
-    <!-- End Page content -->
-    <!-- ============================================================== -->
+    </div>
+</div>
 @endsection
+
+

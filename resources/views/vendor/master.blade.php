@@ -16,6 +16,48 @@
     <!-- Template CSS -->
     <link rel="stylesheet" href="{{ asset('vendor/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/css/components.css') }}">
+    <style>
+        /* ===== VENDOR MASTER GLOBAL ===== */
+        body { background: #f1f5f9 !important; }
+        .navbar-bg { background: #fff !important; box-shadow: 0 1px 0 #e2e8f0; }
+        .main-navbar {
+            background: #fff !important;
+            box-shadow: 0 2px 12px rgba(15,23,42,.07) !important;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .main-sidebar { background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%) !important; }
+        .sidebar-brand { border-bottom: 1px solid rgba(255,255,255,.07) !important; }
+        .sidebar-brand a { color: #f59e0b !important; font-weight: 800 !important; font-size: 1.1rem !important; }
+        .sidebar-menu > li > a {
+            color: rgba(255,255,255,.7) !important;
+            border-radius: 10px;
+            margin: 2px 10px;
+            padding: 10px 16px !important;
+            transition: all .2s;
+        }
+        .sidebar-menu > li > a:hover,
+        .sidebar-menu > li > a.active {
+            background: rgba(99,102,241,.2) !important;
+            color: #fff !important;
+            border-left: 3px solid #6366f1;
+        }
+        .sidebar-menu > li > a i { color: #6366f1 !important; width: 22px; }
+        .menu-header {
+            color: rgba(255,255,255,.3) !important;
+            font-size: .65rem !important;
+            letter-spacing: 2px;
+            padding: 14px 24px 4px !important;
+        }
+        .main-footer {
+            background: #fff !important;
+            border-top: 1px solid #e2e8f0 !important;
+            color: #64748b !important;
+            font-size: .82rem;
+        }
+        .main-content { background: #f1f5f9 !important; }
+        /* Card base */
+        .card { border-radius: 14px !important; border: none !important; box-shadow: 0 2px 16px rgba(0,0,0,.06) !important; }
+    </style>
     <!-- Start GA -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-94034622-3"></script>
     <script>

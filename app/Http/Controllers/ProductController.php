@@ -142,7 +142,7 @@ class ProductController extends Controller
 
         $product = new Product();
         $product->name = $request->name;
-        $product->short_description = $request->short_description;
+        $product->short_description = $request->short_description ?? '';
         $product->long_description = $request->long_description;
         $product->actual_quantity = 0;
         $product->price = $request->price;
@@ -248,7 +248,7 @@ class ProductController extends Controller
 
         $product = Product::findOrFail($id);
         $product->name = $request->name;
-        $product->short_description = $request->short_description;
+        $product->short_description = $request->short_description ?? '';
         $product->long_description = $request->long_description;
         //$product->actual_quantity = $request->actual_quantity;
         $product->price = $request->price;
@@ -262,7 +262,7 @@ class ProductController extends Controller
             $product->principalImage = $imagePath;
         }
 
-        $product->category = $request->subcategory ? $request->subcategory : $request->category;
+        $product->category_id = $request->subcategory ? $request->subcategory : $request->category;
 
 
 

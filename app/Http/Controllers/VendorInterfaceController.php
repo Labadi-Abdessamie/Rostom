@@ -6,9 +6,9 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Magasin;
-
 use App\Models\Order;
 use App\Models\OrderItem;
+use Illuminate\Support\Carbon;
 
 class VendorInterfaceController extends Controller
 {
@@ -75,7 +75,43 @@ class VendorInterfaceController extends Controller
         //! 6
         $pendingOrders = $totalOrders->where('status', 'pending')->count();
 
-        return view('vendor.index', compact('totalProducts', 'totalCompletedOrders', 'totalEarnings', 'pendingOrders', 'topProducts'));
+        // ===== Monthly Revenue (last 6 months) =====
+        $chartLabels    = [];
+        $revenueByMonth = [];
+
+        $completedItemIds = collect($completedOrders)
+            ->pluck('items')->flatten(1)->pluck('id');
+
+        $completedItemsFlat = OrderItem::with('product:id,price')
+            ->whereIn('id', $completedItemIds)
+            ->where('status', 'available')
+            ->get();
+
+        for ($m = 5; $m >= 0; $m--) {
+            $date           = Carbon::now()->subMonths($m);
+            $chartLabels[]  = $date->format('M Y');
+
+            $revenueByMonth[] = (float) $completedItemsFlat
+                ->filter(fn ($item) =>
+                    Carbon::parse($item->created_at)->year  === $date->year &&
+                    Carbon::parse($item->created_at)->month === $date->month
+                )
+                ->sum(fn ($item) => $item->product->price * $item->quantity);
+        }
+
+        // ===== Order Status Breakdown =====
+        $statusBreakdown = [
+            'pending'    => $totalOrders->where('status', 'pending')->count(),
+            'delivered'  => $totalOrders->where('status', 'delivered')->count(),
+            'processing' => $totalOrders->where('status', 'processing')->count(),
+            'cancelled'  => $totalOrders->where('status', 'cancelled')->count(),
+        ];
+
+        return view('vendor.index', compact(
+            'totalProducts', 'totalCompletedOrders', 'totalEarnings',
+            'pendingOrders', 'topProducts',
+            'chartLabels', 'revenueByMonth', 'statusBreakdown'
+        ));
     }
     public function profile()
     {

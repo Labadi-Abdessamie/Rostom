@@ -14,20 +14,34 @@
     <script src="{{ asset('vendor/modules/jquery-selectric/jquery.selectric.min.js') }}"></script>
     <script src="{{ asset('vendor/modules/upload-preview/assets/js/jquery.uploadPreview.min.js') }}"></script>
     <script>
+        var finalCategoriesData = @json(collect($finalCategories)->map(fn($group) => $group->map(fn($c) => ['id' => $c->id, 'name' => $c->name])));
+        var preselectedSubcat   = {{ $currentSubcategoryId ?? 'null' }};
+        var preselectedFinalCat = {{ $currentSubSubcategoryId ?? 'null' }};
+
+        function updateFinalCategories(subcatId, preselectId) {
+            var select = $('#subcategory_id');
+            select.find('option:not(:first)').remove();
+            var options = (subcatId && finalCategoriesData[subcatId]) ? finalCategoriesData[subcatId] : [];
+            if (options.length > 0) {
+                $.each(options, function(i, cat) {
+                    var opt = $('<option>', { value: cat.id, text: cat.name });
+                    select.append(opt);
+                });
+                if (preselectId) { select.val(preselectId); }
+                $('#subcategory_wrapper').removeClass('d-none');
+            } else {
+                $('#subcategory_wrapper').addClass('d-none');
+            }
+        }
+
+        // Pre-populate on page load if editing an existing product
+        if (preselectedSubcat) {
+            updateFinalCategories(preselectedSubcat, preselectedFinalCat);
+        }
+
         $('#category_id').selectric({
             onChange: function(element) {
-                if (element.value != "") {
-                    $('#subcategory_wrapper').removeClass('d-none');
-                    $('option').each(function() {
-                        if ($(this).hasClass(element.value)) {
-                            $(this).removeClass('d-none');
-                        } else {
-                            $(this).addClass('d-none');
-                        }
-                    });
-                } else {
-                    $('#subcategory_wrapper').addClass('d-none');
-                }
+                updateFinalCategories(element.value, null);
             }
         });
     </script>
@@ -123,18 +137,10 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="form-group " id="subcategory_wrapper">
+                                <div class="form-group d-none" id="subcategory_wrapper">
                                     <label class="col-form-label text-md-right col-12 col-md-3">Final Category</label>
-                                    <select name="subcategory" id="subcategory_id" class="form-control" required>
+                                    <select name="subcategory" id="subcategory_id" class="form-control">
                                         <option value="">-- Select Category --</option>
-                                        @foreach ($finalCategories as $key => $finalCategory)
-                                            @foreach ($finalCategory as $category)
-                                                <option class="{{ $key }} d-none" value="{{ $category->id }}"
-                                                    @if ($currentSubSubcategoryId == $category->id) selected @endif>
-                                                    {{ $category->name }}
-                                                </option>
-                                            @endforeach
-                                        @endforeach
                                     </select>
                                 </div>
 
@@ -151,7 +157,4 @@
     </section>
 @endsection
 
-@section('scripts')
-    <script src="{{ asset('vendor/modules/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('vendor/modules/bootstrap/js/bootstrap.min.js') }}"></script>
-@endsection
+{{-- jQuery and Bootstrap are already loaded by the master layout --}}

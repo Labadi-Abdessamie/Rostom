@@ -200,6 +200,9 @@ Route::middleware(['auth', RoleMiddleware::class . ':admin'])->group(function ()
 
         Route::get('reviews', [AdminController::class, 'reviews'])->name('reviews');
         Route::delete('review/{id}/delete', [ReviewController::class, 'destroy'])->name('delete_review');
+
+        Route::get('reports', [AdminController::class, 'reports'])->name('reports');
+        Route::get('reports/export/{type}', [AdminController::class, 'exportCsv'])->name('export_csv');
     });
 });
 

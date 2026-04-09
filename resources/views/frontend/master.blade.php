@@ -25,6 +25,93 @@
     <link rel="stylesheet" href="{{ asset('frontend/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/responsive.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/toastr.css') }}">
+    <style>
+        /* ===== GLOBAL DESIGN ENHANCEMENTS ===== */
+        :root {
+            --color-primary: #f59e0b;
+            --color-danger: #ef4444;
+            --color-dark: #0f172a;
+            --color-surface: #ffffff;
+            --radius-card: 14px;
+        }
+        body { background: #f8fafc; }
+
+        /* Section headers */
+        .wsus__section_header h3 {
+            font-size: 1.6rem !important;
+            font-weight: 800 !important;
+            color: #0f172a !important;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        .wsus__section_header h3::after {
+            content: '';
+            position: absolute;
+            left: 0; bottom: 0;
+            width: 48px; height: 3px;
+            border-radius: 99px;
+            background: linear-gradient(90deg, #f59e0b, #ef4444);
+        }
+        .wsus__section_header { margin-bottom: 28px !important; }
+
+        /* Product cards */
+        .wsus__product_item {
+            border-radius: var(--radius-card) !important;
+            overflow: hidden !important;
+            box-shadow: 0 2px 16px rgba(0,0,0,.07) !important;
+            transition: transform .25s, box-shadow .25s !important;
+            background: #fff !important;
+        }
+        .wsus__product_item:hover {
+            transform: translateY(-5px) !important;
+            box-shadow: 0 10px 32px rgba(0,0,0,.13) !important;
+        }
+        .wsus__product_details { padding: 14px 16px !important; }
+        .wsus__pro_name { font-weight: 700 !important; color: #1e293b !important; }
+        .wsus__price { font-weight: 800 !important; color: var(--color-primary) !important; font-size: 1.1rem !important; }
+        .wsus__category { color: #64748b !important; font-size: .77rem !important; text-transform: uppercase; letter-spacing: .5px; }
+
+        /* Buttons */
+        .common_btn, .add_cart, .btn-cart {
+            border-radius: 50px !important;
+            font-weight: 700 !important;
+            transition: transform .2s, box-shadow .2s !important;
+        }
+        .common_btn:hover { transform: translateY(-2px) !important; }
+
+        /* Hot deals cards */
+        .wsus__hot_deals_offer {
+            border-radius: var(--radius-card) !important;
+            overflow: hidden !important;
+            box-shadow: 0 2px 16px rgba(0,0,0,.07) !important;
+            background: #fff !important;
+            transition: transform .25s, box-shadow .25s !important;
+        }
+        .wsus__hot_deals_offer:hover {
+            transform: translateY(-5px) !important;
+            box-shadow: 0 10px 32px rgba(0,0,0,.13) !important;
+        }
+        .wsus__hot_title { font-weight: 700 !important; color: #1e293b !important; }
+        .wsus__hot_deals_proce { color: var(--color-primary) !important; font-weight: 800 !important; font-size: 1.1rem !important; }
+
+        /* Monthly top product cards */
+        .wsus__hot_deals__single {
+            border-radius: var(--radius-card) !important;
+            overflow: hidden !important;
+            box-shadow: 0 2px 12px rgba(0,0,0,.07) !important;
+            background: #fff !important;
+            display: block;
+            transition: transform .25s, box-shadow .25s !important;
+        }
+        .wsus__hot_deals__single:hover {
+            transform: translateY(-4px) !important;
+            box-shadow: 0 8px 24px rgba(0,0,0,.12) !important;
+        }
+
+        /* Section spacing */
+        #wsus__hot_deals, #wsus__monthly_top, #wsus__electronic, #wsus__flash_sell { padding: 60px 0 !important; }
+        #wsus__single_banner { padding: 0 0 40px !important; }
+    </style>
 </head>
 
 <body>

@@ -14,20 +14,27 @@
 
 
     <script>
+        var finalCategoriesData = @json(collect($finalCategories)->map(fn($group) => $group->map(fn($c) => ['id' => $c->id, 'name' => $c->name])));
+
+        function updateFinalCategories(subcatId) {
+            var select = $('#subcategory_id');
+            select.find('option:not(:first)').remove();
+            var options = (subcatId && finalCategoriesData[subcatId]) ? finalCategoriesData[subcatId] : [];
+            if (options.length > 0) {
+                $.each(options, function(i, cat) {
+                    select.append($('<option>', { value: cat.id, text: cat.name }));
+                });
+                $('#subcategory_wrapper').removeClass('d-none');
+            } else {
+                // No 3rd level — hide and clear so server uses the subcategory directly
+                $('#subcategory_wrapper').addClass('d-none');
+            }
+            select.val('');
+        }
+
         $('#category_id').selectric({
             onChange: function(element) {
-                if (element.value != "") {
-                    $('#subcategory_wrapper').removeClass('d-none');
-                    $('option').each(function() {
-                        if ($(this).hasClass(element.value)) {
-                            $(this).removeClass('d-none');
-                        } else {
-                            $(this).addClass('d-none');
-                        }
-                    });
-                } else {
-                    $('#subcategory_wrapper').addClass('d-none');
-                }
+                updateFinalCategories(element.value);
             }
         });
 
@@ -144,17 +151,11 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group row mb-4 " id="subcategory_wrapper">
+                        <div class="form-group row mb-4 d-none" id="subcategory_wrapper">
                             <label class="col-form-label text-md-right col-12 col-md-3">Final Category</label>
                             <div class="col-sm-12 col-md-7">
-                                <select name="subcategory" id="subcategory_id" class="form-control" required>
+                                <select name="subcategory" id="subcategory_id" class="form-control">
                                     <option value="">-- Select Category --</option>
-                                    @foreach ($finalCategories as $key => $finalCategory)
-                                        @foreach ($finalCategory as $category)
-                                            <option class="{{ $key }} d-none" value="{{ $category->id }}">
-                                                {{ $category->name }}</option>
-                                        @endforeach
-                                    @endforeach
                                 </select>
                             </div>
                         </div>
