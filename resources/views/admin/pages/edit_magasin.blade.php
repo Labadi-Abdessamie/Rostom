@@ -1,6 +1,20 @@
 @extends('admin.master')
 
 @section('content')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <style>
+        #locationMap {
+            height: 400px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        .map-info {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+    </style>
     <div class="content">
         <div class="container-fluid">
 
@@ -66,9 +80,27 @@
                                     <input type="text" class="form-control @error('location') is-invalid @enderror"
                                         id="location" name="location" value="{{ old('location', $magasin->location) }}"
                                         required>
+                                    <div class="map-info">Click on the map to set the magasin's exact location</div>
                                     @error('location')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
+                                </div>
+
+                                <!-- Hidden fields for latitude and longitude -->
+                                <input type="hidden" name="latitude" id="latitude" value="{{ $magasin->latitude }}">
+                                <input type="hidden" name="longitude" id="longitude" value="{{ $magasin->longitude }}">
+
+                                <!-- OpenStreetMap -->
+                                <div class="mb-3">
+                                    <label for="locationMap" class="form-label">Magasin Location on Map</label>
+                                    <div id="locationMap"></div>
+                                    <p class="map-info" id="coordsDisplay">
+                                        @if ($magasin->latitude && $magasin->longitude)
+                                            Selected Location: {{ $magasin->latitude }}, {{ $magasin->longitude }}
+                                        @else
+                                            No location selected yet. Click on the map to select.
+                                        @endif
+                                    </p>
                                 </div>
 
                                 <!-- Image -->
@@ -143,4 +175,62 @@
 
         </div>
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize variables
+            let map;
+            let marker;
+            const latitudeInput = document.getElementById('latitude');
+            const longitudeInput = document.getElementById('longitude');
+            const coordsDisplay = document.getElementById('coordsDisplay');
+            
+            // Default location
+            const defaultLat = {{ $magasin->latitude ?? 35.8 }};
+            const defaultLng = {{ $magasin->longitude ?? 3.0 }};
+            
+            // Initialize map
+            map = L.map('locationMap').setView([defaultLat, defaultLng], 10);
+            
+            // Add OpenStreetMap tiles
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 19,
+                minZoom: 2
+            }).addTo(map);
+            
+            // Add existing marker if coordinates exist
+            @if ($magasin->latitude && $magasin->longitude)
+                marker = L.marker([{{ $magasin->latitude }}, {{ $magasin->longitude }}])
+                    .addTo(map)
+                    .bindPopup('Magasin Location');
+                map.setView([{{ $magasin->latitude }}, {{ $magasin->longitude }}], 15);
+            @endif
+            
+            // Handle map clicks
+            map.on('click', function(e) {
+                const lat = e.latlng.lat;
+                const lng = e.latlng.lng;
+                
+                // Remove existing marker
+                if (marker) {
+                    map.removeLayer(marker);
+                }
+                
+                // Add new marker
+                marker = L.marker([lat, lng])
+                    .addTo(map)
+                    .bindPopup('Selected Location<br>Lat: ' + lat.toFixed(6) + '<br>Lng: ' + lng.toFixed(6))
+                    .openPopup();
+                
+                // Update hidden inputs
+                latitudeInput.value = lat;
+                longitudeInput.value = lng;
+                
+                // Update display
+                coordsDisplay.textContent = 'Selected Location: ' + lat.toFixed(6) + ', ' + lng.toFixed(6);
+            });
+        });
+    </script>
 @endsection

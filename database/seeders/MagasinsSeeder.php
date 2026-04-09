@@ -13,6 +13,7 @@ class MagasinsSeeder extends Seeder
      */
     public function run(): void
     {
-        Magasin::factory(5)->create();
+        Magasin::factory(10)->create();
     }
 }
+

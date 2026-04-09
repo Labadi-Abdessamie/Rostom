@@ -40,6 +40,8 @@ class MagasinController extends Controller
             'vitrineVideo' => 'nullable|mimetypes:video/mp4,video/quicktime|max:10000',
             'bio' => 'required|string',
             'location' => 'required|string|max:255',
+            'latitude' => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
             'facebookLink' => 'nullable|url',
             'instagramLink' => 'nullable|url',
             'tiktokLink' => 'nullable|url',
@@ -54,6 +56,8 @@ class MagasinController extends Controller
         $magasin->email = $validated['email'];
         $magasin->bio = $validated['bio'];
         $magasin->location = $validated['location'];
+        $magasin->latitude = $validated['latitude'] ?? null;
+        $magasin->longitude = $validated['longitude'] ?? null;
         $magasin->facebookLink = $validated['facebookLink'] ?? null;
         $magasin->instagramLink = $validated['instagramLink'] ?? null;
         $magasin->tiktokLink = $validated['tiktokLink'] ?? null;
@@ -155,6 +159,8 @@ class MagasinController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:magasins,email,' . $magasin->id,
+            'latitude' => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
             'phoneNumber' => 'required|string|max:20',
             'location' => 'required|string|max:255',
             'bio' => 'nullable|string',
@@ -169,6 +175,8 @@ class MagasinController extends Controller
 
         $magasin->name = $request->name;
         $magasin->email = $request->email;
+        $magasin->latitude = $request->latitude;
+        $magasin->longitude = $request->longitude;
         $magasin->phoneNumber = $request->phoneNumber;
         $magasin->location = $request->location;
         $magasin->bio = $request->bio;

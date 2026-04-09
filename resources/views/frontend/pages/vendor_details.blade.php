@@ -5,6 +5,25 @@
 @endsection
 
 @section('content')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <style>
+        #vendorLocationMap {
+            height: 400px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+        .wsus__vendor_map_section {
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+        }
+        .wsus__vendor_map_section h5 {
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+    </style>
     <!--============================
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             BREADCRUMB START
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         ==============================-->
@@ -153,6 +172,19 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Vendor Location Map Section -->
+                @if ($vendor->latitude && $vendor->longitude)
+                    <div class="col-xl-12">
+                        <div class="wsus__vendor_map_section">
+                            <h5><i class="fal fa-map-marker-alt"></i> {{ $vendor->name }}'s Location</h5>
+                            <div id="vendorLocationMap"></div>
+                        </div>
+                    </div>
+                @endif
+            </div>
+
+            <div class="row">
                 <div class="col-xl-3 col-lg-4">
                     <div class="wsus__sidebar_filter">
                         <p>filter</p>
@@ -174,10 +206,13 @@
                                     data-bs-parent="#accordionExample">
                                     <div class="accordion-body">
                                         <ul>
-                                            @foreach ($vendor->category->childrens as $child)
-                                                <li><a href="#">{{ $child->name }}</a></li>
-                                            @endforeach ()
-
+                                            @if ($vendor->category && $vendor->category->childrens)
+                                                @foreach ($vendor->category->childrens as $child)
+                                                    <li><a href="#">{{ $child->name }}</a></li>
+                                                @endforeach
+                                            @else
+                                                <li><a href="#">No subcategories available</a></li>
+                                            @endif
                                         </ul>
                                     </div>
                                 </div>
@@ -570,6 +605,26 @@
             </div>
         </div>
     </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            @if ($vendor->latitude && $vendor->longitude)
+                const map = L.map('vendorLocationMap').setView([{{ $vendor->latitude }}, {{ $vendor->longitude }}], 15);
+                
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors',
+                    maxZoom: 19,
+                    minZoom: 2
+                }).addTo(map);
+                
+                L.marker([{{ $vendor->latitude }}, {{ $vendor->longitude }}])
+                    .addTo(map)
+                    .bindPopup('<strong>{{ $vendor->name }}</strong><br>{{ $vendor->location }}')
+                    .openPopup();
+            @endif
+        });
+    </script>
 @endsection
 {{--
     ============================

@@ -17,11 +17,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        //User::factory(30)->create();
-        //Product::factory(40)->create();
-        //Magasin::factory(5)->create();
-        //Category::factory(3)->create();
-        //BagItem::factory(20)->create();
-
+        // Run seeders in order
+        $this->call([
+            UsersSeeder::class,
+            CategorySeeder::class,
+            MagasinsSeeder::class,
+            ProductsSeeder::class,
+            BagItemSeeder::class,
+        ]);
     }
 }
+
