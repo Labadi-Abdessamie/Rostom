@@ -10,10 +10,14 @@
     <div class="row">
         <div class="col-xl-9 col-xxl-10 col-lg-9 ms-auto">
             <div class="dashboard_content">
-                <h3><i class="far fa-cloud-download-alt"></i> download</h3>
-                <div class="wsus__dashboard_download">
-                    <p>No downloads available yet.</p>
-                    <a href="index.html" class="common_btn">go shop <i class="fal fa-arrow-circle-right"></i></a>
+                <div class="dash-page-header">
+                    <h1><i class="far fa-cloud-download-alt"></i>Downloads</h1>
+                    <p>Your purchased digital files will appear here</p>
+                </div>
+                <div class="dash-empty dash-card">
+                    <i class="far fa-cloud-download-alt"></i>
+                    <h5>No downloads available yet</h5>
+                    <a href="{{ route('frontend.index') }}" class="dash-btn dash-btn-primary">Go Shop <i class="fal fa-arrow-circle-right"></i></a>
                 </div>
             </div>
         </div>

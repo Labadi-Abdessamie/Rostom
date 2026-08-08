@@ -150,7 +150,7 @@ class OrderController extends Controller
         if ($order->status == 'delivered') {
             return redirect()->back()->with('error', 'You can\'t delete this order.');
         }
-        foreach ($order->items as $item) {
+        foreach ($order->orderItems as $item) {
             $item->delete();
         }
         $order->delete();

@@ -25,60 +25,76 @@
                     <div class="card">
                         <div class="card-body">
 
-                            <table class="table table-striped table-bordered">
-                                <thead>
+                            <div class="table-responsive">
+                            <table class="table table-centered mb-0">
+                                <thead class="table-light">
                                     <tr>
                                         <th>ID</th>
                                         <th>Status</th>
-                                        <th>Details</th>
                                         <th>Total Amount</th>
                                         <th>Date</th>
                                         <th>Payment Method</th>
                                         <th>Payment Status</th>
                                         <th>Shipping Address</th>
-                                        <th>Billing Address</th>
                                         <th>User</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($orders as $order)
+                                        @php
+                                            $sbClass = match($order->status) {
+                                                'delivered' => 'sb-delivered',
+                                                'processing' => 'sb-processing',
+                                                'shipped' => 'sb-shipped',
+                                                'confirmed' => 'sb-confirmed',
+                                                'cancelled' => 'sb-cancelled',
+                                                default => 'sb-pending',
+                                            };
+                                            $paySbClass = match($order->paymentStatus) {
+                                                'paid' => 'sb-delivered',
+                                                'refunded' => 'sb-cancelled',
+                                                default => 'sb-pending',
+                                            };
+                                        @endphp
                                         <tr>
-                                            <td>{{ $order->id }}</td>
+                                            <td class="fw-semibold">#{{ $order->id }}</td>
                                             <td>
-                                                <span>
+                                                <span class="status-badge {{ $sbClass }}">
                                                     {{ ucfirst($order->status) ?? 'Unknown' }}
                                                 </span>
                                             </td>
-                                            <td>{{ $order->details ?? 'N/A' }}</td>
                                             <td>{{ number_format($order->totalAmount, 2) }} DZD</td>
                                             <td>{{ $order->date ?? 'N/A' }}</td>
                                             <td>
                                                 {{ ucfirst($order->paymentMethod) ?? 'N/A' }}
                                             </td>
                                             <td>
-                                                <span>
+                                                <span class="status-badge {{ $paySbClass }}">
                                                     {{ ucfirst($order->paymentStatus) ?? 'Unknown' }}
                                                 </span>
                                             </td>
                                             <td>
                                                 {{ $order->shippingAddress ? $order->shippingAddress->address : 'Not available' }}
                                             </td>
-                                            <td>
-                                                {{ $order->billingAddress ? $order->billingAddress->address : 'Not available' }}
-                                            </td>
                                             <td>{{ $order->user ? $order->user->name : 'N/A' }}</td>
                                             <td>
+                                                <a href="{{ route('admin.order_details', $order->id) }}" class="action-icon text-primary" title="View">
+                                                    <i class="mdi mdi-eye"></i>
+                                                </a>
                                                 <form action="{{ route('admin.delete_order', $order->id) }}" method="POST" style="display:inline;">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this order?')">Delete</button>
+                                                    <button type="submit" class="action-icon text-danger border-0 bg-transparent" title="Delete" onclick="return confirm('Are you sure you want to delete this order?')">
+                                                        <i class="mdi mdi-delete"></i>
+                                                    </button>
                                                 </form>
                                             </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
                             </table>
+                            </div>
 
                         </div>
                     </div>

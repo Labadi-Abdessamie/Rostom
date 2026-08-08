@@ -8,11 +8,13 @@
     <div class="row">
 
         <div class="col-xl-9 col-xxl-10 col-lg-9 ms-auto">
-            <div class="col-md-8 offset-md-2">
-                <h3>Edit Address</h3>
+            <div class="dashboard_content">
+                <div class="dash-page-header">
+                    <h1><i class="fas fa-map-marker-alt"></i>Edit Address</h1>
+                </div>
 
                 @if ($errors->any())
-                    <div class="alert alert-danger">
+                    <div class="dash-alert dash-alert-error">
                         <ul class="mb-0">
                             @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
@@ -21,6 +23,7 @@
                     </div>
                 @endif
 
+                <div class="dash-card">
                 <form action="{{ route('client.address.update', $address->id) }}" method="POST">
                     @csrf
                     @method('PUT')
@@ -63,8 +66,9 @@
                         <label class="form-check-label" for="principalAddress">Principal Address</label>
                     </div>
 
-                    <button type="submit" class="btn btn-success">Save Changes</button>
+                    <button type="submit" class="dash-btn dash-btn-primary">Save Changes</button>
                 </form>
+                </div>
             </div>
         </div>
     </div>

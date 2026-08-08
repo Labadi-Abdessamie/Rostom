@@ -10,7 +10,9 @@
         {{ $category->name }}
     </td>
     <td>
-        {{ $category->status }}
+        <span class="status-badge {{ $category->status === 'active' ? 'sb-active' : 'sb-inactive' }}">
+            {{ ucfirst($category->status) }}
+        </span>
     </td>
     <td>
         {{ $category->created_at ? $category->created_at->format('d/m/y') : 'N/A' }}

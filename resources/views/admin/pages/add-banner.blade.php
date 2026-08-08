@@ -2,12 +2,12 @@
 
 @section('styles')
     <!-- Plugins css -->
-    <link href="assets/libs/dropzone/min/dropzone.min.css" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('assets/libs/dropzone/min/dropzone.min.css') }}" rel="stylesheet" type="text/css" />
 @endsection
 
 @section('scripts')
     <!-- Plugin js -->
-    <script src="assets/libs/dropzone/min/dropzone.min.js"></script>
+    <script src="{{ asset('assets/libs/dropzone/min/dropzone.min.js') }}"></script>
 @endsection
 
 @section('content')

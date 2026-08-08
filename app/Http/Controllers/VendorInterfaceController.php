@@ -18,7 +18,8 @@ class VendorInterfaceController extends Controller
         //! 1
         $totalProducts = Product::where('magasin_id', $vendor->magasin->id)->count();
         //! 2
-        $totalOrderItems = $vendor->magasin->orderItems()->get();
+        $totalOrderItems = $vendor->magasin->orderItems()->with('order')->get()
+            ->filter(fn ($item) => $item->order !== null);
         $totalOrders = $totalOrderItems->groupBy('order_id')->map(function ($items, $orderId) {
             return [
                 'id' => $orderId,
@@ -135,7 +136,8 @@ class VendorInterfaceController extends Controller
     {
         $vendor = Auth::user();
         //$magasinId = $vendor->magasin->id;
-        $orderItems = $vendor->magasin->orderItems()->with(['product'])->get();
+        $orderItems = $vendor->magasin->orderItems()->with(['product', 'order'])->get()
+            ->filter(fn ($item) => $item->order !== null);
 
         $orders = $orderItems->groupBy('order_id')->map(function ($items, $orderId) {
             return [

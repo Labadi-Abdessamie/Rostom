@@ -130,7 +130,7 @@
         left: 0;
         right: 0;
         height: 4px;
-        background: linear-gradient(90deg, transparent 0%, #14b8a6 100%);
+        background: linear-gradient(90deg, transparent 0%, #4f46e5 100%);
     }
 
     .stat-card:hover {
@@ -183,7 +183,7 @@
         justify-content: center;
         font-size: 32px;
         background: linear-gradient(135deg, #e0f2fe 0%, #e0f8f9 100%);
-        color: #14b8a6;
+        color: #4f46e5;
     }
 
     .stat-card:nth-child(2) .stat-icon-box {
@@ -234,7 +234,7 @@
         left: -100%;
         width: 100%;
         height: 100%;
-        background: linear-gradient(135deg, rgba(20, 184, 166, 0.1) 0%, transparent 100%);
+        background: linear-gradient(135deg, rgba(79, 70, 229, 0.1) 0%, transparent 100%);
         transition: all 0.5s ease;
     }
 
@@ -265,7 +265,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        color: #14b8a6;
+        color: #4f46e5;
         margin: 0 auto 18px;
         transition: all 0.3s ease;
     }
@@ -330,7 +330,7 @@
     }
 
     .card-title i {
-        color: #14b8a6;
+        color: #4f46e5;
     }
 
     .info-grid {
@@ -365,7 +365,7 @@
     }
 
     .info-label i {
-        color: #14b8a6;
+        color: #4f46e5;
         font-size: 13px;
     }
 
@@ -413,9 +413,9 @@
         top: 26px;
         width: 14px;
         height: 14px;
-        background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
         border-radius: 50%;
-        box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.1);
+        box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
     }
 
     .timeline-item h5 {
@@ -441,7 +441,7 @@
         gap: 4px;
         padding: 4px 12px;
         background: linear-gradient(135deg, #e0f2fe 0%, #e0f8f9 100%);
-        color: #14b8a6;
+        color: #4f46e5;
         border-radius: 20px;
         font-size: 11px;
         font-weight: 700;
@@ -677,7 +677,7 @@
                             <i class="fas fa-circle-check"></i>
                             Account Status
                         </div>
-                        <div class="info-value" style="color: #14b8a6;">{{ ucfirst(Auth::user()->status) }}</div>
+                        <div class="info-value" style="color: #4f46e5;">{{ ucfirst(Auth::user()->status) }}</div>
                     </div>
                 </div>
             </div>

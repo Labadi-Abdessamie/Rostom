@@ -23,8 +23,16 @@
             <!-- Product count -->
             <div class="row">
                 <div class="col-12">
-                    <div class="alert alert-info">
-                        Total Products: {{ $totalProducts }}
+                    <div class="card adm-stat-strip mb-3">
+                        <div class="card-body d-flex align-items-center gap-3 py-3">
+                            <div class="stat-icon-wrap" style="width:44px;height:44px;border-radius:10px;background:#ede9fe;color:#4f46e5;display:flex;align-items:center;justify-content:center;font-size:1.2rem;">
+                                <i class="mdi mdi-package-variant-closed"></i>
+                            </div>
+                            <div>
+                                <div class="text-muted font-13">Total Products</div>
+                                <div class="fw-bold" style="font-size:1.25rem;">{{ $totalProducts }}</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

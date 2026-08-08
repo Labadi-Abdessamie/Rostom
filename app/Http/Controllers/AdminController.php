@@ -262,7 +262,7 @@ class AdminController extends Controller
 
     public function orderDetails($id)
     {
-        $order = Order::findOrFail($id);
+        $order = Order::with(['user', 'shippingAddress', 'billingAddress', 'orderItems.product'])->findOrFail($id);
         return view('admin.pages.orderDetails', compact('order'));
     }
 }

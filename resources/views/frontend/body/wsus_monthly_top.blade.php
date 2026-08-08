@@ -47,8 +47,7 @@
                 <div class="col-xl-12 col-lg-12">
                     <div class="row grid">
                         @foreach ($monthlyProducts as $monthlyProduct)
-                            <div
-                                class="col-xl-2 col-6 col-sm-6 col-md-4 col-lg-3 {{ $monthlyProduct->category->name }}">
+                            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12 {{ $monthlyProduct->category->name }}">
                                 <a class="wsus__hot_deals__single"
                                     href="{{ route('frontend.product_details', ['id' => $monthlyProduct->id]) }} ">
                                     <div class="wsus__hot_deals__single_img">
