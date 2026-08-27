@@ -102,9 +102,8 @@
                         </div>
                     </div>
                 </form>
-                <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('profile.update.password') }}" method="POST" enctype="multipart/form-data">
                     @csrf
-                    @method('PATCH')
                     <div class="card">
                         <div class="card-header">
                             <h4>Edit Password</h4>

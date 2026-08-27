@@ -215,7 +215,7 @@ class AdminController extends Controller
             $vendors = User::where('role', 'vendor')->paginate($perPage);
         } elseif ($type === "blocked") {
             $title = "Blocked Vendors";
-            $vendors = User::where('status', 'blocked')->paginate($perPage);
+            $vendors = User::where('role', 'vendor')->where('status', 'blocked')->paginate($perPage);
         } else {
             return redirect()->route('admin.vendors');
         }

@@ -171,6 +171,8 @@ class MagasinController extends Controller
             'tiktokLink' => 'nullable|url',
             'whatsupLink' => 'nullable|url',
             'magasinOpen' => 'required|boolean',
+            'status' => 'nullable|in:active,inactive,blocked',
+            'rate' => 'nullable|numeric|min:0|max:5',
         ]);
 
         $magasin->name = $request->name;
@@ -179,12 +181,33 @@ class MagasinController extends Controller
         $magasin->longitude = $request->longitude;
         $magasin->phoneNumber = $request->phoneNumber;
         $magasin->location = $request->location;
-        $magasin->bio = $request->bio;
-        $magasin->facebookLink = $request->facebookLink;
-        $magasin->instagramLink = $request->instagramLink;
-        $magasin->tiktokLink = $request->tiktokLink;
-        $magasin->whatsupLink = $request->whatsupLink;
         $magasin->magasinOpen = $request->magasinOpen;
+
+        // Bio and social links only exist on the vendor edit form. Guard them so
+        // the admin edit form (which omits them) doesn't wipe them to null.
+        if ($request->has('bio')) {
+            $magasin->bio = $request->bio;
+        }
+        if ($request->has('facebookLink')) {
+            $magasin->facebookLink = $request->facebookLink;
+        }
+        if ($request->has('instagramLink')) {
+            $magasin->instagramLink = $request->instagramLink;
+        }
+        if ($request->has('tiktokLink')) {
+            $magasin->tiktokLink = $request->tiktokLink;
+        }
+        if ($request->has('whatsupLink')) {
+            $magasin->whatsupLink = $request->whatsupLink;
+        }
+
+        // Status and rate only exist on the admin edit form.
+        if ($request->filled('status')) {
+            $magasin->status = $request->status;
+        }
+        if ($request->filled('rate')) {
+            $magasin->rate = $request->rate;
+        }
 
         if ($request->hasFile('magasinPicture')) {
             if ($magasin->magasinPicture && Storage::exists('public/' . $magasin->magasinPicture)) {
@@ -203,6 +226,10 @@ class MagasinController extends Controller
         }
 
         $magasin->save();
+
+        if (Auth::user()->role === 'admin') {
+            return redirect()->route('admin.magasins')->with('success', 'Magasin updated successfully!');
+        }
 
         return redirect()->route('vendor.magasin', $magasin->id)->with('success', 'Magasin updated successfully!');
     }

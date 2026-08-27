@@ -27,7 +27,7 @@ class ReviewController extends Controller
 
 
         $product = Product::findorFail($request->product_id);
-        $product->rate_average = ($product->rate_average + $request->rating) / ($product->rate_count + 1);
+        $product->rate_average = ($product->rate_average * $product->rate_count + $request->rating) / ($product->rate_count + 1);
         $product->rate_count++;
         $product->save();
 
@@ -66,7 +66,7 @@ class ReviewController extends Controller
 
         if ($review) {
             $product = Product::findorFail($review->product_id);
-            $product->rate_average = ($product->rate_average - $review->rate + $request->rate) / $product->rate_count;
+            $product->rate_average = ($product->rate_average * $product->rate_count - $review->rate + $request->rate) / $product->rate_count;
             $product->save();
 
             $review->update([
@@ -90,7 +90,7 @@ class ReviewController extends Controller
             if ($product->rate_count - 1 == 0) {
                 $product->rate_average = 0;
             } else {
-                $product->rate_average = ($product->rate_average - $review->rate) / ($product->rate_count - 1);
+                $product->rate_average = ($product->rate_average * $product->rate_count - $review->rate) / ($product->rate_count - 1);
             }
             $product->rate_count--;
             $product->save();

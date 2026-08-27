@@ -115,28 +115,15 @@
                             @if ($order->type === 'quote')
                                 <div class="text-md-right">
                                     <form action="{{ route('vendor.purchase_orders.confirm', $order->id) }}" method="POST"
-                                        onsubmit="return confirm('Are you sure you want to confirm this order?');">
+                                        onsubmit="return confirm('Confirm this order? The ordered quantities will be added to your stock.');">
                                         @csrf
                                         <button type="submit" class="btn btn-success btn-icon icon-left"><i
                                                 class="fas fa-check"></i> Confirm Order</button>
                                     </form>
                                 </div>
-                            @endif
-
-
-                            @if ($order->type === 'order')
-                                <div class="text-md-right mt-3" id="pay-section">
-                                    <form id="pay-form" action="{{ route('vendor.purchase_orders.pay', $order->id) }}"
-                                        method="POST" onsubmit="return handlePaySubmit();">
-                                        @csrf
-                                        <button type="submit" class="btn btn-primary btn-icon icon-left" id="pay-btn">
-                                            <i class="fas fa-credit-card"></i> Pay
-                                        </button>
-                                    </form>
-                                </div>
-                            @elseif($order->type === 'delivery')
+                            @else
                                 <div class="text-md-right mt-3">
-                                    <span class="badge badge-success p-2"><i class="fas fa-check-circle"></i> Done</span>
+                                    <span class="badge badge-success p-2"><i class="fas fa-check-circle"></i> Confirmed — stock updated</span>
                                 </div>
                             @endif
                         </div>

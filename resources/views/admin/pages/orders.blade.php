@@ -65,13 +65,13 @@
                                                 </span>
                                             </td>
                                             <td>{{ number_format($order->totalAmount, 2) }} DZD</td>
-                                            <td>{{ $order->date ?? 'N/A' }}</td>
+                                            <td>{{ $order->created_at?->format('d/m/Y') ?? 'N/A' }}</td>
                                             <td>
-                                                {{ ucfirst($order->paymentMethod) ?? 'N/A' }}
+                                                {{ ucfirst($order->paymentMethod ?? 'N/A') }}
                                             </td>
                                             <td>
                                                 <span class="status-badge {{ $paySbClass }}">
-                                                    {{ ucfirst($order->paymentStatus) ?? 'Unknown' }}
+                                                    {{ ucfirst($order->paymentStatus ?? 'Unknown') }}
                                                 </span>
                                             </td>
                                             <td>

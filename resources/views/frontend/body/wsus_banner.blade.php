@@ -152,7 +152,7 @@
                                             <h3>{{ $banner->title }}</h3>
                                             <h1>{{ $banner->description }}</h1>
                                             <div class="banner_cta_group">
-                                                <a class="banner_btn_primary" href="{{ route($banner->link) }}">
+                                                <a class="banner_btn_primary" href="{{ $banner->link_url }}">
                                                     Shop Now <i class="fas fa-arrow-right"></i>
                                                 </a>
                                                 <a class="banner_btn_secondary" href="{{ route('frontend.products') }}">

@@ -40,8 +40,8 @@
                                                     <span class="dash-badge dash-badge-warning">Pending</span>
                                                 @elseif($order->status == 'processing')
                                                     <span class="dash-badge dash-badge-info">Processing</span>
-                                                @elseif($order->status == 'shipped')
-                                                    <span class="dash-badge dash-badge-cyan">Shipped</span>
+                                                @elseif($order->status == 'confirmed')
+                                                    <span class="dash-badge dash-badge-cyan">Confirmed</span>
                                                 @elseif($order->status == 'delivered')
                                                     <span class="dash-badge dash-badge-success">Delivered</span>
                                                 @else

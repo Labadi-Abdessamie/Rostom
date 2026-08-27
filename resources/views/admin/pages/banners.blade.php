@@ -59,7 +59,7 @@
 
                                 <!-- Banner Details -->
                                 <h5 class="mt-2">
-                                    <a href="{{ route($banner->link) ?? '#' }}" class="text-dark fw-bold"
+                                    <a href="{{ $banner->link_url }}" class="text-dark fw-bold"
                                         target="_blank">{{ $banner->title }}</a>
                                 </h5>
                                 <p class="text-muted small">{{ $banner->description }}</p>

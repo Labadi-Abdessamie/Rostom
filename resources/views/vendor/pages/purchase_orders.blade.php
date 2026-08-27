@@ -41,22 +41,16 @@
                         <div class="card-body">
                             <ul class="nav nav-pills" id="orders-tab" role="tablist">
                                 <li class="nav-item">
-                                    <a class="nav-link active" href="#payed-orders" id="payed-orders-tab"
-                                        data-bs-toggle="pill" data-bs-target="#payed-orders" role="tab"
-                                        aria-controls="payed-orders" aria-selected="true">Payed <span
-                                            class="badge badge-primary">{{ $payedOrders->count() }}</span></a>
+                                    <a class="nav-link active" href="#pending-orders" id="pending-orders-tab"
+                                        data-bs-toggle="pill" data-bs-target="#pending-orders" role="tab"
+                                        aria-controls="pending-orders" aria-selected="true">Pending <span
+                                            class="badge badge-warning">{{ $pendingOrders->count() }}</span></a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#not-fully-payed-orders" id="not-fully-payed-orders-tab"
-                                        data-bs-toggle="pill" data-bs-target="#not-fully-payed-orders" role="tab"
-                                        aria-controls="not-fully-payed-orders" aria-selected="false">Not Fully Payed<span
-                                            class="badge badge-primary">{{ $notFullyPayedOrders->count() }}</span></a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#debt-orders" id="debt-orders-tab" data-bs-toggle="pill"
-                                        data-bs-target="#debt-orders" role="tab" aria-controls="debt-orders"
-                                        aria-selected="false">Debt<span
-                                            class="badge badge-primary">{{ $debtOrders->count() }}</span></a>
+                                    <a class="nav-link" href="#confirmed-orders" id="confirmed-orders-tab"
+                                        data-bs-toggle="pill" data-bs-target="#confirmed-orders" role="tab"
+                                        aria-controls="confirmed-orders" aria-selected="false">Confirmed <span
+                                            class="badge badge-success">{{ $confirmedOrders->count() }}</span></a>
                                 </li>
                             </ul>
                         </div>
@@ -65,8 +59,9 @@
             </div>
 
             <div class="tab-content" id="orders-tabContent">
-                {{-- Payed Orders --}}
-                <div class="tab-pane fade show active" id="payed-orders" role="tabpanel" aria-labelledby="payed-orders-tab">
+                {{-- Pending Orders (awaiting confirmation) --}}
+                <div class="tab-pane fade show active" id="pending-orders" role="tabpanel"
+                    aria-labelledby="pending-orders-tab">
                     <div class="row">
                         <div class="col-12">
                             <div class="card">
@@ -84,7 +79,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($payedOrders as $order)
+                                                @forelse ($pendingOrders as $order)
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>{{ $order->supplierName }}</td>
@@ -104,7 +99,11 @@
                                                             </form>
                                                         </td>
                                                     </tr>
-                                                @endforeach
+                                                @empty
+                                                    <tr>
+                                                        <td colspan="6" class="text-center">No pending orders.</td>
+                                                    </tr>
+                                                @endforelse
                                             </tbody>
                                         </table>
                                     </div>
@@ -114,9 +113,8 @@
                     </div>
                 </div>
 
-                {{-- Not Fully Payed Orders --}}
-                <div class="tab-pane fade" id="not-fully-payed-orders" role="tabpanel"
-                    aria-labelledby="not-fully-payed-orders-tab">
+                {{-- Confirmed Orders (stock already added) --}}
+                <div class="tab-pane fade" id="confirmed-orders" role="tabpanel" aria-labelledby="confirmed-orders-tab">
                     <div class="row">
                         <div class="col-12">
                             <div class="card">
@@ -134,7 +132,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($notFullyPayedOrders as $order)
+                                                @forelse ($confirmedOrders as $order)
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>{{ $order->supplierName }}</td>
@@ -154,57 +152,11 @@
                                                             </form>
                                                         </td>
                                                     </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Debt Orders --}}
-                <div class="tab-pane fade" id="debt-orders" role="tabpanel" aria-labelledby="debt-orders-tab">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="table-responsive">
-                                        <table class="table table-striped" id="table-3">
-                                            <thead>
-                                                <tr>
-                                                    <th>Id</th>
-                                                    <th>Supplier Name</th>
-                                                    <th>Total Amount</th>
-                                                    <th>Done Date</th>
-                                                    <th>Payment Status</th>
-                                                    <th>Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($debtOrders as $order)
+                                                @empty
                                                     <tr>
-                                                        <td>{{ $loop->iteration }}</td>
-                                                        <td>{{ $order->supplierName }}</td>
-                                                        <td>{{ 'DZ ' . number_format($order->totalAmount, 2) }}</td>
-                                                        <td>{{ $order->doneDate }}</td>
-                                                        <td>{{ $order->paymentStatus }}</td>
-                                                        <td class="d-flex">
-                                                            <a href="{{ route('vendor.purchase_orders.show', $order->id) }}"
-                                                                class="btn btn-info btn-sm mr-2">Detail</a>
-                                                            <form
-                                                                action="{{ route('vendor.purchase_orders.delete', $order->id) }}"
-                                                                method="POST"
-                                                                onsubmit="return confirm('Are you sure?');">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button type="submit"
-                                                                    class="btn btn-danger btn-sm">Delete</button>
-                                                            </form>
-                                                        </td>
+                                                        <td colspan="6" class="text-center">No confirmed orders yet.</td>
                                                     </tr>
-                                                @endforeach
+                                                @endforelse
                                             </tbody>
                                         </table>
                                     </div>

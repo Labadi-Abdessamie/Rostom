@@ -88,7 +88,7 @@
                                                         <a href="{{ $admin->id == Auth::id() ? route('admin.profile') : route('admin.edit_user', ['id' => $admin->id]) }}"
                                                             class="text-body fw-semibold">{{ $admin->name }}</a>
                                                     </td>
-                                                    <td>{{ $admin->phone }}</td>
+                                                    <td>{{ $admin->phoneNumber }}</td>
                                                     <td>{{ $admin->email }}</td>
                                                     <td>{{ $admin->role }}</td>
                                                     <td>{{ $admin->created_at->format('m/d/Y') }}</td>

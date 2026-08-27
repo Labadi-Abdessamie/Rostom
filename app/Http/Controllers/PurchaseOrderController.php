@@ -11,26 +11,25 @@ class PurchaseOrderController extends Controller
 {
     public function index()
     {
+        // Resolve the vendor's magasin the same way create()/store() do (via the
+        // ownership relationship), so orders created here are also listed here.
+        $magasin = auth()->user()->magasin;
 
-        $purchaseOrders = PurchaseOrder::where('magasin_id', auth()->user()->magasin_id)->get();
+        if (!$magasin) {
+            return redirect()->back()->with('error', 'You do not have a magasin assigned.');
+        }
 
-
-        $payedOrders = PurchaseOrder::where('magasin_id', auth()->user()->magasin_id)
-            ->where('paymentStatus', 'full')
+        // Pending orders still await confirmation; confirmed orders have already
+        // had their quantities added to stock.
+        $pendingOrders = PurchaseOrder::where('magasin_id', $magasin->id)
+            ->where('type', 'quote')
             ->get();
 
-
-        $notFullyPayedOrders = PurchaseOrder::where('magasin_id', auth()->user()->magasin_id)
-            ->where('paymentStatus', 'partial')
+        $confirmedOrders = PurchaseOrder::where('magasin_id', $magasin->id)
+            ->where('type', '!=', 'quote')
             ->get();
 
-
-        $debtOrders = PurchaseOrder::where('magasin_id', auth()->user()->magasin_id)
-            ->where('paymentStatus', 'debt')
-            ->get();
-
-
-        return view('vendor.pages.purchase_orders', compact('purchaseOrders', 'payedOrders', 'notFullyPayedOrders', 'debtOrders'));
+        return view('vendor.pages.purchase_orders', compact('pendingOrders', 'confirmedOrders'));
     }
 
     public function create()
@@ -100,7 +99,10 @@ class PurchaseOrderController extends Controller
 
         $order = PurchaseOrder::findOrFail($id);
         $magasin = $order->magasin;
-        if ($magasin->id !== auth()->user()->magasin_id) {
+        // Compare against the vendor's owned magasin (same source create()/store()
+        // use) rather than the users.magasin_id column, which can drift out of sync.
+        $vendorMagasin = auth()->user()->magasin;
+        if (!$vendorMagasin || $magasin->id !== $vendorMagasin->id) {
             return redirect()->back()->with('error', 'Unauthorized access to this purchase order.');
         }
 
@@ -113,14 +115,30 @@ class PurchaseOrderController extends Controller
 
     public function confirm($id)
     {
-
         $order = PurchaseOrder::findOrFail($id);
 
+        // Only the owning vendor may confirm (and thereby add stock).
+        $vendorMagasin = auth()->user()->magasin;
+        if (!$vendorMagasin || $order->magasin_id !== $vendorMagasin->id) {
+            return redirect()->route('vendor.purchase_orders')->with('error', 'Unauthorized action.');
+        }
 
-        $order->type = 'order';
-        $order->save();
+        // Confirming receives the goods: add each ordered quantity to stock.
+        // Guarded by type === 'quote' so a re-submit can never double-count.
+        if ($order->type === 'quote') {
+            foreach ($order->purchaseOrderItems as $item) {
+                $product = $item->product;
+                if ($product) {
+                    $product->actual_quantity += $item->quantity;
+                    $product->save();
+                }
+            }
 
-        return redirect()->route('vendor.purchase_orders.show', $id)->with('success', 'Order has been confirmed.');
+            $order->type = 'order';
+            $order->save();
+        }
+
+        return redirect()->route('vendor.purchase_orders.show', $id)->with('success', 'Order confirmed and product quantities added to stock.');
     }
     public function pay($id)
     {
