@@ -139,7 +139,7 @@ class ProfileController extends Controller
 
         return redirect()->back()->with('success', 'User updated successfully.');
     }
-    public function deleteUser($id)
+    public function deleteUser(Request $request, $id)
     {
         //! add here to change the pending orders to cancelled and the reviews to anynomus
         $user = User::findOrFail($id);
@@ -167,6 +167,11 @@ class ProfileController extends Controller
         }
         $user->status = "inactive";
         $user->save();
+
+        $returnUrl = $request->input('return_url');
+        if ($returnUrl && filter_var($returnUrl, FILTER_VALIDATE_URL) && str_contains($returnUrl, url('/'))) {
+            return redirect()->to($returnUrl)->with('success', 'User deleted successfully.');
+        }
         return redirect()->back()->with('success', 'User deleted successfully.');
     }
 }

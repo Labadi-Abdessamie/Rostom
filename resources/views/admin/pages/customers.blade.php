@@ -90,6 +90,7 @@
                                                         method="POST" style="display: inline;">
                                                         @csrf
                                                         @method('DELETE')
+                                                        <input type="hidden" name="return_url" value="{{ url()->current() }}">
                                                         <button type="submit"
                                                             class="action-icon text-danger border-0 bg-transparent"
                                                             title="Delete"

@@ -429,27 +429,31 @@ header {
 }
 
 .wsus__icon_area li {
-    margin-right: 10px;
-    margin-left: 10px;
+    margin-right: 8px;
+    margin-left: 8px;
 }
 
 .wsus__icon_area li a {
     position: relative;
     text-align: center;
-    background: #fff;
+    background: rgba(255,255,255,.12);
     width: 40px;
     height: 40px;
     line-height: 40px;
-    background: none;
     color: #fff;
     box-shadow: none;
-    font-size: 30px;
-    border: 1px solid transparent;
+    font-size: 1.05rem;
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 50%;
     transition: all linear 0.3s;
-    -webkit-transition: all linear 0.3s ease;
-    -moz-transition: all linear 0.3s ease;
-    -ms-transition: all linear 0.3s ease;
-    -o-transition: all linear 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.wsus__icon_area li a:hover {
+    background: rgba(255,255,255,.25);
+    color: #fff;
 }
 
 .wsus__icon_area li a span {
@@ -9509,3 +9513,6 @@ a:not([href]):not([class]):hover {
 .star-rating .fa-star.selected {
     color: gold;
 }
+/* ===== .fal fallback for Font Awesome Light (maps to Free) ===== */
+.fal,
+.fa-light { font-family: "Font Awesome 5 Free"; font-weight: 400; }

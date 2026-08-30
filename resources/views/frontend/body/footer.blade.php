@@ -7,7 +7,7 @@
                 <div class="col-xl-3 col-sm-7 col-md-6 col-lg-3">
                     <div class="wsus__footer_content">
                         <a class="wsus__footer_2_logo" href="{{ route('frontend.index') }}">
-                            <img src="{{ asset('' . $website->logo . '') }}" alt="logo">
+                            <img src="{{ file_exists(public_path('frontend/images/tiarshop-logo.png')) ? asset('frontend/images/tiarshop-logo.png') : asset('frontend/images/logo.png') }}" alt="logo" onerror="this.src='{{ asset('frontend/images/logo.png') }}'">
                         </a>
                         <a class="action" href="callto:+213{{ $website->contact_phone }}"><i
                                 class="fas fa-phone-alt"></i>
@@ -99,14 +99,4 @@
     </footer>
     <!--============================
         FOOTER PART END
-    ==============================-->
-
-    <!--============================
-        SCROLL BUTTON START
-    ==============================-->
-    <div class="wsus__scroll_btn">
-        <i class="fas fa-chevron-up"></i>
-    </div>
-    <!--============================
-        SCROLL BUTTON  END
     ==============================-->

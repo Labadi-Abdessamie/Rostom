@@ -87,6 +87,6 @@ class CategoryController extends Controller
         }
         $category->status = 'inactive';
         $category->save();
-        return redirect()->back()->with('success', 'Category deleted successfully.');
+        return redirect()->route('admin.categories')->with('success', 'Category deleted successfully.');
     }
 }

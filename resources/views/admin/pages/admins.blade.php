@@ -109,6 +109,7 @@
                                                                 method="POST">
                                                                 @csrf
                                                                 @method('DELETE')
+                                                                <input type="hidden" name="return_url" value="{{ url()->current() }}">
                                                                 <button class="btn action-icon">
                                                                     <i class="mdi mdi-delete"></i>
                                                                 </button>

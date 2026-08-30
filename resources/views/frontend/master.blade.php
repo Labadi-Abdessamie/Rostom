@@ -286,58 +286,371 @@
             }
         }
 
-        /* ===== HEADER / NAV / FOOTER — bold refresh ===== */
+        /* ===== HEADER / NAV / FOOTER ===== */
+        /* Force header layout regardless of style.css */
+        header.wsus__header,
         header {
-            box-shadow: 0 4px 24px rgba(15, 23, 42, 0.06);
+            display: block !important;
+            overflow: visible !important;
+            height: auto !important;
+            min-height: auto !important;
+        }
+
+        /* Override logo width: don't let style.css force 75% */
+        .wsus__header .wsus__header_logo,
+        .wsus__header_logo {
+            width: auto !important;
+        }
+
+        .wsus__header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
+            box-shadow: 0 4px 24px rgba(15, 23, 42, 0.25) !important;
             position: relative;
             z-index: 20;
-        }
-
-        .wsus__call_area .wsus__call {
-            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)) !important;
-            color: #fff !important;
-            box-shadow: 0 10px 24px rgba(245, 158, 11, 0.25);
-        }
-
-        .wsus__search input {
-            border-radius: 999px !important;
-            border: 2px solid #eef2f7 !important;
-            transition: border-color .2s ease, box-shadow .2s ease;
-        }
-
-        .wsus__search input:focus {
-            border-color: var(--color-primary) !important;
-            box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.12);
-        }
-
-        .wsus__search button {
-            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)) !important;
-            border-radius: 999px !important;
-        }
-
-        .wsus__main_menu {
-            background: var(--color-dark) !important;
-        }
-
-        .wsus_menu_category_bar {
-            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)) !important;
-        }
-
-        .wsus_menu_cat_item > li > a {
-            transition: color .2s ease;
-        }
-
-        .wsus_menu_cat_item > li > a:hover {
-            color: var(--color-primary) !important;
-        }
-
-        .wsus_menu_cat_droapdown,
-        .wsus__sub_category {
-            border-radius: 12px !important;
-            box-shadow: var(--shadow-soft) !important;
+            padding: 0.9rem 0;
             overflow: hidden;
         }
 
+        .wsus__header_inner {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            width: 100%;
+            flex-wrap: nowrap;
+        }
+
+        .wsus__header_search {
+            flex: 1 1 auto;
+            min-width: 220px;
+            max-width: 520px;
+            margin: 0 0.5rem;
+        }
+
+        .wsus__header .wsus__header_logo {
+            flex: 0 0 auto;
+            display: inline-block;
+        }
+
+        .wsus__header .wsus__header_logo img {
+            max-height: 52px;
+            max-width: 160px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            filter: brightness(1.15);
+        }
+
+        .wsus__header_search {
+            flex: 1 1 auto;
+            display: flex;
+            align-items: center;
+            min-width: 0;
+            margin: 0;
+        }
+
+        .wsus__header_search form,
+        .wsus__search,
+        .wsus__search form {
+            width: 100% !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 0 !important;
+            position: relative !important;
+            overflow: visible !important;
+            line-height: normal !important;
+        }
+
+        .wsus__header_search input {
+            flex: 1 1 auto;
+            min-width: 0;
+            border-radius: 999px 0 0 999px !important;
+            border: 2px solid rgba(255, 255, 255, 0.2) !important;
+            border-right: none !important;
+            padding: 0.55rem 1.1rem;
+            font-size: 0.9rem;
+            line-height: normal !important;
+            height: auto !important;
+            color: #ffffff !important;
+            background: rgba(255, 255, 255, 0.1) !important;
+            transition: border-color .2s ease, box-shadow .2s ease;
+        }
+
+        .wsus__header_search input::placeholder {
+            color: rgba(255, 255, 255, 0.55) !important;
+        }
+
+        .wsus__header_search input:focus {
+            border-color: var(--color-primary) !important;
+            box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.2) !important;
+            outline: none;
+            background: rgba(255, 255, 255, 0.15) !important;
+        }
+
+        .wsus__header_search .wsus__search_btn {
+            flex: 0 0 auto;
+            border-radius: 0 999px 999px 0 !important;
+            border: 2px solid var(--color-primary) !important;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)) !important;
+            color: #fff !important;
+            padding: 0.55rem 0.95rem;
+            cursor: pointer;
+            transition: opacity .2s ease, transform .2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .wsus__header_search .wsus__search_btn:hover {
+            opacity: 0.85;
+        }
+
+        /* Force override of style.css conflicting .wsus__search rules */
+        .wsus__search form,
+        .wsus__search,
+        .wsus__search input,
+        .wsus__search button,
+        .wsus__search form input,
+        .wsus__search form button {
+            position: relative !important;
+            overflow: visible !important;
+            line-height: normal !important;
+            height: auto !important;
+            border-radius: 0 !important;
+            border: none !important;
+            float: none !important;
+            top: auto !important;
+            transform: none !important;
+            right: auto !important;
+            left: auto !important;
+            background: none !important;
+        }
+
+        .wsus__search_btn,
+        .wsus__search form button[type="submit"] {
+            position: relative !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+
+        .wsus__header_right {
+            flex: 0 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-left: 0.75rem;
+            white-space: nowrap;
+        }
+
+        .wsus__header_contact {
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            color: inherit;
+            flex: 0 0 auto;
+        }
+
+        .wsus__header_contact:hover {
+            opacity: 0.9;
+        }
+
+        .wsus__header_contact_icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 0.95rem;
+            flex-shrink: 0;
+        }
+
+        .wsus__header_contact_text {
+            line-height: 1.15;
+        }
+
+        .wsus__header_contact small {
+            display: block;
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .wsus__header_contact strong {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        @media (max-width: 991px) {
+            .wsus__header_contact_text {
+                display: none;
+            }
+
+            .wsus__header_inner {
+                gap: 0.75rem;
+            }
+        }
+
+        @media (max-width: 575px) {
+            .wsus__header .wsus__header_logo img {
+                max-height: 40px;
+            }
+
+            .wsus__header_right {
+                gap: 0.5rem;
+            }
+        }
+
+        /* ===== NAVBAR ===== */
+        .wsus__main_menu {
+            background: var(--color-dark) !important;
+            width: 100%;
+            height: auto;
+            box-shadow: none;
+            position: relative;
+            z-index: 15;
+        }
+
+        .wsus__menu_item {
+            height: auto;
+            display: flex;
+            align-items: center;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 0;
+        }
+
+        .wsus__menu_item li {
+            margin: 0;
+            float: none;
+            height: auto;
+            display: flex;
+            align-items: center;
+        }
+
+        .wsus__menu_item li a {
+            position: relative;
+            text-transform: capitalize;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            padding: 0.85rem 1rem;
+            border-radius: 6px;
+            transition: color .2s ease, background .2s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .wsus__menu_item li a i {
+            font-size: 0.85rem;
+        }
+
+        .wsus__menu_item li a:hover,
+        .wsus__menu_item li a.active {
+            color: #fff !important;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .wsus__menu_item li a.active {
+            color: var(--color-primary) !important;
+            font-weight: 600;
+        }
+
+        .wsus__menu_auth_btn {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)) !important;
+            color: #fff !important;
+            border-radius: 999px !important;
+            padding: 0.5rem 1.1rem !important;
+            font-weight: 600 !important;
+            font-size: 0.85rem !important;
+        }
+
+        .wsus__menu_auth_btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .wsus__menu_item_right {
+            margin-left: auto;
+        }
+
+        /* ===== ICON AREA ===== */
+        .wsus__icon_area {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .wsus__icon_area li {
+            margin: 0;
+        }
+
+        .wsus__icon_btn {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff !important;
+            text-decoration: none;
+            font-size: 1.05rem;
+            transition: background .2s ease, color .2s ease, transform .2s ease;
+        }
+
+        .wsus__icon_btn i {
+            color: #ffffff !important;
+            font-family: 'Font Awesome 5 Free' !important;
+        }
+
+        .wsus__icon_btn i.fas {
+            font-weight: 900 !important;
+        }
+
+        .wsus__icon_btn i.far {
+            font-weight: 400 !important;
+        }
+
+        .wsus__icon_btn:hover {
+            background: rgba(255, 255, 255, 0.18);
+            color: #fff !important;
+            transform: translateY(-2px);
+        }
+
+        .wsus__icon_badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            min-width: 18px;
+            height: 18px;
+            border-radius: 999px;
+            background: var(--color-secondary) !important;
+            color: #fff !important;
+            font-size: 0.65rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+            line-height: 1;
+        }
+
+        /* ===== BREADCRUMB ===== */
         #wsus__breadcrumb {
             background: linear-gradient(135deg, var(--color-dark) 0%, #1e293b 100%) !important;
             position: relative;
@@ -358,6 +671,7 @@
             color: rgba(255, 255, 255, 0.75) !important;
         }
 
+        /* ===== FOOTER ===== */
         footer.footer_2 {
             background: var(--color-dark) !important;
             padding-top: 4rem;
@@ -404,6 +718,28 @@
         .wsus__scroll_btn {
             background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)) !important;
             box-shadow: 0 12px 28px rgba(245, 158, 11, 0.3) !important;
+            display: none; /* hidden by default, shown by JS .active */
+            animation: none !important;
+        }
+        .wsus__scroll_btn i {
+            color: #fff;
+            font-size: 16px;
+        }
+
+        /* Responsive all pages - make layout work on phones/tablets/desktop */
+        @media (max-width: 575px) {
+            .wsus__header { padding: 0.5rem 0 !important; }
+            .wsus__header_inner { flex-wrap: wrap !important; gap: 0.5rem !important; }
+            .wsus__header_logo img { max-height: 36px !important; max-width: 110px !important; }
+            .wsus__header_search { max-width: 100% !important; min-width: 100% !important; margin: 0 !important; flex: 1 1 100% !important; }
+        }
+        @media (min-width: 576px) and (max-width: 767px) {
+            .wsus__header_search { max-width: 260px !important; }
+            .wsus__header_logo img { max-height: 44px !important; }
+        }
+        @media (min-width: 768px) and (max-width: 991px) {
+            .wsus__header_logo img { max-height: 48px !important; max-width: 130px !important; }
+            .wsus__header_search { max-width: 320px !important; }
         }
     </style>
 </head>

@@ -95,8 +95,14 @@ class ReviewController extends Controller
             $product->rate_count--;
             $product->save();
             $review->delete();
+            if (Auth::user()->role == "admin") {
+                return redirect()->route('admin.reviews')->with('success', 'Review deleted successfully.');
+            }
             return redirect()->back()->with('success', 'Review deleted successfully.');
         } else {
+            if (Auth::user()->role == "admin") {
+                return redirect()->route('admin.reviews')->with('error', 'Review not found or unauthorized.');
+            }
             return redirect()->back()->with('error', 'Review not found or unauthorized.');
         }
     }

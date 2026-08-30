@@ -124,6 +124,6 @@ class BannerController extends Controller
     {
         $banner = Banner::findOrFail($id);
         $banner->delete();
-        return redirect()->back()->with('success', 'Banner deleted successfully.');
+        return redirect()->route('admin.banners')->with('success', 'Banner deleted successfully.');
     }
 }

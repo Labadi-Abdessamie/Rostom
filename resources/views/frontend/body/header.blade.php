@@ -1,51 +1,42 @@
     <!--============================
         HEADER START
     ==============================-->
-    <header>
+    <header class="wsus__header">
         <div class="container">
-            <div class="row">
-                <div class="col-2 col-md-1 d-lg-none">
-                    <div class="wsus__mobile_menu_area">
-                        <span class="wsus__mobile_menu_icon"><i class="fal fa-bars"></i></span>
-                    </div>
+            <div class="wsus__header_inner">
+
+                {{-- Logo --}}
+                <a class="wsus__header_logo" href="{{ route('frontend.index') }}">
+                    <img src="{{ file_exists(public_path('frontend/images/tiarshop-logo.png')) ? asset('frontend/images/tiarshop-logo.png') : asset('frontend/images/logo.png') }}"
+                         alt="{{ $website->name }}" class="img-fluid"
+                         onerror="this.src='{{ asset('frontend/images/logo.png') }}'">
+                </a>
+
+                {{-- Search Bar --}}
+                <form action="{{ route('frontend.search') }}" class="wsus__header_search">
+                    @csrf
+                    <input name="query" type="text" placeholder="Search products, brands..." class="form-control">
+                    <button type="submit" class="wsus__search_btn" style="position:relative!important;display:flex!important;align-items:center!important;justify-content:center!important;float:none!important;top:auto!important;transform:none!important;right:auto!important;left:auto!important;">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+
+                {{-- Right Side: Contact + Icons --}}
+                <div class="wsus__header_right">
+                    <a href="tel:+213{{ $website->contact_phone }}" class="wsus__header_contact">
+                        <span class="wsus__header_contact_icon">
+                            <i class="fas fa-phone-volume"></i>
+                        </span>
+                        <span class="wsus__header_contact_text">
+                            <small>Need Help?</small>
+                            <strong>+213 {{ $website->contact_phone }}</strong>
+                        </span>
+                    </a>
+                    @livewire('icons')
                 </div>
-                <div class="col-xl-2 col-7 col-md-8 col-lg-2">
-                    <div class="wsus_logo_area">
-                        <a class="wsus__header_logo" href="{{ route('frontend.index') }}">
-                            <img src="{{ asset('' . $website->logo . '') }}" alt="logo" class="img-fluid w-100">
-                        </a>
-                    </div>
-                </div>
-                <div class="col-xl-5 col-md-6 col-lg-4 d-none d-lg-block">
-                    <div class="wsus__search">
-                        <form action="{{ route('frontend.search') }}">
-                            @csrf
-                            <input name="query" type="text" placeholder="Search...">
-                            <button type="submit"><i class="far fa-search"></i></button>
-                        </form>
-                    </div>
-                </div>
-                <div class="col-xl-5 col-3 col-md-3 col-lg-6 ">
-                    <div class="wsus__call_icon_area">
-                        <a href="{{ route('frontend.contact') }}">
-                            <div class="wsus__call_area">
-                                <div class="wsus__call">
-                                    <i class="fas fa-user-headset"></i>
-                                </div>
-                                <div class="wsus__call_text ">
-                                    <p>{{ $website->contact_email }}</p>
-                                    <p>+213{{ $website->contact_phone }}</p>
-                                </div>
-                            </div>
-                        </a>
-                        @livewire('icons')
-                    </div>
-                </div>
+
             </div>
         </div>
-        @auth
-            @livewire('cart', ['type' => 'mini'])
-        @endauth
     </header>
     <!--============================
         HEADER END

@@ -132,7 +132,7 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'short_description' => 'nullable|string|max:255',
             'long_description' => 'nullable|string',
-            //'actual_quantity' => 'required|integer|min:0',
+            'actual_quantity' => 'required|integer|min:0|max:999999',
             'price' => 'required|numeric|min:0',
             'principalImage' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'category' => 'required|exists:categories,id',
@@ -144,7 +144,7 @@ class ProductController extends Controller
         $product->name = $request->name;
         $product->short_description = $request->short_description ?? '';
         $product->long_description = $request->long_description;
-        $product->actual_quantity = 0;
+        $product->actual_quantity = $request->actual_quantity;
         $product->price = $request->price;
         $product->magasin_id = Auth::user()->magasin->id;
 
@@ -239,7 +239,7 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'short_description' => 'nullable|string|max:255',
             'long_description' => 'nullable|string',
-            //'actual_quantity' => 'required|integer|min:0',
+            'actual_quantity' => 'required|integer|min:0|max:999999',
             'price' => 'required|numeric|min:0',
             'principalImage' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'category' => 'required|exists:categories,id',
@@ -250,7 +250,7 @@ class ProductController extends Controller
         $product->name = $request->name;
         $product->short_description = $request->short_description ?? '';
         $product->long_description = $request->long_description;
-        //$product->actual_quantity = $request->actual_quantity;
+        $product->actual_quantity = $request->actual_quantity;
         $product->price = $request->price;
 
         if ($request->hasFile('principalImage')) {
@@ -278,7 +278,7 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
         if ($product->orderItems()->count() > 0) {
-            return redirect()->back()->with('error', 'You can\'t delete this product.');
+            return redirect()->route('admin.products')->with('error', "You can't delete this product.");
         }
         if (!empty($product->principalImage)) {
             $path = 'products_images/' . $product->id . '/' . $product->principalImage;
@@ -288,6 +288,6 @@ class ProductController extends Controller
         }
 
         $product->delete();
-        return redirect()->back()->with('success', 'Product deleted successfully.');
+        return redirect()->route('admin.products')->with('success', 'Product deleted successfully.');
     }
 }

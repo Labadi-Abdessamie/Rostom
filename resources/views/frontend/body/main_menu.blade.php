@@ -1,313 +1,81 @@
     <!--============================
         MAIN MENU START
     ==============================-->
-    <nav class="wsus__main_menu d-none d-lg-block">
+    <nav class="wsus__main_menu">
         <div class="container">
-            <div class="row">
-                <div class="col-xl-12">
-                    <div class="relative_contect d-flex">
-                        <div class="wsus_menu_category_bar">
-                            <i class="far fa-bars"></i>
-                        </div>
-                        <ul class="wsus_menu_cat_item show_home toggle_menu">
-                            @if (count($categories) > 0)
-                                @foreach ($categories as $category)
-                                    <li>
-                                        @if (count($category->childrens) > 0)
-                                            <a class="wsus__droap_arrow"
-                                                href="{{ route('frontend.products', ['category' => $category->id]) }}"><i
-                                                    class="fas fa-star"></i>
-                                                {{ $category->name }}</a>
-                                            <ul class="wsus_menu_cat_droapdown">
-                                                @foreach ($category->childrens as $firstLevelChild)
-                                                    <li>
-                                                        @if (count($firstLevelChild->childrens) > 0)
-                                                            <a
-                                                                href="{{ route('frontend.products', ['category' => $firstLevelChild->id]) }}">{{ $firstLevelChild->name }}
-                                                                <i class="fas fa-angle-right"></i></a>
-                                                            <ul class="wsus__sub_category">
-                                                                @foreach ($firstLevelChild->childrens as $SecondLevelChild)
-                                                                    <li><a
-                                                                            href="{{ route('frontend.products', ['category' => $SecondLevelChild->id]) }}">{{ $SecondLevelChild->name }}</a>
-                                                                    </li>
-                                                                @endforeach
-                                                            </ul>
-                                                        @else
-                                                            <a
-                                                                href="{{ route('frontend.products', ['category' => $firstLevelChild->id]) }}">{{ $firstLevelChild->name }}
-                                                            </a>
-                                                        @endif
-                                                    </li>
-                                                @endforeach
-                                            </ul>
-                                        @else
-                                            <a href="{{ route('frontend.products', ['category' => $category->id]) }}"><i
-                                                    class="fas fa-star"></i>
-                                                {{ $category->name }}</a>
-                                        @endif
-                                    </li>
-                                @endforeach
-                            @else
-                                <li><a href=""><i class="fas fa-ban"></i>Categories Are none</a></li>
-                            @endif
-                            {{--   ! just to take maybe icons
-                            <li><a class="wsus__droap_arrow" href="#"><i class="fal fa-tshirt"></i> Fashion </a>
-                                <ul class="wsus_menu_cat_droapdown">
-                                    <li><a href="#">New Arrivals <i class="fas fa-angle-right"></i></a>
-                                        <ul class="wsus__sub_category">
-                                            <li><a href="#">New Arrivals</a> </li>
-                                            <li><a href="#">Best Sellers</a></li>
-                                            <li><a href="#">Trending</a></li>
-                                            <li><a href="#">Clothing</a></li>
-                                            <li><a href="#">Bags</a></li>
-                                            <li><a href="#">Home Audio & Theaters</a></li>
-                                            <li><a href="#">TV & Videos</a></li>
-                                            <li><a href="#">Camera</a></li>
-                                            <li><a href="#">Photos & Videos</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="#">Best Sellers</a></li>
-                                    <li><a href="#">Trending <i class="fas fa-angle-right"></i></a>
-                                        <ul class="wsus__sub_category">
-                                            <li><a href="#">New Arrivals</a> </li>
-                                            <li><a href="#">Best Sellers</a></li>
-                                            <li><a href="#">Trending</a></li>
-                                            <li><a href="#">Clothing</a></li>
-                                            <li><a href="#">Bags</a></li>
-                                            <li><a href="#">Home Audio & Theaters</a></li>
-                                            <li><a href="#">TV & Videos</a></li>
-                                            <li><a href="#">Camera</a></li>
-                                            <li><a href="#">Photos & Videos</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="#">Clothing</a></li>
-                                    <li><a href="#">Bags</a></li>
-                                    <li><a href="#">Home Audio & Theaters</a></li>
-                                    <li><a href="#">TV & Videos</a></li>
-                                    <li><a href="#">Camera</a></li>
-                                    <li><a href="#">Photos & Videos <i class="fas fa-angle-right"></i></a>
-                                        <ul class="wsus__sub_category">
-                                            <li><a href="#">New Arrivals</a> </li>
-                                            <li><a href="#">Best Sellers</a></li>
-                                            <li><a href="#">Trending</a></li>
-                                            <li><a href="#">Clothing</a></li>
-                                            <li><a href="#">Bags</a></li>
-                                            <li><a href="#">Home Audio & Theaters</a></li>
-                                            <li><a href="#">TV & Videos</a></li>
-                                            <li><a href="#">Camera</a></li>
-                                            <li><a href="#">Photos & Videos</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li><a class="wsus__droap_arrow" href="#"><i class="fas fa-tv"></i> Electronics</a>
-                                <ul class="wsus_menu_cat_droapdown">
-                                    <li><a href="#">New Arrivals <i class="fas fa-angle-right"></i></a>
-                                        <ul class="wsus__sub_category">
-                                            <li><a href="#">New Arrivals</a> </li>
-                                            <li><a href="#">Best Sellers</a></li>
-                                            <li><a href="#">Trending</a></li>
-                                            <li><a href="#">Clothing</a></li>
-                                            <li><a href="#">Bags</a></li>
-                                            <li><a href="#">Home Audio & Theaters</a></li>
-                                            <li><a href="#">TV & Videos</a></li>
-                                            <li><a href="#">Camera</a></li>
-                                            <li><a href="#">Photos & Videos</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="#">Best Sellers</a></li>
-                                    <li><a href="#">Trending <i class="fas fa-angle-right"></i></a>
-                                        <ul class="wsus__sub_category">
-                                            <li><a href="#">New Arrivals</a> </li>
-                                            <li><a href="#">Best Sellers</a></li>
-                                            <li><a href="#">Trending</a></li>
-                                            <li><a href="#">Clothing</a></li>
-                                            <li><a href="#">Bags</a></li>
-                                            <li><a href="#">Home Audio & Theaters</a></li>
-                                            <li><a href="#">TV & Videos</a></li>
-                                            <li><a href="#">Camera</a></li>
-                                            <li><a href="#">Photos & Videos</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="#">Clothing</a></li>
-                                    <li><a href="#">Bags</a></li>
-                                    <li><a href="#">Home Audio & Theaters</a></li>
-                                    <li><a href="#">TV & Videos</a></li>
-                                    <li><a href="#">Camera</a></li>
-                                    <li><a href="#">Photos & Videos <i class="fas fa-angle-right"></i></a>
-                                        <ul class="wsus__sub_category">
-                                            <li><a href="#">New Arrivals</a> </li>
-                                            <li><a href="#">Best Sellers</a></li>
-                                            <li><a href="#">Trending</a></li>
-                                            <li><a href="#">Clothing</a></li>
-                                            <li><a href="#">Bags</a></li>
-                                            <li><a href="#">Home Audio & Theaters</a></li>
-                                            <li><a href="#">TV & Videos</a></li>
-                                            <li><a href="#">Camera</a></li>
-                                            <li><a href="#">Photos & Videos</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li><a class="wsus__droap_arrow" href="#"><i class="fas fa-chair-office"></i>
-                                    Furniture</a>
-                                <ul class="wsus_menu_cat_droapdown">
-                                    <li><a href="#">New Arrivals <i class="fas fa-angle-right"></i></a>
-                                        <ul class="wsus__sub_category">
-                                            <li><a href="#">New Arrivals</a> </li>
-                                            <li><a href="#">Best Sellers</a></li>
-                                            <li><a href="#">Trending</a></li>
-                                            <li><a href="#">Clothing</a></li>
-                                            <li><a href="#">Bags</a></li>
-                                            <li><a href="#">Home Audio & Theaters</a></li>
-                                            <li><a href="#">TV & Videos</a></li>
-                                            <li><a href="#">Camera</a></li>
-                                            <li><a href="#">Photos & Videos</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="#">Best Sellers</a></li>
-                                    <li><a href="#">Trending <i class="fas fa-angle-right"></i></a>
-                                        <ul class="wsus__sub_category">
-                                            <li><a href="#">New Arrivals</a> </li>
-                                            <li><a href="#">Best Sellers</a></li>
-                                            <li><a href="#">Trending</a></li>
-                                            <li><a href="#">Clothing</a></li>
-                                            <li><a href="#">Bags</a></li>
-                                            <li><a href="#">Home Audio & Theaters</a></li>
-                                            <li><a href="#">TV & Videos</a></li>
-                                            <li><a href="#">Camera</a></li>
-                                            <li><a href="#">Photos & Videos</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="#">Clothing</a></li>
-                                    <li><a href="#">Bags</a></li>
-                                    <li><a href="#">Home Audio & Theaters</a></li>
-                                    <li><a href="#">TV & Videos</a></li>
-                                    <li><a href="#">Camera</a></li>
-                                    <li><a href="#">Photos & Videos <i class="fas fa-angle-right"></i></a>
-                                        <ul class="wsus__sub_category">
-                                            <li><a href="#">New Arrivals</a> </li>
-                                            <li><a href="#">Best Sellers</a></li>
-                                            <li><a href="#">Trending</a></li>
-                                            <li><a href="#">Clothing</a></li>
-                                            <li><a href="#">Bags</a></li>
-                                            <li><a href="#">Home Audio & Theaters</a></li>
-                                            <li><a href="#">TV & Videos</a></li>
-                                            <li><a href="#">Camera</a></li>
-                                            <li><a href="#">Photos & Videos</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li><a class="wsus__droap_arrow" href="#"><i class="fal fa-mobile"></i> Smart
-                                    Phones</a>
-                                <ul class="wsus_menu_cat_droapdown">
-                                    <li><a href="#">New Arrivals <i class="fas fa-angle-right"></i></a>
-                                        <ul class="wsus__sub_category">
-                                            <li><a href="#">New Arrivals</a> </li>
-                                            <li><a href="#">Best Sellers</a></li>
-                                            <li><a href="#">Trending</a></li>
-                                            <li><a href="#">Clothing</a></li>
-                                            <li><a href="#">Bags</a></li>
-                                            <li><a href="#">Home Audio & Theaters</a></li>
-                                            <li><a href="#">TV & Videos</a></li>
-                                            <li><a href="#">Camera</a></li>
-                                            <li><a href="#">Photos & Videos</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="#">Best Sellers</a></li>
-                                    <li><a href="#">Trending <i class="fas fa-angle-right"></i></a>
-                                        <ul class="wsus__sub_category">
-                                            <li><a href="#">New Arrivals</a> </li>
-                                            <li><a href="#">Best Sellers</a></li>
-                                            <li><a href="#">Trending</a></li>
-                                            <li><a href="#">Clothing</a></li>
-                                            <li><a href="#">Bags</a></li>
-                                            <li><a href="#">Home Audio & Theaters</a></li>
-                                            <li><a href="#">TV & Videos</a></li>
-                                            <li><a href="#">Camera</a></li>
-                                            <li><a href="#">Photos & Videos</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="#">Clothing</a></li>
-                                    <li><a href="#">Bags</a></li>
-                                    <li><a href="#">Home Audio & Theaters</a></li>
-                                    <li><a href="#">TV & Videos</a></li>
-                                    <li><a href="#">Camera</a></li>
-                                    <li><a href="#">Photos & Videos <i class="fas fa-angle-right"></i></a>
-                                        <ul class="wsus__sub_category">
-                                            <li><a href="#">New Arrivals</a> </li>
-                                            <li><a href="#">Best Sellers</a></li>
-                                            <li><a href="#">Trending</a></li>
-                                            <li><a href="#">Clothing</a></li>
-                                            <li><a href="#">Bags</a></li>
-                                            <li><a href="#">Home Audio & Theaters</a></li>
-                                            <li><a href="#">TV & Videos</a></li>
-                                            <li><a href="#">Camera</a></li>
-                                            <li><a href="#">Photos & Videos</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li><a href="#"><i class="fas fa-home-lg-alt"></i> Home & Garden</a></li>
-                            <li><a href="#"><i class="far fa-camera"></i> Accessories</a></li>
-                            <li><a href="#"><i class="fas fa-heartbeat"></i> Healthy & Beauty</a></li>
-                            <li><a href="#"><i class="fal fa-gift-card"></i> Gift Ideas</a></li>
-                            <li><a href="#"><i class="fal fa-gamepad-alt"></i> Toy & Games</a></li>
-                            <li><a href="#"><i class="fal fa-gem"></i> View All Categories</a></li>
-                            --}}
-                        </ul>
-                        <ul class="wsus__menu_item">
-                            <li><a @if (Route::currentRouteName() == 'frontend.index') class="active" @endif
-                                    href="{{ route('frontend.index') }}">home</a></li>
-                            <li><a @if (Route::currentRouteName() == 'frontend.products') class="active" @endif
-                                    href="{{ route('frontend.products') }}">products</a></li>
-                            <li><a @if (Route::currentRouteName() == 'frontend.vendor') class="active" @endif
-                                    href="{{ route('frontend.vendor') }}">vendors</a></li>
+            <div class="row align-items-center">
+                <div class="col">
 
-                            @if (Auth::user())
-                                @if (Auth::user()->role == 'client')
-                                    <li><a @if (Route::currentRouteName() == 'frontend.cart') class="active" @endif
-                                            href="{{ route('frontend.cart') }}">Cart</a></li>
-                                @endif
-                            @else
-                                <li><a @if (Route::currentRouteName() == 'frontend.cart') class="active" @endif
-                                        href="{{ route('frontend.cart') }}">Cart</a></li>
+                    {{-- Main Navigation --}}
+                    <ul class="wsus__menu_item">
+                        <li>
+                            <a href="{{ route('frontend.index') }}"
+                               class="{{ Route::currentRouteName() == 'frontend.index' ? 'active' : '' }}">
+                                <i class="fas fa-home"></i> Home
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('frontend.products') }}"
+                               class="{{ Route::currentRouteName() == 'frontend.products' ? 'active' : '' }}">
+                                <i class="fas fa-box-open"></i> Products
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('frontend.vendor') }}"
+                               class="{{ Route::currentRouteName() == 'frontend.vendor' ? 'active' : '' }}">
+                                <i class="fas fa-store"></i> Vendors
+                            </a>
+                        </li>
+                        @auth
+                            @if(Auth::user()->role === 'client')
+                                <li>
+                                    <a href="{{ route('frontend.cart') }}"
+                                       class="{{ Route::currentRouteName() == 'frontend.cart' ? 'active' : '' }}">
+                                        <i class="fas fa-shopping-cart"></i> Cart
+                                    </a>
+                                </li>
                             @endif
-                            <li><a @if (Route::currentRouteName() == 'frontend.contact') class="active" @endif
-                                    href="{{ route('frontend.contact') }}">contact</a></li>
-                            @if (false)
-                                <li><a href="{{ route('frontend.daily_deals') }}">daily deals</a></li>
-                                <li><a href="{{ route('frontend.track_order') }}">track order</a></li>
-                                <li><a href="{{ route('frontend.brands') }}">brands</a></li>
-                                <li><a href="{{ route('frontend.blog') }}">blog</a></li>
-                            @endif
-                        </ul>
-                        <ul class="wsus__menu_item wsus__menu_item_right">
-                            @if (Route::has('login'))
-                                @auth
-                                    <li><a href="{{ route('dashboard') }}">
-                                            @switch(Auth::user()->role)
-                                                @case('client')
-                                                    My Dashboard
-                                                @break
+                        @else
+                            <li>
+                                <a href="{{ route('frontend.cart') }}"
+                                   class="{{ Route::currentRouteName() == 'frontend.cart' ? 'active' : '' }}">
+                                    <i class="fas fa-shopping-cart"></i> Cart
+                                </a>
+                            </li>
+                        @endauth
+                        <li>
+                            <a href="{{ route('frontend.contact') }}"
+                               class="{{ Route::currentRouteName() == 'frontend.contact' ? 'active' : '' }}">
+                                <i class="fas fa-envelope"></i> Contact
+                            </a>
+                        </li>
+                    </ul>
 
-                                                @case('vendor')
-                                                    Magasin
-                                                @break
-
-                                                @case('admin')
-                                                    Dashboard
-                                                @break
-                                            @endswitch
-                                        </a></li>
-                                @else
-                                    <li><a @if (Route::currentRouteName() == 'login') class="active" @endif
-                                            href="{{ route('login') }}">login</a></li>
-                                @endauth
-                            @endif
-                        </ul>
-                    </div>
+                </div>
+                <div class="col-auto">
+                    {{-- Auth / Dashboard --}}
+                    <ul class="wsus__menu_item wsus__menu_item_right">
+                        @auth
+                            <li>
+                                <a href="{{ route('dashboard') }}" class="wsus__menu_auth_btn">
+                                    <i class="fas fa-user-circle"></i>
+                                    @switch(Auth::user()->role)
+                                        @case('client') My Dashboard @break
+                                        @case('vendor') Magasin @break
+                                        @case('admin') Dashboard @break
+                                        @default Dashboard
+                                    @endswitch
+                                </a>
+                            </li>
+                        @else
+                            <li>
+                                <a href="{{ route('login') }}"
+                                   class="{{ Route::currentRouteName() == 'login' ? 'active' : '' }}">
+                                    <i class="fas fa-sign-in-alt"></i> Login
+                                </a>
+                            </li>
+                        @endauth
+                    </ul>
                 </div>
             </div>
         </div>

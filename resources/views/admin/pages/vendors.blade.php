@@ -111,6 +111,7 @@
                                                         method="POST" style="display: inline;">
                                                         @csrf
                                                         @method('DELETE')
+                                                        <input type="hidden" name="return_url" value="{{ url()->current() }}">
                                                         <button type="submit"
                                                             class="action-icon btn btn-link p-0 text-danger"
                                                             onclick="return confirm('Are you sure?');">

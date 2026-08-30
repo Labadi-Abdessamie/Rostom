@@ -149,7 +149,7 @@ class MagasinController extends Controller
         $magasin->status = 'inactive';
         $magasin->save();
 
-        return redirect()->back()->with('success', 'Magasin disabled successfully.');
+        return redirect()->route('admin.magasins')->with('success', 'Magasin disabled successfully.');
     }
 
     public function update(Request $request, $id)

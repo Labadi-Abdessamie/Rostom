@@ -148,13 +148,13 @@ class OrderController extends Controller
     {
         $order = Order::findOrFail($id);
         if ($order->status == 'delivered') {
-            return redirect()->back()->with('error', 'You can\'t delete this order.');
+            return redirect()->route('admin.orders')->with('error', "You can't delete this order.");
         }
         foreach ($order->orderItems as $item) {
             $item->delete();
         }
         $order->delete();
-        return redirect()->back()->with('success', 'Order deleted successfully.');
+        return redirect()->route('admin.orders')->with('success', 'Order deleted successfully.');
     }
 
     public function confirmOrder(string $id)

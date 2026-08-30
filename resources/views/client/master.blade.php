@@ -566,8 +566,8 @@
                     <i class="far fa-bars dash_bar"></i>
                     <i class="far fa-times dash_close"></i>
                 </span>
-                <a href="{{ route('frontend.index') }}" class="dash_logo"><img src="{{ asset($website->logo) }}"
-                        alt="logo" class="img-fluid"></a>
+                <a href="{{ route('frontend.index') }}" class="dash_logo"><img src="{{ file_exists(public_path('frontend/images/tiarshop-logo.png')) ? asset('frontend/images/tiarshop-logo.png') : asset('frontend/images/logo.png') }}"
+                        alt="logo" class="img-fluid" onerror="this.src='{{ asset('frontend/images/logo.png') }}'"></a>
                 <ul class="dashboard_link">
                     <li>
                         <a href="{{ route('client.dashboard') }}"

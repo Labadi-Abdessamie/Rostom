@@ -10,10 +10,12 @@ class Wishlist extends Component
 {
     protected $listeners = ['Notification' => 'refreshWishlist'];
     public $wishlist;
+    public $availableStock;
 
     public function mount()
     {
         $this->wishlist = session()->get('wishlist', []);
+        $this->availableStock = null;
     }
 
     public function refreshWishlist()
@@ -44,13 +46,25 @@ class Wishlist extends Component
         if ($user) {
             $product = Product::findOrFail($productId);
             if ($product->magasin->status == 'active') {
-                $cart = session()->get('cart', []);
-                if (isset($cart[$productId])) {
-                    $cart[$productId]['quantity'] += $quantity;
+                $wishlist = session()->get('wishlist', []);
+                $qty = $quantity;
+
+                // Check if enough stock available
+                if ($product->actual_quantity < $qty) {
+                    $qty = $product->actual_quantity;
+                    $this->dispatch('Notification', product: ['name' => $product->name], message: 'Only ' . $product->actual_quantity . ' available in stock');
+                }
+
+                if (isset($wishlist[$productId])) {
+                    $newQty = $wishlist[$productId]['quantity'] + $qty;
+                    if ($newQty > $product->actual_quantity) {
+                        $qty = $product->actual_quantity - $wishlist[$productId]['quantity'];
+                        if ($qty < 0) $qty = 0;
+                    }
+                    $wishlist[$productId]['quantity'] = $newQty > $product->actual_quantity ? $product->actual_quantity : $newQty;
                 } else {
-                    $cart[$productId] = [
-                        'id' => null,
-                        'quantity' => $quantity,
+                    $wishlist[$productId] = [
+                        'quantity' => $qty,
                         'product' => [
                             'image' => $product->principalImage,
                             'name' => $product->name,
@@ -59,8 +73,9 @@ class Wishlist extends Component
                         ]
                     ];
                 }
-                session()->put('cart', $cart);
-                $this->dispatch('Notification', product: ['name' => $product->name], message: 'Added To cart');
+
+                session()->put('wishlist', $wishlist);
+                $this->dispatch('Notification', product: ['name' => $product->name], message: $qty . 'x ' . $product->name . ' added to cart');
             } else {
                 $this->dispatch('Notification', product: ['name' => $product->name], message: 'Error Adding To cart');
             }
@@ -68,6 +83,7 @@ class Wishlist extends Component
             return redirect()->route('login');
         }
     }
+
     public function ClearWishlist()
     {
         $user = Auth::user();
@@ -78,6 +94,7 @@ class Wishlist extends Component
             return redirect()->route('login');
         }
     }
+
     public function render()
     {
         return view('livewire.wishlist');
