@@ -106,6 +106,24 @@
             </div>
         </div>
 
+        {{-- ===== NOTIFICATION BANNERS ===== --}}
+        @if($newVendorRequests > 0)
+            <a href="{{ route('admin.vendors', ['type' => 'firstOpening']) }}" class="text-decoration-none">
+                <div class="alert alert-warning d-flex align-items-center justify-content-between mb-3" style="border-radius:14px; border:none; background:linear-gradient(135deg,#f59e0b,#d97706); color:#fff;">
+                    <div class="d-flex align-items-center gap-3">
+                        <div style="width:48px;height:48px;border-radius:12px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:1.3rem;">
+                            <i class="mdi mdi-store-plus-outline"></i>
+                        </div>
+                        <div>
+                            <strong style="font-size:1rem;">{{ $newVendorRequests }} New Vendor Request{{ $newVendorRequests === 1 ? '' : 's' }}</strong>
+                            <div style="font-size:.82rem;opacity:.9;">Stores with status "firstOpening" are waiting for your review.</div>
+                        </div>
+                    </div>
+                    <span class="badge bg-white text-warning" style="font-size:.95rem;padding:8px 14px;font-weight:700;">{{ $newVendorRequests }} pending</span>
+                </div>
+            </a>
+        @endif
+
         {{-- ===== STAT CARDS ROW 1 ===== --}}
         <div class="row g-3 mb-4">
             <div class="col-md-6 col-xl-2">

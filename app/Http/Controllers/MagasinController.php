@@ -56,8 +56,17 @@ class MagasinController extends Controller
         $magasin->email = $validated['email'];
         $magasin->bio = $validated['bio'];
         $magasin->location = $validated['location'];
-        $magasin->latitude = $validated['latitude'] ?? null;
-        $magasin->longitude = $validated['longitude'] ?? null;
+
+        // Default to Tiaret, Algeria (35.8, 2.5) with a small random spread
+        // so stores appear slightly scattered on the map without leaving Tiaret.
+        if ($validated['latitude'] && $validated['longitude']) {
+            $magasin->latitude = $validated['latitude'];
+            $magasin->longitude = $validated['longitude'];
+        } else {
+            $magasin->latitude  = 35.8 + (mt_rand(-200, 200) / 1000); // ±0.2° spread
+            $magasin->longitude = 2.5  + (mt_rand(-200, 200) / 1000);
+        }
+
         $magasin->facebookLink = $validated['facebookLink'] ?? null;
         $magasin->instagramLink = $validated['instagramLink'] ?? null;
         $magasin->tiktokLink = $validated['tiktokLink'] ?? null;

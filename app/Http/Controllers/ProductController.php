@@ -241,7 +241,7 @@ class ProductController extends Controller
             'long_description' => 'nullable|string',
             'actual_quantity' => 'required|integer|min:0|max:999999',
             'price' => 'required|numeric|min:0',
-            'principalImage' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'principalImage' => 'nullable|image|mimes:png|max:2048',
             'category' => 'required|exists:categories,id',
             'subcategory' => 'nullable|exists:categories,id',
         ]);
@@ -278,7 +278,7 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
         if ($product->orderItems()->count() > 0) {
-            return redirect()->route('admin.products')->with('error', "You can't delete this product.");
+            return redirect()->back()->with('error', "You can't delete this product.");
         }
         if (!empty($product->principalImage)) {
             $path = 'products_images/' . $product->id . '/' . $product->principalImage;
@@ -288,6 +288,6 @@ class ProductController extends Controller
         }
 
         $product->delete();
-        return redirect()->route('admin.products')->with('success', 'Product deleted successfully.');
+        return redirect()->back()->with('success', 'Product deleted successfully.');
     }
 }

@@ -70,6 +70,7 @@
         }
         .bg-grad-products { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
         .bg-grad-balance  { background: linear-gradient(135deg, #0ea5e9, #06b6d4); }
+.bg-grad-amber    { background: linear-gradient(135deg, #f59e0b, #d97706); }
         .bg-grad-sales    { background: linear-gradient(135deg, #10b981, #059669); }
 
         /* Chart card */
@@ -267,6 +268,22 @@
 @section('content')
     <section class="section">
 
+        {{-- ===== NEW ORDER NOTIFICATION ===== --}}
+        @if($newOrderCount > 0)
+            <a href="{{ route('vendor.orders') }}" class="text-decoration-none d-block mb-3">
+                <div class="alert alert-info d-flex align-items-center gap-3 mb-0" style="border-radius:14px; border:none; background:linear-gradient(135deg,#6366f1,#8b5cf6); color:#fff; border-left:4px solid #f59e0b;">
+                    <div style="width:48px;height:48px;border-radius:12px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:1.3rem;">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <div>
+                        <strong style="font-size:1.05rem;">{{ $newOrderCount }} New Order{{ $newOrderCount === 1 ? '' : 's' }}</strong>
+                        <div style="font-size:.82rem;opacity:.9;">You have new pending orders waiting for processing.</div>
+                    </div>
+                    <span class="badge bg-white text-info ms-auto" style="font-size:.9rem;padding:8px 14px;font-weight:700;">{{ $newOrderCount }} new</span>
+                </div>
+            </a>
+        @endif
+
         {{-- ===== STAT CARDS ===== --}}
         <div class="row g-3 mb-4">
             <div class="col-lg-4 col-md-4 col-sm-12">
@@ -290,6 +307,19 @@
                     </div>
                     <i class="fas fa-coins card-bg-icon"></i>
                 </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-12">
+                <a href="{{ route('vendor.pending_payments') }}" class="text-decoration-none">
+                    <div class="vd-stat-card bg-grad-amber">
+                        <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-label">Pending</div>
+                            <div class="stat-value" style="font-size:1.6rem;">{{ number_format($pendingBalance) }}</div>
+                            <div class="stat-change">DZD unconfirmed</div>
+                        </div>
+                        <i class="fas fa-clock card-bg-icon"></i>
+                    </div>
+                </a>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-12">
                 <div class="vd-stat-card bg-grad-sales">
@@ -349,6 +379,41 @@
                             </div>
                         </div>
                     @endforeach
+                </div>
+            </div>
+        </div>
+
+        {{-- ===== PENDING PAYMENTS LIST ===== --}}
+        <div class="row g-3 mb-4" style="margin-top:22px;">
+            <div class="col-12">
+                <div class="card adm-section-card">
+                    <div class="card-header">
+                        <span><i class="mdi mdi-cash-clock-outline me-1 text-warning"></i>Pending Payment Confirmations</span>
+                        <a href="{{ route('vendor.pending_payments') }}" class="btn btn-xs btn-outline-amber">View All &rarr;</a>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table adm-table mb-0">
+                                <thead><tr><th>Order #</th><th>Customer</th><th>Amount (DZD)</th><th>Status</th><th>Payment</th><th>Action</th></tr></thead>
+                                <tbody>
+                                    @forelse($pendingPaymentOrders ?? [] as $order)
+                                        <tr>
+                                            <td class="text-muted">#{{ $order->id }}</td>
+                                            <td style="font-weight:600;">{{ $order->user->name ?? 'N/A' }}</td>
+                                            <td>{{ number_format($order->totalAmount) }}</td>
+                                            <td><span class="status-badge sb-delivered">Delivered</span></td>
+                                            <td><span class="status-badge sb-pending">Pending</span></td>
+                                            <td>
+                                                <a href="{{ route('vendor.pending_payments') }}" class="btn btn-xs btn-amber">Confirm</a>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr><td colspan="6" class="text-center text-muted py-3">No pending payments.</td></tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

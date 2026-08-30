@@ -18,7 +18,7 @@ use App\Http\Middleware\RoleMiddleware;
 use App\Http\Middleware\StatusMiddleware;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
-
+/*
 Route::get('/cleareverything', function () {
     $clearcache = Artisan::call('cache:clear');
     echo 'Cache cleared<br>';
@@ -27,7 +27,7 @@ Route::get('/cleareverything', function () {
     $clearconfig = Artisan::call('config:clear');
     echo 'Config cleared<br>';
     return redirect()->back();
-});
+});*/
 
 //Frontend route
 Route::group(['prefix' => '', 'as' => 'frontend.'], function () {
@@ -120,6 +120,7 @@ Route::middleware(['auth',  RoleMiddleware::class . ':vendor'])->group(function 
             Route::get('orders', [VendorInterfaceController::class, 'orders'])->name('orders');
             Route::get('order-details/{id}', [VendorInterfaceController::class, 'orderDetails'])->name('order_details');
             Route::post('order/{id}/update', [OrderController::class, 'update'])->name('order.update');
+            Route::post('order/{id}/confirm-payment', [OrderController::class, 'confirmPayment'])->name('order.confirm_payment');
 
 
             Route::get('reviews', [VendorInterfaceController::class, 'reviews'])->name('reviews');
@@ -132,6 +133,8 @@ Route::middleware(['auth',  RoleMiddleware::class . ':vendor'])->group(function 
             Route::post('purchase-orders/{id}/confirm', [PurchaseOrderController::class, 'confirm'])->name('purchase_orders.confirm');
             Route::post('purchase-orders/{id}/pay', [PurchaseOrderController::class, 'pay'])->name('purchase_orders.pay');
             //Route::get('purchase-orders/{id}', [PurchaseOrderController::class, 'show'])->name('purchase_order_details');
+
+            Route::get('pending-payments', [VendorInterfaceController::class, 'pendingPayments'])->name('pending_payments');
 
             Route::get('magasin', [VendorInterfaceController::class, 'magasin'])->name('magasin');
             Route::get('magasin/edit/{id}', [MagasinController::class, 'edit'])->name('edit_magasin');

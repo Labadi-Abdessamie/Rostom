@@ -4,14 +4,17 @@
 
 @section('styles')
     <link rel="stylesheet" href="{{ asset('vendor/modules/bootstrap-social/bootstrap-social.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <link rel="stylesheet" href="{{ asset("vendor/leaflet/leaflet.min.css") }}" />
     <style>
         #locationMap {
-            height: 400px;
+            height: 400px !important;
+            min-height: 400px !important;
             border: 1px solid #ddd;
             border-radius: 4px;
             margin-top: 10px;
+            z-index: 1 !important;
         }
+        .leaflet-container { z-index: 1 !important; }
     </style>
 @endsection
 
@@ -149,23 +152,26 @@
             @endif
     </section>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script src="{{ asset("vendor/leaflet/leaflet.min.js") }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            @if ($magasin->latitude && $magasin->longitude)
-                const map = L.map('locationMap').setView([{{ $magasin->latitude }}, {{ $magasin->longitude }}], 15);
-                
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '© OpenStreetMap contributors',
-                    maxZoom: 19,
-                    minZoom: 2
-                }).addTo(map);
-                
-                L.marker([{{ $magasin->latitude }}, {{ $magasin->longitude }}])
-                    .addTo(map)
-                    .bindPopup('<strong>{{ $magasin->name }}</strong><br>{{ $magasin->location }}')
-                    .openPopup();
-            @endif
+            const lat = {{ $magasin->latitude ?? 35.8 }};
+            const lng = {{ $magasin->longitude ?? 2.5 }};
+
+            const map = L.map('locationMap').setView([lat, lng], 14);
+
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 19,
+                minZoom: 2
+            }).addTo(map);
+
+            L.marker([lat, lng])
+                .addTo(map)
+                .bindPopup('<strong>{{ $magasin->name }}</strong><br>{{ $magasin->location }}');
+
+            // Force redraw when rendered inside card layout
+            setTimeout(function() { map.invalidateSize(); }, 300);
         });
     </script>
 @endsection

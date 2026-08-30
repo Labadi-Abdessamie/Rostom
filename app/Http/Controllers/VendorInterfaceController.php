@@ -61,20 +61,33 @@ class VendorInterfaceController extends Controller
         //$topProducts = Product::where('magasin_id', $vendor->magasin->id)->withCount('orderItems')->orderBy('order_items_count', 'desc')->take(5)->get();
         //$totalEarnings = $vendor->magasin->orderItems()->where('status', 'available')->get();
 
-        //! 5
-        $totalEarnings = 0;
-        foreach ($completedOrders as $order) {
-            $totalOrderEarning = 0;
-            foreach ($order['items'] as $item) {
-                $orderItem = OrderItem::with('product:id,price')->findorFail($item['id']);
-                if ($orderItem->status == 'available') {
-                    $totalOrderEarning += $orderItem->product->price * $orderItem->quantity;
-                }
-            }
-            $totalEarnings += $totalOrderEarning;
-        }
+        //! 5 — Confirmed Balance (stored in magasin)
+        $totalEarnings = $vendor->magasin->balance;
+
         //! 6
         $pendingOrders = $totalOrders->where('status', 'pending')->count();
+        $newOrderCount = $totalOrders->where('status', 'pending')->count();
+
+        //! 7 — Pending Balance: delivered orders with unconfirmed payment
+        $pendingBalance = 0;
+        $pendingPaymentOrders = collect();
+        if ($vendor->magasin) {
+            $deliveredOrderIds = $totalOrders->where('status', 'delivered')->pluck('id');
+            $pendingPaymentOrderItems = OrderItem::with(['product', 'order'])
+                ->whereIn('order_id', $deliveredOrderIds)
+                ->whereHas('order', fn($q) => $q->where('paymentStatus', 'pending'))
+                ->whereHas('product', fn($q) => $q->where('magasin_id', $vendor->magasin->id))
+                ->get();
+
+            $pendingBalance = $pendingPaymentOrderItems->sum(fn($item) => $item->product->price * $item->quantity);
+
+            $pendingPaymentOrders = Order::with(['user', 'orderItems.product'])
+                ->whereIn('id', $deliveredOrderIds)
+                ->where('paymentStatus', 'pending')
+                ->whereHas('orderItems.product', fn($q) => $q->where('magasin_id', $vendor->magasin->id))
+                ->latest()
+                ->get();
+        }
 
         // ===== Monthly Revenue (last 6 months) =====
         $chartLabels    = [];
@@ -111,7 +124,8 @@ class VendorInterfaceController extends Controller
         return view('vendor.index', compact(
             'totalProducts', 'totalCompletedOrders', 'totalEarnings',
             'pendingOrders', 'topProducts',
-            'chartLabels', 'revenueByMonth', 'statusBreakdown'
+            'chartLabels', 'revenueByMonth', 'statusBreakdown',
+            'pendingBalance', 'pendingPaymentOrders', 'newOrderCount'
         ));
     }
     public function profile()
@@ -196,6 +210,36 @@ class VendorInterfaceController extends Controller
             return redirect()->back();
         }
         return view('vendor.pages.order_details', compact('order', 'orderItems'));
+    }
+
+    public function pendingPayments()
+    {
+        $vendor = Auth::user();
+        $magasin = $vendor->magasin;
+
+        if (!$magasin) {
+            $orders = collect();
+            $totalPending = 0;
+        } else {
+            $orders = Order::with(['user', 'orderItems.product'])
+                ->where('status', 'delivered')
+                ->where('paymentStatus', 'pending')
+                ->whereHas('orderItems.product', fn($q) => $q->where('magasin_id', $magasin->id))
+                ->latest()
+                ->get();
+
+            $totalPending = 0;
+            foreach ($orders as $order) {
+                $totalPending += $order->orderItems
+                    ->where('product.magasin_id', $magasin->id)
+                    ->sum(fn($item) => $item->product->price * $item->quantity);
+            }
+        }
+
+        return view('vendor.pages.pending_payments', [
+            'orders' => $orders,
+            'totalPending' => $totalPending,
+        ]);
     }
 
     public function purchaseOrders()

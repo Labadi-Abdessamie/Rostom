@@ -112,14 +112,12 @@
                                 <textarea name="long_description" class="form-control"></textarea>
                             </div>
                         </div>
-                        {{--
                         <div class="form-group row mb-4">
                             <label class="col-form-label text-md-right col-12 col-md-3">Quantity</label>
                             <div class="col-sm-12 col-md-7">
-                                <input type="number" name="actual_quantity" class="form-control" required>
+                                <input type="number" name="actual_quantity" class="form-control" min="0" required>
                             </div>
                         </div>
-                        --}}
 
                         <div class="form-group row mb-4">
                             <label class="col-form-label text-md-right col-12 col-md-3">Price</label>

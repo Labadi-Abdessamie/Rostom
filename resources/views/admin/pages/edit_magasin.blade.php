@@ -1,14 +1,17 @@
 @extends('admin.master')
 
 @section('content')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <link rel="stylesheet" href="{{ asset("vendor/leaflet/leaflet.min.css") }}" />
     <style>
         #locationMap {
-            height: 400px;
+            height: 400px !important;
+            min-height: 400px !important;
             border: 1px solid #ddd;
             border-radius: 4px;
             margin-top: 10px;
+            z-index: 1 !important;
         }
+        .leaflet-container { z-index: 1 !important; }
         .map-info {
             font-size: 12px;
             color: #666;
@@ -176,7 +179,7 @@
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script src="{{ asset("vendor/leaflet/leaflet.min.js") }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize variables
@@ -188,17 +191,19 @@
             
             // Default location
             const defaultLat = {{ $magasin->latitude ?? 35.8 }};
-            const defaultLng = {{ $magasin->longitude ?? 3.0 }};
+            const defaultLng = {{ $magasin->longitude ?? 2.5 }};
             
             // Initialize map
             map = L.map('locationMap').setView([defaultLat, defaultLng], 10);
             
             // Add OpenStreetMap tiles
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '© OpenStreetMap contributors',
                 maxZoom: 19,
                 minZoom: 2
             }).addTo(map);
+
+            setTimeout(function() { map.invalidateSize(); }, 200);
             
             // Add existing marker if coordinates exist
             @if ($magasin->latitude && $magasin->longitude)

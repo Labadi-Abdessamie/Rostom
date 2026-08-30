@@ -24,6 +24,10 @@
                 <a href="{{ route('vendor.orders') }}" class="nav-link"><i
                         class="fas fa-box"></i><span>Orders</span></a>
             </li>
+            <li>
+                <a href="{{ route('vendor.pending_payments') }}" class="nav-link"><i
+                        class="fas fa-clock text-amber"></i><span>Pending Payments</span></a>
+            </li>
             @if (false)
                 <li class="dropdown">
                     <a href="#" class="nav-link has-dropdown"><i class="fas fa-box"></i>

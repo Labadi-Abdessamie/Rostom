@@ -119,8 +119,9 @@
                         @foreach ($vendors as $vendor)
                             <div class="col-xl-6 col-md-6">
                                 <div class="wsus__vendor_single">
-                                    <img src="{{ asset('storage/magasins_images/' . $vendor->id . '/' . $vendor->magasinPicture) }}"
-                                        alt="vendor" class="img-fluid w-100">
+                                    <img src="{{ $vendor->magasinPicture ? asset('storage/magasins_images/' . $vendor->id . '/' . $vendor->magasinPicture) : asset('frontend/images/vendor_details_banner.jpg') }}"
+                                        alt="vendor" class="img-fluid w-100"
+                                        onerror="this.onerror=null;this.src='{{ asset('frontend/images/vendor_details_banner.jpg') }}';">
                                     <div class="wsus__vendor_text">
                                         <div class="wsus__vendor_text_center">
                                             <h4>{{ $vendor->name }}</h4>

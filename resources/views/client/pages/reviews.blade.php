@@ -69,14 +69,15 @@
 
                                                 <div style="margin-bottom: 12px;">
                                                     <label class="dash-label" style="font-size: 13px;">Rating</label>
-                                                    <div style="display: flex; gap: 8px;">
+                                                    <div class="star-rating" data-initial="{{ $review->rate }}">
                                                         @for ($i = 1; $i <= 5; $i++)
-                                                            <label style="cursor: pointer;">
-                                                                <input type="radio" name="rate" value="{{ $i }}" {{ $review->rate == $i ? 'checked' : '' }} style="margin-right: 4px;">
-                                                                <span style="color: #f59e0b; font-size: 16px;"><i class="fas fa-star"></i></span>
-                                                            </label>
+                                                            <span class="star" data-value="{{ $i }}" role="button" tabindex="0" aria-label="{{ $i }} star{{ $i > 1 ? 's' : '' }}">
+                                                                <i class="far fa-star"></i>
+                                                            </span>
+                                                            <input type="radio" name="rate" value="{{ $i }}" {{ $review->rate == $i ? 'checked' : '' }} style="display:none;">
                                                         @endfor
                                                     </div>
+                                                    <small class="star-label text-muted d-block mt-1" style="font-size: 12px;">Click a star to rate</small>
                                                 </div>
 
                                                 <div style="margin-bottom: 12px;">

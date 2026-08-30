@@ -5,25 +5,24 @@
 @section('styles')
     <link rel="stylesheet" href="{{ asset('vendor/modules/bootstrap-social/bootstrap-social.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/modules/summernote/summernote-bs4.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <link rel="stylesheet" href="{{ asset("vendor/leaflet/leaflet.min.css") }}" />
     <style>
         #locationMap {
-            height: 400px;
+            height: 400px !important;
+            min-height: 400px !important;
             border: 1px solid #ddd;
             border-radius: 4px;
             margin-top: 10px;
+            z-index: 1 !important;
         }
-        .map-info {
-            font-size: 12px;
-            color: #666;
-            margin-top: 5px;
-        }
+        .leaflet-container { z-index: 1 !important; }
+        .map-info { font-size: 12px; color: #666; margin-top: 5px; }
     </style>
 @endsection
 
 @section('scripts')
     <script src="{{ asset('vendor/modules/summernote/summernote-bs4.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script src="{{ asset("vendor/leaflet/leaflet.min.js") }}"></script>
 @endsection
 
 @section('content')
@@ -77,7 +76,7 @@
                         <!-- OpenStreetMap -->
                         <div class="form-group">
                             <label>Magasin Location on Map</label>
-                            <div id="locationMap"></div>
+                            <div id="locationMap" style="background:#eee;border:2px solid red;min-height:400px;height:400px;"></div>
                             <p class="map-info" id="coordsDisplay">
                                 @if ($magasin->latitude && $magasin->longitude)
                                     Selected Location: {{ $magasin->latitude }}, {{ $magasin->longitude }}
@@ -154,6 +153,7 @@
         </div>
     </section>
 
+    <script src="{{ asset("vendor/leaflet/leaflet.min.js") }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize variables
@@ -165,25 +165,48 @@
             
             // Default location (center of your country - adjust as needed)
             const defaultLat = {{ $magasin->latitude ?? 35.8 }};
-            const defaultLng = {{ $magasin->longitude ?? 3.0 }};
+            const defaultLng = {{ $magasin->longitude ?? 2.5 }};
             
-            // Initialize map
-            map = L.map('locationMap').setView([defaultLat, defaultLng], 10);
+            // Initialize map with guard
+            try {
+                if (typeof L === 'undefined') { coordsDisplay.textContent = 'ERROR: Leaflet JS not loaded'; return; }
+                const div = document.getElementById('locationMap');
+                if (!div) { coordsDisplay.textContent = 'ERROR: #locationMap div missing'; return; }
+                const rect = div.getBoundingClientRect();
+                if (rect.height < 10) { coordsDisplay.textContent = 'ERROR: Map div has 0 height'; return; }
+
+                map = L.map('locationMap').setView([defaultLat, defaultLng], 10);
+            } catch (e) { coordsDisplay.textContent = 'ERROR: ' + e.message; return; }
+
+            // Force redraw for hidden/collapsed containers
+            setTimeout(function() {
+                try {
+                    if (map && map.invalidateSize) map.invalidateSize();
+                    if (map && map.setView) map.setView([defaultLat, defaultLng], 15);
+                    coordsDisplay.textContent = 'Loaded at Tiaret [' + defaultLat + ', ' + defaultLng + ']';
+                } catch(e) {}
+            }, 800);
             
             // Add OpenStreetMap tiles
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '© OpenStreetMap contributors',
-                maxZoom: 19,
-                minZoom: 2
+                maxZoom: 19
             }).addTo(map);
             
-            // Add existing marker if coordinates exist
-            @if ($magasin->latitude && $magasin->longitude)
-                marker = L.marker([{{ $magasin->latitude }}, {{ $magasin->longitude }}])
+            // Add existing marker if coordinates exist; otherwise drop marker at Tiaret default
+            const lat = {{ $magasin->latitude ?? 35.8 }};
+            const lng = {{ $magasin->longitude ?? 2.5 }};
+
+            if ({{ $magasin->latitude ? 'true' : 'false' }}) {
+                marker = L.marker([lat, lng])
                     .addTo(map)
                     .bindPopup('Magasin Location');
-                map.setView([{{ $magasin->latitude }}, {{ $magasin->longitude }}], 15);
-            @endif
+                map.setView([lat, lng], 15);
+            } else {
+                marker = L.marker([lat, lng])
+                    .addTo(map)
+                    .bindPopup('Tiaret Default (click to set exact location)');
+            }
             
             // Handle map clicks
             map.on('click', function(e) {

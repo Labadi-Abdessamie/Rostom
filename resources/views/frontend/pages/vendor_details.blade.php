@@ -5,25 +5,12 @@
 @endsection
 
 @section('content')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
-    <style>
-        #vendorLocationMap {
-            height: 400px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin-top: 20px;
-        }
-        .wsus__vendor_map_section {
-            margin: 30px 0;
-            padding: 20px;
-            background-color: #f5f5f5;
-            border-radius: 4px;
-        }
-        .wsus__vendor_map_section h5 {
-            margin-bottom: 15px;
-            font-weight: 600;
-        }
-    </style>
+<link rel="stylesheet" href="{{ asset("vendor/leaflet/leaflet.min.css") }}" />
+<style>
+    .leaflet-container img { max-width: none !important; max-height: none !important; }
+    #vendorLocationMap { height: 400px; width: 100%; border: 1px solid #ddd; border-radius: 8px; }
+    .wsus__vendor_map_section { margin: 30px 0; padding: 20px; background-color: #f5f5f5; border-radius: 8px; }
+</style>
     <!--============================
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             BREADCRUMB START
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         ==============================-->
@@ -111,8 +98,9 @@
             <div class="row">
                 <div class="col-xl-12">
                     <div class="wsus__pro_page_bammer vendor_det_banner">
-                        <img src="{{ asset('storage/magasins_images/' . $vendor->id . '/' . $vendor->magasinPicture) }}"
-                            alt="banner" class="img-fluid w-100">
+                        <img src="{{ $vendor->magasinPicture ? asset('storage/magasins_images/' . $vendor->id . '/' . $vendor->magasinPicture) : asset('frontend/images/vendor_details_banner.jpg') }}"
+                            alt="banner" class="img-fluid w-100"
+                            onerror="this.onerror=null;this.src='{{ asset('frontend/images/vendor_details_banner.jpg') }}';">
                         <div class="wsus__pro_page_bammer_text wsus__vendor_det_banner_text">
                             <div class="wsus__vendor_text_center">
                                 <h4>{{ $vendor->name }}</h4>
@@ -174,14 +162,13 @@
                 </div>
 
                 <!-- Vendor Location Map Section -->
-                @if ($vendor->latitude && $vendor->longitude)
-                    <div class="col-xl-12">
-                        <div class="wsus__vendor_map_section">
-                            <h5><i class="fal fa-map-marker-alt"></i> {{ $vendor->name }}'s Location</h5>
-                            <div id="vendorLocationMap"></div>
-                        </div>
+                <div class="col-xl-12">
+                    <div class="wsus__vendor_map_section" style="margin: 30px 0; padding: 20px; background-color: #f5f5f5; border-radius: 8px;">
+                        <h5 style="margin-bottom:15px;font-weight:600;"><i class="fal fa-map-marker-alt"></i> {{ $vendor->name }}'s Location</h5>
+                        <div id="vendorLocationMap" style="height: 400px; width: 100%; border-radius: 8px; overflow: hidden; border: 1px solid #ddd;"></div>
+                        <p id="vendorCoordsDisplay" style="font-size:12px;color:#666;margin-top:10px;text-align:center;">Location: {{ $vendor->latitude ?? 'N/A' }}, {{ $vendor->longitude ?? 'N/A' }}</p>
                     </div>
-                @endif
+                </div>
             </div>
 
             <div class="row">
@@ -606,24 +593,75 @@
         </div>
     </section>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script src="{{ asset("vendor/leaflet/leaflet.min.js") }}"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            @if ($vendor->latitude && $vendor->longitude)
-                const map = L.map('vendorLocationMap').setView([{{ $vendor->latitude }}, {{ $vendor->longitude }}], 15);
-                
+        (function() {
+            const lat = {{ $vendor->latitude ?? 35.8 }};
+            const lng = {{ $vendor->longitude ?? 2.5 }};
+            const hasCoords = {{ !is_null($vendor->latitude) && !is_null($vendor->longitude) ? 'true' : 'false' }};
+            const vendorName = `{{ addslashes($vendor->name) }}`;
+            const vendorLocation = `{{ addslashes($vendor->location ?? '') }}`;
+
+            function initMap() {
+                const mapEl = document.getElementById('vendorLocationMap');
+                const coordsDisplay = document.getElementById('vendorCoordsDisplay');
+                if (!mapEl) { console.error('Map div missing'); return; }
+
+                mapEl.style.height = '400px';
+                mapEl.style.width = '100%';
+
+                const map = L.map('vendorLocationMap', {
+                    zoomControl: true,
+                    scrollWheelZoom: false,
+                    fadeAnimation: false,
+                    zoomAnimation: false,
+                    markerZoomAnimation: false
+                }).setView([lat, lng], hasCoords ? 15 : 13);
+
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '© OpenStreetMap contributors',
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
                     maxZoom: 19,
-                    minZoom: 2
+                    subdomains: 'abc'
                 }).addTo(map);
-                
-                L.marker([{{ $vendor->latitude }}, {{ $vendor->longitude }}])
+
+                const icon = L.icon({
+                    iconUrl: '{{ asset("vendor/leaflet/images/marker-icon.png") }}',
+                    iconRetinaUrl: '{{ asset("vendor/leaflet/images/marker-icon-2x.png") }}',
+                    shadowUrl: '{{ asset("vendor/leaflet/images/marker-shadow.png") }}',
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34],
+                    shadowSize: [41, 41]
+                });
+
+                L.marker([lat, lng], { icon: icon })
                     .addTo(map)
-                    .bindPopup('<strong>{{ $vendor->name }}</strong><br>{{ $vendor->location }}')
+                    .bindPopup('<strong>' + vendorName + '</strong><br>' + vendorLocation)
                     .openPopup();
-            @endif
-        });
+
+                if (coordsDisplay) {
+                    coordsDisplay.textContent = 'Location: ' + lat.toFixed(5) + ', ' + lng.toFixed(5);
+                }
+
+                requestAnimationFrame(function() {
+                    map.invalidateSize();
+                });
+            }
+
+            function startMap() {
+                if (typeof L === 'undefined') {
+                    setTimeout(startMap, 50);
+                    return;
+                }
+                initMap();
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', startMap);
+            } else {
+                startMap();
+            }
+        })();
     </script>
 @endsection
 {{--

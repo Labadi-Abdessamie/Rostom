@@ -46,6 +46,14 @@
                             <li>
                                 <a href="{{ route('admin.vendors') }}">Vendors</a>
                             </li>
+                            @php $newVendorRequests = \App\Models\Magasin::where('status', 'firstOpening')->count(); @endphp
+                            @if($newVendorRequests > 0)
+                            <li>
+                                <a href="{{ route('admin.vendors', ['type' => 'firstOpening']) }}" class="text-warning fw-bold">
+                                    Pending Approval <span class="badge badge-warning">{{ $newVendorRequests }}</span>
+                                </a>
+                            </li>
+                            @endif
                             <li>
                                 <a href="{{ route('admin.vendors', ['type' => 'blocked']) }}">Blocked Vendors</a>
                             </li>

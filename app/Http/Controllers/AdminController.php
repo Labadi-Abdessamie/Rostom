@@ -26,6 +26,7 @@ class AdminController extends Controller
         $totalReviews        = Review::count();
         $totalOrders         = Order::count();
         $pendingOrders       = Order::where('status', 'pending')->count();
+        $newVendorRequests    = Magasin::where('status', 'firstOpening')->count();
 
         $latestOrders        = Order::with('user')->orderBy('created_at', 'desc')->take(8)->get();
         $topMagasinsRating   = Magasin::orderBy('rate', 'desc')->take(5)->get();
@@ -58,7 +59,7 @@ class AdminController extends Controller
             'totalClients', 'totalVendors', 'totalProducts', 'latestOrders',
             'totalActiveMagasins', 'totalMagasins', 'totalAdmins',
             'avgRating', 'totalReviews', 'topMagasinsRating', 'bestSellingProducts',
-            'totalOrders', 'pendingOrders',
+            'totalOrders', 'pendingOrders', 'newVendorRequests',
             'chartLabels', 'revenueByMonth', 'orderStatusBreakdown'
         ));
     }
@@ -216,6 +217,9 @@ class AdminController extends Controller
         } elseif ($type === "blocked") {
             $title = "Blocked Vendors";
             $vendors = User::where('role', 'vendor')->where('status', 'blocked')->paginate($perPage);
+        } elseif ($type === "firstOpening") {
+            $title = "Pending Approval";
+            $vendors = User::where('role', 'vendor')->whereHas('magasin', fn($q) => $q->where('status', 'firstOpening'))->paginate($perPage);
         } else {
             return redirect()->route('admin.vendors');
         }

@@ -1,31 +1,43 @@
-@extends('frontend.master') <!-- or your layout -->
+@extends('vendor.master')
+
+@section('title', 'Vendor | Create Magasin')
+
+@section('styles')
+    <link rel="stylesheet" href="{{ asset("vendor/leaflet/leaflet.min.css") }}" />
+    <style>
+        #locationMap {
+            height: 400px !important;
+            min-height: 400px !important;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 10px;
+            z-index: 1 !important;
+        }
+        .leaflet-container { z-index: 1 !important; }
+        .map-info {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+    </style>
+@endsection
 
 @section('content')
-    <div class="container mt-4">
-        <h1>Create Magasin</h1>
-
-        @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
+    <section class="section">
+        <div class="section-header">
+            <h1>Create Magasin</h1>
+            <div class="section-header-breadcrumb">
+                <div class="breadcrumb-item active"><a href="{{ route('vendor.dashboard') }}">Dashboard</a></div>
+                <div class="breadcrumb-item">Create Magasin</div>
             </div>
-        @endif
+        </div>
 
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
-        <style>
-            #locationMap {
-                height: 400px;
-                border: 1px solid #ddd;
-                border-radius: 4px;
-                margin-top: 10px;
-            }
-            .map-info {
-                font-size: 12px;
-                color: #666;
-                margin-top: 5px;
-            }
-        </style>
+        <div class="section-body">
+            @if (session('success'))
+                <div class="alert alert-success" style="border-radius:10px;">{{ session('success') }}</div>
+            @endif
 
-        <form action="{{ route('vendor.magasin_store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('vendor.magasin_store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             <div class="mb-3">
@@ -113,56 +125,50 @@
             </div>
 
             <button type="submit" class="btn btn-primary">Create Magasin</button>
-        </form>
+            </form>
+        </div>
     </div>
+</section>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+@section('scripts')
+    <script src="{{ asset("vendor/leaflet/leaflet.min.js") }}"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize variables
+        (function() {
             let map;
             let marker;
             const latitudeInput = document.getElementById('latitude');
             const longitudeInput = document.getElementById('longitude');
             const coordsDisplay = document.getElementById('coordsDisplay');
-            
-            // Default location (center of your country - adjust as needed)
-            const defaultLat = 35.8; // Algeria center
-            const defaultLng = 3.0;
-            
-            // Initialize map
+
+            const defaultLat = 35.8;
+            const defaultLng = 2.5;
+
             map = L.map('locationMap').setView([defaultLat, defaultLng], 10);
-            
-            // Add OpenStreetMap tiles
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '© OpenStreetMap contributors',
                 maxZoom: 19,
                 minZoom: 2
             }).addTo(map);
-            
-            // Handle map clicks
+
+            // Redraw after layout settles
+            setTimeout(function() { map.invalidateSize(); }, 500);
+
             map.on('click', function(e) {
                 const lat = e.latlng.lat;
                 const lng = e.latlng.lng;
-                
-                // Remove existing marker
-                if (marker) {
-                    map.removeLayer(marker);
-                }
-                
-                // Add new marker
+
+                if (marker) { map.removeLayer(marker); }
+
                 marker = L.marker([lat, lng])
                     .addTo(map)
-                    .bindPopup('Selected Location<br>Lat: ' + lat.toFixed(6) + '<br>Lng: ' + lng.toFixed(6))
+                    .bindPopup('Lat: ' + lat.toFixed(6) + '<br>Lng: ' + lng.toFixed(6))
                     .openPopup();
-                
-                // Update hidden inputs
+
                 latitudeInput.value = lat;
                 longitudeInput.value = lng;
-                
-                // Update display
-                coordsDisplay.textContent = 'Selected Location: ' + lat.toFixed(6) + ', ' + lng.toFixed(6);
+                coordsDisplay.textContent = 'Selected: ' + lat.toFixed(6) + ', ' + lng.toFixed(6);
             });
-        });
+        })();
     </script>
 @endsection

@@ -2,21 +2,34 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Category;
 
 class CategorySeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        //create main cateogries
-        Category::factory()->count(5)->create();
-        
-        //Create subcategories
-        Category::factory()->count(10)->child()->create();
+        // Real categories matching the project domain
+        $categories = [
+            'Electronics' => ['Smartphones', 'Laptops', 'Headphones', 'Accessories'],
+            'Fashion'     => ["Men's Wear", "Women's Wear", 'Shoes', 'Accessories'],
+            'Beauty'      => ['Perfumes', 'Skincare', 'Makeup', 'Haircare'],
+            'Home'        => ['Kitchen', 'Decor', 'Bedding', 'Bathroom'],
+        ];
+
+        foreach ($categories as $main => $subs) {
+            $mainCat = Category::create([
+                'name' => $main,
+                'status' => 'active',
+                'parentId' => null,
+            ]);
+            foreach ($subs as $subName) {
+                Category::create([
+                    'name' => $subName,
+                    'status' => 'active',
+                    'parentId' => $mainCat->id,
+                ]);
+            }
+        }
     }
 }

@@ -13,7 +13,11 @@ class MagasinsSeeder extends Seeder
      */
     public function run(): void
     {
-        Magasin::factory(10)->create();
+        // Only fill up to 10 total stores (StoresSeeder creates the named ones first)
+        $toCreate = max(0, 10 - Magasin::count());
+        if ($toCreate > 0) {
+            Magasin::factory($toCreate)->create();
+        }
     }
 }
 

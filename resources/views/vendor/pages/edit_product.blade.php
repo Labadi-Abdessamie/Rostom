@@ -98,21 +98,20 @@
                                     @enderror
                                 </div>
 
-                                {{--
                                 <div class="form-group">
-                                    <label for="quantity">Quantity</label>
-                                    <input type="number" name="quantity" id="quantity"
-                                        class="form-control @error('quantity') is-invalid @enderror"
-                                        value="{{ old('quantity', $product->actual_quantity) }}" required>
-                                    @error('quantity')
+                                    <label for="actual_quantity">Quantity</label>
+                                    <input type="number" name="actual_quantity" id="actual_quantity"
+                                        class="form-control @error('actual_quantity') is-invalid @enderror"
+                                        value="{{ old('actual_quantity', $product->actual_quantity) }}" min="0" required>
+                                    @error('actual_quantity')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                --}}
 
                                 <div class="form-group">
                                     <label for="principalImage">Product Image</label>
                                     <input type="file" name="principalImage" id="principalImage"
+                                        accept="image/png"
                                         class="form-control @error('principalImage') is-invalid @enderror">
                                     @error('principalImage')
                                         <div class="invalid-feedback">{{ $message }}</div>

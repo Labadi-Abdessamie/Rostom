@@ -2,29 +2,21 @@
 
 namespace Database\Seeders;
 
-use App\Models\BagItem;
-use App\Models\Category;
-use App\Models\Magasin;
-use App\Models\Product;
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // Run seeders in order
         $this->call([
-            UsersSeeder::class,
-            CategorySeeder::class,
-            MagasinsSeeder::class,
-            ProductsSeeder::class,
+            UsersSeeder::class,          // admin, vendor@demo.com, client@demo.com
+            ExtraUsersSeeder::class,      // extra client users for reviews
+            CategorySeeder::class,        // Electronics/Fashion/Beauty/Home categories
+            StoresSeeder::class,         // 4 named stores + fill to 10
+            MagasinsSeeder::class,       // factory fill if needed (now respects total)
+            RealProductsSeeder::class,   // products assigned to non-demo stores
+            ReviewsSeeder::class,         // reviews for seeded products
             BagItemSeeder::class,
         ]);
     }
 }
-

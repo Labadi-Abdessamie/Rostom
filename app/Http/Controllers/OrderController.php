@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Magasin;
 use App\Models\Order;
 use App\Models\OrderItem;
-use App\Models\Product;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -68,6 +66,8 @@ class OrderController extends Controller
             'status' => 'pending',
             'details' => $request->details,
             'totalAmount' => $total,
+            'paymentMethod' => 'cashOnDelivery',
+            'paymentStatus' => 'pending',
             //'date' => Carbon::now()->addDays(15),
             'user_id' => Auth::id(),
             'shippingAddress_id' => $request->id,
@@ -163,14 +163,42 @@ class OrderController extends Controller
         $order->status = 'delivered';
         $order->save();
         foreach ($order->orderItems as $item) {
-            Product::findOrFail($item->product->id);
             $item->product->actual_quantity -= $item->quantity;
             $item->product->save();
-            Magasin::findOrFail($item->product->magasin->id);
-            $item->product->magasin->balance += $item->product->price * $item->quantity;
-            $item->product->magasin->save();
         }
         return redirect()->back()->with('message', 'Order confirmed successfully.');
+    }
+
+    public function confirmPayment(string $id)
+    {
+        $order = Order::findOrFail($id);
+
+        if ($order->paymentStatus === 'success') {
+            return redirect()->back()->with('error', 'Payment already confirmed.');
+        }
+
+        if ($order->status !== 'delivered') {
+            return redirect()->back()->with('error', 'Order must be delivered before payment can be confirmed.');
+        }
+
+        // Vendor can only confirm payment for their own products
+        foreach ($order->orderItems as $item) {
+            $magasin = $item->product->magasin;
+            if ($magasin->user_id !== Auth::id()) {
+                return redirect()->back()->with('error', 'You are not authorized to confirm payment for this order.');
+            }
+        }
+
+        $order->paymentStatus = 'success';
+        $order->save();
+
+        foreach ($order->orderItems as $item) {
+            $magasin = Magasin::findOrFail($item->product->magasin->id);
+            $magasin->balance += $item->product->price * $item->quantity;
+            $magasin->save();
+        }
+
+        return redirect()->back()->with('message', 'Payment confirmed successfully.');
     }
     public function cancelOrder(string $id)
     {

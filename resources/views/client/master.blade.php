@@ -543,6 +543,49 @@
                 height: 40px;
             }
         }
+
+        /* Animated Star Rating */
+        .star-rating {
+            display: inline-flex;
+            flex-direction: row;
+            gap: 4px;
+        }
+
+        .star-rating .star {
+            cursor: pointer;
+            font-size: 22px;
+            color: #cbd5e1;
+            transition: transform .15s ease, color .2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+
+        .star-rating .star i {
+            transition: color .2s ease, transform .25s cubic-bezier(.34, 1.56, .64, 1);
+            color: #f59e0b;
+        }
+
+        .star-rating .star:not(.filled) i {
+            color: #cbd5e1;
+        }
+
+        .star-rating .star.filled i {
+            color: #f59e0b;
+            transform: scale(1.25);
+            filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.55));
+        }
+
+        .star-rating .star.animating i {
+            animation: star-pop .35s cubic-bezier(.34, 1.56, .64, 1);
+        }
+
+        @keyframes star-pop {
+            0%   { transform: scale(1); }
+            50%  { transform: scale(1.45); }
+            100% { transform: scale(1.25); }
+        }
     </style>
 </head>
 
@@ -690,6 +733,59 @@
         document.querySelector('.dash_close').addEventListener('click', function() {
             document.querySelector('.dashboard_link').classList.remove('active');
         });
+
+        /* Animated star rating interaction */
+        (function() {
+            document.querySelectorAll('.star-rating').forEach(container => {
+                const stars = Array.from(container.querySelectorAll('.star'));
+                const radios = Array.from(container.querySelectorAll('input[name="rate"]'));
+
+                function setFilled(value) {
+                    stars.forEach(star => {
+                        const starValue = parseInt(star.dataset.value, 10);
+                        star.classList.toggle('filled', starValue <= value);
+                        const i = star.querySelector('i');
+                        if (starValue <= value) {
+                            i.classList.remove('far'); i.classList.add('fas');
+                        } else {
+                            i.classList.remove('fas'); i.classList.add('far');
+                        }
+                    });
+                    radios.forEach(r => r.checked = parseInt(r.value, 10) === value);
+                }
+
+                // Initialize based on current checked radio or data-initial
+                const initial = parseInt(container.dataset.initial || '0', 10);
+                if (initial > 0) setFilled(initial);
+
+                stars.forEach(star => {
+                    star.addEventListener('mouseenter', () => {
+                        const val = parseInt(star.dataset.value, 10);
+                        setFilled(val);
+                    });
+
+                    star.addEventListener('mouseleave', () => {
+                        const selected = radios.find(r => r.checked);
+                        const val = selected ? parseInt(selected.value, 10) : initial;
+                        setFilled(val);
+                    });
+
+                    star.addEventListener('click', () => {
+                        const val = parseInt(star.dataset.value, 10);
+                        star.classList.add('animating');
+                        setTimeout(() => star.classList.remove('animating'), 350);
+                        setFilled(val);
+                    });
+
+                    star.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            star.click();
+                        }
+                    });
+                });
+            });
+        })();
     </script>
 </body>
 

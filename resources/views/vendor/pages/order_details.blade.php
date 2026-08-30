@@ -48,6 +48,10 @@
                                             <address>
                                                 <strong>Payment Method:</strong><br>
                                                 {{ $order->paymentMethod }}<br>
+                                                <strong>Payment Status:</strong><br>
+                                                <span class="badge badge-{{ $order->paymentStatus === 'success' ? 'success' : ($order->paymentStatus === 'failed' ? 'danger' : 'warning') }}">
+                                                    {{ ucfirst($order->paymentStatus) }}
+                                                </span>
                                             </address>
                                         </div>
                                         <div class="col-md-6 text-md-right">
@@ -279,6 +283,15 @@
                     </div>
                     <hr class="mt-2 mb-2">
                     <div class="text-md-right">
+                        @if ($order->status === 'delivered' && $order->paymentStatus !== 'success')
+                            <form action="{{ route('vendor.order.confirm_payment', ['id' => $order->id]) }}" method="POST" style="display:inline;">
+                                @csrf
+                                <button type="submit" class="btn btn-success btn-icon icon-left"><i class="fas fa-check"></i> Confirm Payment Received</button>
+                            </form>
+                        @endif
+                        @if ($order->status === 'delivered' && $order->paymentStatus === 'success')
+                            <span class="badge badge-success">Payment Confirmed</span>
+                        @endif
                         @if (false)
                             <div class="float-lg-left mb-lg-0 mb-3">
                                 <button class="btn btn-primary btn-icon icon-left"><i class="fas fa-credit-card"></i>
