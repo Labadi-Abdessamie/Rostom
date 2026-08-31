@@ -88,7 +88,7 @@
 
         <ul class="list-unstyled topnav-menu topnav-menu-left m-0">
             <li>
-                <button class="button-menu-mobile waves-effect waves-light">
+                <button onclick="document.querySelector('.left-side-menu').classList.add('open'); document.querySelector('.mobile-sidebar-overlay').classList.add('active');" class="button-menu-mobile waves-effect waves-light" aria-label="Menu">
                     <i class="fe-menu"></i>
                 </button>
             </li>

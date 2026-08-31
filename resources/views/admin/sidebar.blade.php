@@ -1,151 +1,132 @@
-<!-- ========== Left Sidebar Start ========== -->
-<div class="left-side-menu">
-    <div class="h-100" data-simplebar>
-        <!--- Sidemenu -->
-        <div id="sidebar-menu">
-            <ul id="side-menu">
-                <li class="menu-title">Navigation</li>
-                <li>
-                    <a href="{{ route('admin.dashboard') }}">
-                        <i class="mdi mdi-view-dashboard-outline"></i>
-                        <span> Dashboard </span>
-                    </a>
-                </li>
+<!-- ========== Admin Sidebar ========== -->
+<aside class="adm-sidebar" id="admSidebar">
 
-                <li class="menu-title mt-2">Apps</li>
+    <!-- Header -->
+    <div class="adm-sidebar-header">
+        <a href="{{ route('frontend.index') }}" class="adm-brand">
+            <i class="fas fa-store"></i>
+            <span>{{ config('app.name', 'TiarShop') }}</span>
+        </a>
+        <button class="adm-sidebar-close" id="admSidebarClose" aria-label="Close menu">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
 
-                <li>
-                    <a data-bs-target="#sidebarcustomers" data-bs-toggle="collapse" class="cursor-pointer">
-                        <i class="mdi mdi-account-multiple-outline"></i>
-                        <span> Customers </span>
-                        <span class="menu-arrow"></span>
-                    </a>
-                    <div class="collapse" id="sidebarcustomers">
-                        <ul class="nav-second-level">
-                            <li>
-                                <a href="{{ route('admin.customers') }}">Customers</a>
-                            </li>
-                            <li>
-                                <a href="{{ route('admin.customers', ['type' => 'inactive']) }}">Inactive Customers</a>
-                            </li>
-                            <li>
-                                <a href="{{ route('admin.customers', ['type' => 'blocked']) }}">Blocked Customers</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
+    <!-- Body -->
+    <div class="adm-sidebar-body">
+        <ul class="adm-menu">
+            <li class="adm-menu-title">Navigation</li>
+            <li>
+                <a href="{{ route('admin.dashboard') }}" class="{{ Route::currentRouteName() == 'admin.dashboard' ? 'active' : '' }}">
+                    <i class="fas fa-th-large"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
 
-                <li>
-                    <a data-bs-target="#sidebarvendors" data-bs-toggle="collapse" class="cursor-pointer">
-                        <i class="mdi mdi-account-multiple-outline"></i>
-                        <span> Vendors </span>
-                        <span class="menu-arrow"></span>
-                    </a>
-                    <div class="collapse" id="sidebarvendors">
-                        <ul class="nav-second-level">
-                            <li>
-                                <a href="{{ route('admin.vendors') }}">Vendors</a>
-                            </li>
-                            @php $newVendorRequests = \App\Models\Magasin::where('status', 'firstOpening')->count(); @endphp
-                            @if($newVendorRequests > 0)
-                            <li>
-                                <a href="{{ route('admin.vendors', ['type' => 'firstOpening']) }}" class="text-warning fw-bold">
-                                    Pending Approval <span class="badge badge-warning">{{ $newVendorRequests }}</span>
-                                </a>
-                            </li>
-                            @endif
-                            <li>
-                                <a href="{{ route('admin.vendors', ['type' => 'blocked']) }}">Blocked Vendors</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                <li>
-                    <a data-bs-target="#sidebarMagasins" data-bs-toggle="collapse" class="cursor-pointer">
-                        <i class="mdi mdi-domain"></i>
-                        <span> Magasins </span>
-                        <span class="menu-arrow"></span>
-                    </a>
-                    <div class="collapse" id="sidebarMagasins">
-                        <ul class="nav-second-level">
-                            <li>
-                                <a href="{{ route('admin.magasins') }}">List</a>
-                            </li>
-                            <li>
-                                <a href="{{ route('admin.magasins', ['filtre' => 'demands']) }}">Demands</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                <li>
-                    <a href="{{ route('admin.categories') }}">
-                        <i class="mdi mdi-table"></i>
-                        <span> Categories </span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('admin.products') }}">
-                        <i class="mdi mdi-package-variant"></i>
-                        <span> Products </span>
-                    </a>
-                </li>
+            <li class="adm-menu-title">Management</li>
 
-                <li>
-                    <a href="{{ route('admin.reviews') }}">
-                        <i class="mdi mdi-comment"></i>
-                        <span> Reviews </span>
-                    </a>
-                </li>
-                <li>
-                    <a data-bs-target="#sidebarProjects" data-bs-toggle="collapse" class="cursor-pointer">
-                        <i class="mdi mdi-briefcase-check-outline"></i>
-                        <span> Banners </span>
-                        <span class="menu-arrow"></span>
-                    </a>
-                    <div class="collapse" id="sidebarProjects">
-                        <ul class="nav-second-level">
-                            <li>
-                                <a href="{{ route('admin.banners') }}">List</a>
-                            </li>
-                            <li>
-                                <a href="{{ route('admin.add_banner') }}">Create Banner</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                <li>
-                    <a href="{{ route('admin.orders') }}">
-                        <i class="mdi mdi-cart-outline"></i>
-                        <span> Orders </span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('admin.reports') }}">
-                        <i class="mdi mdi-chart-bar"></i>
-                        <span> Reports </span>
-                    </a>
-                </li>
-                @if (false)
+            <li class="has-sub">
+                <a href="#">
+                    <i class="fas fa-users"></i>
+                    <span>Customers</span>
+                    <i class="fas fa-chevron-right adm-arrow"></i>
+                </a>
+                <ul class="sub-menu">
+                    <li><a href="{{ route('admin.customers') }}">All Customers</a></li>
+                    <li><a href="{{ route('admin.customers', ['type' => 'inactive']) }}">Inactive</a></li>
+                    <li><a href="{{ route('admin.customers', ['type' => 'blocked']) }}">Blocked</a></li>
+                </ul>
+            </li>
+
+            <li class="has-sub">
+                <a href="#">
+                    <i class="fas fa-store"></i>
+                    <span>Vendors</span>
+                    <i class="fas fa-chevron-right adm-arrow"></i>
+                </a>
+                <ul class="sub-menu">
+                    <li><a href="{{ route('admin.vendors') }}">All Vendors</a></li>
+                    @php $newVendorRequests = \App\Models\Magasin::where('status', 'firstOpening')->count(); @endphp
+                    @if($newVendorRequests > 0)
                     <li>
-                        <a href="apps-file-manager.html">
-                            <i class="mdi mdi-folder-star-outline"></i>
-                            <span> File Manager </span>
+                        <a href="{{ route('admin.vendors', ['type' => 'firstOpening']) }}" class="text-warning">
+                            Pending Approval <span class="badge" style="background:#f59e0b;color:#fff;border-radius:999px;padding:2px 8px;font-size:11px;">{{ $newVendorRequests }}</span>
                         </a>
                     </li>
-                @endif
-                <li class="menu-title mt-2">Admin Settings</li>
+                    @endif
+                    <li><a href="{{ route('admin.vendors', ['type' => 'blocked']) }}">Blocked</a></li>
+                </ul>
+            </li>
 
-                <li>
-                    <a href="{{ route('admin.admins') }}">
-                        <i class="mdi mdi-account-circle-outline"></i>
-                        <span> Admins </span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-        <!-- End Sidebar -->
-        <div class="clearfix"></div>
+            <li class="has-sub">
+                <a href="#">
+                    <i class="fas fa-building"></i>
+                    <span>Magasins</span>
+                    <i class="fas fa-chevron-right adm-arrow"></i>
+                </a>
+                <ul class="sub-menu">
+                    <li><a href="{{ route('admin.magasins') }}">All Magasins</a></li>
+                    <li><a href="{{ route('admin.magasins', ['filtre' => 'demands']) }}">Demands</a></li>
+                </ul>
+            </li>
+
+            <li>
+                <a href="{{ route('admin.categories') }}" class="{{ Route::currentRouteName() == 'admin.categories' ? 'active' : '' }}">
+                    <i class="fas fa-tags"></i>
+                    <span>Categories</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ route('admin.products') }}" class="{{ Route::currentRouteName() == 'admin.products' ? 'active' : '' }}">
+                    <i class="fas fa-box-open"></i>
+                    <span>Products</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ route('admin.reviews') }}" class="{{ Route::currentRouteName() == 'admin.reviews' ? 'active' : '' }}">
+                    <i class="fas fa-star-half-alt"></i>
+                    <span>Reviews</span>
+                </a>
+            </li>
+
+            <li class="has-sub">
+                <a href="#">
+                    <i class="fas fa-images"></i>
+                    <span>Banners</span>
+                    <i class="fas fa-chevron-right adm-arrow"></i>
+                </a>
+                <ul class="sub-menu">
+                    <li><a href="{{ route('admin.banners') }}">All Banners</a></li>
+                    <li><a href="{{ route('admin.add_banner') }}">Create Banner</a></li>
+                </ul>
+            </li>
+
+            <li>
+                <a href="{{ route('admin.orders') }}" class="{{ Route::currentRouteName() == 'admin.orders' ? 'active' : '' }}">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Orders</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ route('admin.reports') }}" class="{{ Route::currentRouteName() == 'admin.reports' ? 'active' : '' }}">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Reports</span>
+                </a>
+            </li>
+
+            <li class="adm-menu-title">Settings</li>
+
+            <li>
+                <a href="{{ route('admin.admins') }}" class="{{ Route::currentRouteName() == 'admin.admins' ? 'active' : '' }}">
+                    <i class="fas fa-user-shield"></i>
+                    <span>Admins</span>
+                </a>
+            </li>
+
+        </ul>
     </div>
-    <!-- Sidebar -left -->
-</div>
-<!-- Left Sidebar End -->
+</aside>
+<!-- End Sidebar -->

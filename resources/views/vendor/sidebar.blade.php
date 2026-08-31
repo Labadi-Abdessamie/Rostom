@@ -1,5 +1,8 @@
 <div class="main-sidebar sidebar-style-2">
     <aside id="sidebar-wrapper">
+        <button onclick="closeMobileSidebar()" style="display:none;position:absolute;top:12px;right:12px;background:rgba(255,255,255,0.15);border:none;color:#fff;font-size:18px;cursor:pointer;width:36px;height:36px;border-radius:8px;z-index:10001;align-items:center;justify-content:center;" class="vendor-sidebar-close" aria-label="Close">
+            <i class="fas fa-times"></i>
+        </button>
         <div class="sidebar-brand">
             <a
                 href="{{ route('frontend.vendor_details', ['id' => Auth::user()->magasin->id]) }}">{{ Auth::user()->magasin()->exists() ? Auth::user()->magasin->name : 'Magasin' }}</a>

@@ -258,12 +258,13 @@
         .dashboard_sidebar .close_icon {
             display: none;
             position: absolute;
-            top: 20px;
-            right: 20px;
+            top: 15px;
+            right: 15px;
             cursor: pointer;
             color: white;
-            font-size: 24px;
-            transition: all 0.3s ease;
+            font-size: 22px;
+            z-index: 1001;
+            transition: color 0.3s ease;
         }
 
         .dashboard_sidebar .close_icon:hover {
@@ -404,15 +405,28 @@
             padding: 20px 30px;
             border-bottom: 1px solid #e2e8f0;
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between;
             align-items: center;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            position: sticky;
+            top: 0;
+            z-index: 998;
         }
 
         .wsusd__dashboard_user {
             display: flex;
             align-items: center;
             gap: 16px;
+        }
+
+        .wsus__dashboard_menu .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--dash-ink);
+            font-size: 22px;
+            cursor: pointer;
+            padding: 4px 8px;
         }
 
         .wsusd__dashboard_user img {
@@ -510,12 +524,41 @@
 
         @media (max-width: 768px) {
             .dashboard_sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-                padding: 20px 0;
-                margin-bottom: 20px;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                width: 300px;
+                height: 100vh;
+                position: fixed;
+                left: 0;
+                top: 0;
+                padding: 70px 0 30px;
+                margin: 0;
+                box-shadow: 4px 0 25px rgba(0,0,0,0.3);
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                z-index: 9999;
+            }
+
+            .dashboard_sidebar.open {
+                transform: translateX(0);
+            }
+
+            .dashboard_sidebar .close_icon {
+                display: flex !important;
+                position: fixed;
+                top: 15px;
+                right: 15px;
+                z-index: 10000;
+            }
+
+            .dashboard_overlay {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0,0,0,0.5);
+                z-index: 9998;
+            }
+
+            .dashboard_overlay.active {
+                display: block;
             }
 
             #wsus__dashboard {
@@ -523,17 +566,14 @@
                 padding: 0;
             }
 
-            .close_icon {
-                display: block !important;
-            }
-
             .dashboard_link {
-                display: none;
-                padding: 0;
+                display: block !important;
+                padding: 0 16px;
             }
 
-            .dashboard_link.active {
-                display: block;
+            @media (max-width: 768px) {
+                .wsus__dashboard_menu .mobile-menu-btn { display: block; }
+                .wsus__dashboard_menu { justify-content: flex-start; padding: 15px 16px; }
             }
 
             .wsus__scroll_btn {
@@ -593,6 +633,9 @@
 
     <div class="wsus__dashboard_menu">
         <div class="wsusd__dashboard_user">
+            <button onclick="document.querySelector('.dashboard_sidebar').classList.add('open')" style="background:none;border:none;color:#1e293b;font-size:22px;cursor:pointer;padding:4px 8px;" aria-label="Open Menu">
+                <i class="fas fa-bars"></i>
+            </button>
             <img src="{{ Auth::user()->profilePicture ? asset('storage/profile_pictures/' . Auth::id() . '/' . Auth::user()->profilePicture) : asset('frontend/images/No_Image.png') }}"
                 alt="Profile Picture" class="img-fluid">
             <a href="{{ route('client.profile') }}">
@@ -602,10 +645,12 @@
     </div>
 
     <livewire:notification />
+    <div class="dashboard_overlay" onclick="document.querySelector('.dashboard_sidebar').classList.remove('open'); this.classList.remove('active')"></div>
+
     <section id="wsus__dashboard">
         <div class="container-fluid">
             <div class="dashboard_sidebar">
-                <span class="close_icon">
+                <span class="close_icon" onclick="document.querySelector('.dashboard_sidebar').classList.remove('open')">
                     <i class="far fa-bars dash_bar"></i>
                     <i class="far fa-times dash_close"></i>
                 </span>
@@ -726,13 +771,22 @@
         });
 
         // Mobile menu toggle
-        document.querySelector('.dash_bar').addEventListener('click', function() {
-            document.querySelector('.dashboard_link').classList.add('active');
-        });
+        const dashBar = document.querySelector('.dash_bar');
+        const dashClose = document.querySelector('.dash_close');
+        const sidebar = document.querySelector('.dashboard_sidebar');
+        const overlay = document.querySelector('.dashboard_overlay');
 
-        document.querySelector('.dash_close').addEventListener('click', function() {
-            document.querySelector('.dashboard_link').classList.remove('active');
-        });
+        function openSidebar() {
+            if (sidebar) sidebar.classList.add('open');
+            if (overlay) overlay.classList.add('active');
+        }
+        function closeSidebar() {
+            if (sidebar) sidebar.classList.remove('open');
+            if (overlay) overlay.classList.remove('active');
+        }
+
+        if (dashBar) dashBar.addEventListener('click', openSidebar);
+        if (dashClose) dashClose.addEventListener('click', closeSidebar);
 
         /* Animated star rating interaction */
         (function() {

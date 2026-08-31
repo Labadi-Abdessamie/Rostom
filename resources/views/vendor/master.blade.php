@@ -19,6 +19,28 @@
     <style>
         /* ===== VENDOR MASTER GLOBAL ===== */
         body { background: #f1f5f9 !important; }
+
+        /* Mobile Sidebar */
+        @media (max-width: 768px) {
+            .main-sidebar {
+                position: fixed !important;
+                left: -280px !important;
+                top: 0 !important;
+                height: 100vh !important;
+                z-index: 9999 !important;
+                transition: left 0.3s ease !important;
+                box-shadow: 4px 0 25px rgba(0,0,0,0.3) !important;
+            }
+            .main-sidebar.open { left: 0 !important; }
+            .main-content { margin-left: 0 !important; }
+            .mobile-sidebar-overlay {
+                display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9998;
+            }
+            .mobile-sidebar-overlay.active { display: block; }
+            .vendor-mobile-menu-btn { display: inline-block !important; }
+            .vendor-sidebar-close { display: flex !important; align-items: center; justify-content: center; }
+        }
+        .vendor-mobile-menu-btn { display: none; }
         .navbar-bg { background: #fff !important; box-shadow: 0 1px 0 #e2e8f0; }
         .main-navbar {
             background: #fff !important;
@@ -57,7 +79,19 @@
         .main-content { background: #f1f5f9 !important; }
         /* Card base */
         .card { border-radius: 14px !important; border: none !important; box-shadow: 0 2px 16px rgba(0,0,0,.06) !important; }
+        .vendor-sidebar-close { display: none; }
     </style>
+
+    <script>
+        function openMobileSidebar() {
+            document.querySelector('.main-sidebar').classList.add('open');
+            document.querySelector('.mobile-sidebar-overlay').classList.add('active');
+        }
+        function closeMobileSidebar() {
+            document.querySelector('.main-sidebar').classList.remove('open');
+            document.querySelector('.mobile-sidebar-overlay').classList.remove('active');
+        }
+    </script>
     <!-- Start GA -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-94034622-3"></script>
     <script>
@@ -74,6 +108,7 @@
 </head>
 
 <body>
+    <div class="mobile-sidebar-overlay" onclick="closeMobileSidebar()"></div>
     <div id="app">
         <div class="main-wrapper main-wrapper-1">
             @include('vendor.nav')

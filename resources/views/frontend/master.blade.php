@@ -728,18 +728,132 @@
 
         /* Responsive all pages - make layout work on phones/tablets/desktop */
         @media (max-width: 575px) {
-            .wsus__header { padding: 0.5rem 0 !important; }
-            .wsus__header_inner { flex-wrap: wrap !important; gap: 0.5rem !important; }
-            .wsus__header_logo img { max-height: 36px !important; max-width: 110px !important; }
-            .wsus__header_search { max-width: 100% !important; min-width: 100% !important; margin: 0 !important; flex: 1 1 100% !important; }
+            /* HEADER — top bar */
+            .wsus__header {
+                padding: 14px 0 !important;
+                background: #fff;
+                box-shadow: 0 4px 18px rgba(15, 23, 42, 0.06);
+            }
+            .wsus__header > .container { padding: 0 14px !important; }
+            .wsus__header_inner {
+                flex-wrap: wrap !important;
+                gap: 10px !important;
+                row-gap: 10px !important;
+            }
+            .wsus__header_logo {
+                width: auto !important;
+                flex: 0 0 auto !important;
+            }
+            .wsus__header_logo img {
+                max-height: 38px !important;
+                max-width: 120px !important;
+            }
+            /* Push right-side icons to the right */
+            .wsus__header_right {
+                margin-left: auto !important;
+                gap: 8px !important;
+            }
+            .wsus__header_contact { display: none !important; }
+            /* Search goes to its own row */
+            .wsus__header_search {
+                flex: 1 1 100% !important;
+                max-width: 100% !important;
+                min-width: 100% !important;
+                margin: 4px 0 0 !important;
+                order: 99;
+            }
+            .wsus__header_search input {
+                height: 42px !important;
+                font-size: 14px !important;
+                padding: 8px 14px !important;
+                border-radius: 10px !important;
+            }
+            .wsus__search_btn {
+                height: 42px !important;
+                width: 48px !important;
+                border-radius: 10px !important;
+            }
+
+            /* MAIN MENU — give it breathing room + clean look */
+            .wsus__main_menu {
+                background: linear-gradient(135deg, #1e293b 0%, #312e81 100%) !important;
+                padding: 12px 0 !important;
+                border-radius: 0 0 14px 14px !important;
+                box-shadow: 0 8px 22px rgba(15, 23, 42, 0.18) !important;
+                position: sticky;
+                top: 0;
+                z-index: 1000;
+            }
+            .wsus__main_menu > .container { padding: 0 14px !important; }
+            .wsus__main_menu .row { gap: 10px !important; row-gap: 10px !important; }
+            .wsus__main_menu .col,
+            .wsus__main_menu .col-auto {
+                flex: 1 1 100% !important;
+                max-width: 100% !important;
+                width: 100% !important;
+            }
+            .wsus__menu_item {
+                flex-wrap: wrap !important;
+                justify-content: center !important;
+                gap: 8px !important;
+            }
+            .wsus__menu_item > li > a {
+                padding: 9px 13px !important;
+                font-size: 13px !important;
+                font-weight: 500 !important;
+                border-radius: 10px !important;
+                background: rgba(255, 255, 255, 0.08) !important;
+                color: rgba(226, 232, 240, 0.92) !important;
+                border: 1px solid rgba(255, 255, 255, 0.08) !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                gap: 6px !important;
+                transition: all .2s ease;
+                white-space: nowrap;
+            }
+            .wsus__menu_item > li > a i { font-size: 13px !important; }
+            .wsus__menu_item > li > a:hover,
+            .wsus__menu_item > li > a.active {
+                background: rgba(244, 63, 94, 0.25) !important;
+                color: #fff !important;
+                border-color: rgba(244, 63, 94, 0.5) !important;
+                transform: translateY(-1px);
+            }
+            .wsus__menu_item_right {
+                justify-content: center !important;
+                border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+                padding-top: 10px !important;
+                margin-top: 4px !important;
+            }
+            .wsus__menu_auth_btn {
+                background: linear-gradient(135deg, #f43f5e 0%, #f59e0b 100%) !important;
+                color: #fff !important;
+                border: none !important;
+                padding: 10px 18px !important;
+                font-weight: 700 !important;
+                border-radius: 10px !important;
+            }
         }
         @media (min-width: 576px) and (max-width: 767px) {
-            .wsus__header_search { max-width: 260px !important; }
-            .wsus__header_logo img { max-height: 44px !important; }
+            .wsus__header { padding: 12px 0 !important; }
+            .wsus__header_inner { gap: 10px !important; }
+            .wsus__header_search { max-width: 240px !important; }
+            .wsus__header_logo img { max-height: 42px !important; max-width: 130px !important; }
+            .wsus__header_contact_text { font-size: 12px !important; }
+            .wsus__main_menu .row { gap: 10px !important; }
+            .wsus__main_menu .col { flex: 1 1 100% !important; max-width: 100% !important; }
+            .wsus__menu_item { flex-wrap: wrap !important; gap: 8px !important; }
+            .wsus__menu_item > li > a {
+                padding: 9px 13px !important;
+                font-size: 13px !important;
+                border-radius: 10px !important;
+            }
+            .wsus__menu_item_right { border-top: 1px solid rgba(0,0,0,.06) !important; padding-top: 8px !important; }
         }
         @media (min-width: 768px) and (max-width: 991px) {
             .wsus__header_logo img { max-height: 48px !important; max-width: 130px !important; }
-            .wsus__header_search { max-width: 320px !important; }
+            .wsus__header_search { max-width: 280px !important; }
+            .wsus__menu_item > li > a { padding: 8px 12px !important; font-size: 13.5px !important; }
         }
     </style>
 </head>
