@@ -66,7 +66,7 @@
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <div class="table-responsive">
+                                    <div class="table-responsive" style="overflow-x:auto;">
                                         <table class="table table-striped" id="table-1">
                                             <thead>
                                                 <tr>
@@ -119,7 +119,7 @@
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <div class="table-responsive">
+                                    <div class="table-responsive" style="overflow-x:auto;">
                                         <table class="table table-striped" id="table-2">
                                             <thead>
                                                 <tr>

@@ -39,8 +39,8 @@ ATLAS MALL || Product Compare
             <div class="row">
                 <div class="col-12">
                     <div class="wsus__compare_list">
-                        <div class="table-responsive">
-                            <table class="table">
+                        <div class="table-responsive" style="overflow-x:auto;">
+                            <table style="font-size:0.9rem;" class="table">
                                 <tbody>
                                     <tr class="d-flex">
                                         <td class="wsus__compare_img">
@@ -254,8 +254,8 @@ ATLAS MALL || Product Compare
             <div class="row">
                 <div class="col-12">
                     <div class="wsus__compare_list">
-                        <div class="table-responsive">
-                            <table class="table">
+                        <div class="table-responsive" style="overflow-x:auto;">
+                            <table style="font-size:0.9rem;" class="table">
                                 @livewire('compare')
                             </table>
                         </div>

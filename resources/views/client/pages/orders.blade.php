@@ -17,7 +17,7 @@
                 <!-- Orders Table -->
                 <div class="dash-card" style="padding: 22px;">
                     @if($orders->count() > 0)
-                        <div class="table-responsive">
+                        <div class="table-responsive" style="overflow-x:auto;">
                             <table class="dash-table">
                                 <thead>
                                     <tr>

@@ -36,7 +36,7 @@
                             </h4>
                         </div>
                         <div class="card-body">
-                            <div class="table-responsive">
+                            <div class="table-responsive" style="overflow-x:auto;">
                                 <table class="table table-striped" id="table-1">
                                     <thead>
                                         <tr>

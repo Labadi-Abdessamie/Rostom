@@ -18,7 +18,7 @@
                             <a href="{{ route('admin.add_category') }}" class="btn btn-primary waves-effect waves-light mb-3"><i
                                     class="mdi mdi-plus-circle me-1"></i>
                                 Add Category</a>
-                            <div class="table-responsive">
+                            <div class="table-responsive" style="overflow-x:auto;">
                                 <table class="table table-hover table-centered mb-0">
                                     <thead class="table-light">
                                         <tr>

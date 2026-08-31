@@ -52,7 +52,7 @@
                                             class="mdi mdi-plus-circle me-1"></i> Add Admin</button>
                                 </div>
 
-                                <div class="table-responsive">
+                                <div class="table-responsive" style="overflow-x:auto;">
                                     <table class="table table-centered table-nowrap table-striped" id="products-datatable">
                                         <thead>
                                             <tr>

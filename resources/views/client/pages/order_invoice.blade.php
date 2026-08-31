@@ -53,7 +53,7 @@
 
                         {{-- Order Items --}}
                         <div class="wsus__invoice_description">
-                            <div class="table-responsive">
+                            <div class="table-responsive" style="overflow-x:auto;">
                                 <table class="table">
                                     <thead>
                                         <tr>

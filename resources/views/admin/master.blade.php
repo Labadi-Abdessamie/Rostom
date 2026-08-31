@@ -225,6 +225,11 @@
             margin-top: 64px;
             min-height: calc(100vh - 64px);
             padding: 28px;
+            display: flex;
+            flex-direction: column;
+        }
+        .adm-content > .content-wrapper {
+            flex: 1 0 auto;
         }
 
         /* ========== OVERLAY ========== */
@@ -268,7 +273,8 @@
         .badge { border-radius: 8px; font-weight: 600; }
         .bg-primary, .badge-primary { background: var(--adm-primary) !important; }
 
-        .footer { background: transparent; color: var(--adm-muted); }
+        .footer { background: transparent !important; color: var(--adm-muted) !important; margin-top: auto !important; padding: 19px 15px 20px !important; position: static !important; left: auto !important; right: auto !important; bottom: auto !important; width: 100% !important; }
+        .footer .container-fluid { padding: 0 !important; }
         .footer .footer-links a { color: var(--adm-muted); transition: color .2s ease; }
         .footer .footer-links a:hover { color: var(--adm-primary); }
 
@@ -345,7 +351,9 @@
 
     <!-- CONTENT -->
     <main class="adm-content">
-        @yield('content')
+        <div class="content-wrapper">
+            @yield('content')
+        </div>
         @include('admin.footer')
     </main>
 

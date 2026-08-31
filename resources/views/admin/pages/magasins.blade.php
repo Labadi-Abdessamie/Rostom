@@ -38,7 +38,7 @@
                             </div>
 
                             <!-- Table -->
-                            <div class="table-responsive">
+                            <div class="table-responsive" style="overflow-x:auto;">
                                 <table class="table table-centered table-hover mb-0">
                                     <thead class="table-light">
                                         <tr>

@@ -47,7 +47,7 @@
         <hr>
 
         <h5>Products in Order</h5>
-        <table class="table" id="orderTable">
+        <table class="table" id="orderTable" style="font-size:0.9rem;">
             <thead>
                 <tr>
                     <th>#</th>

@@ -222,7 +222,7 @@
                         <a href="{{ route('admin.export_csv', 'products') }}" class="btn btn-xs btn-outline-primary"><i class="mdi mdi-download me-1"></i>CSV</a>
                     </div>
                     <div class="card-body p-0">
-                        <div class="table-responsive">
+                        <div class="table-responsive" style="overflow-x:auto;">
                             <table class="table rpt-table mb-0">
                                 <thead><tr><th>#</th><th>Product</th><th>Price</th><th>Units Sold</th><th>Magasin</th></tr></thead>
                                 <tbody>
@@ -231,7 +231,15 @@
                                         <td class="text-muted">{{ $i+1 }}</td>
                                         <td style="font-weight:600;">{{ $product->name }}</td>
                                         <td>{{ number_format($product->price) }} DZD</td>
-                                        <td><span class="badge bg-primary bg-opacity-10 text-primary">{{ $product->order_items_count }}</span></td>
+                                        <td>
+    <div style="display:flex;align-items:center;gap:10px;width:100%;">
+        <div style="flex:1;height:8px;background:#f1f5f9;border-radius:999px;overflow:hidden;">
+            @php $maxUnits = $topProducts->max('order_items_count') ?: 1; @endphp
+            <div style="height:100%;width:{{ ($product->order_items_count / $maxUnits) * 100 }}%;background:linear-gradient(90deg,#4f46e5 0%,#7c3aed 100%);border-radius:999px;"></div>
+        </div>
+        <span style="min-width:36px;text-align:right;font-weight:800;color:#1e1b4b;font-size:1rem;">{{ $product->order_items_count }}</span>
+    </div>
+</td>
                                         <td class="text-muted">{{ $product->magasin->name ?? '-' }}</td>
                                     </tr>
                                     @endforeach
@@ -245,7 +253,7 @@
                 <div class="card export-card">
                     <div class="card-header"><span><i class="mdi mdi-star-outline me-1 text-warning"></i>Top Rated Magasins</span></div>
                     <div class="card-body p-0">
-                        <div class="table-responsive">
+                        <div class="table-responsive" style="overflow-x:auto;">
                             <table class="table rpt-table mb-0">
                                 <thead><tr><th>#</th><th>Magasin</th><th>Rating</th><th>Status</th></tr></thead>
                                 <tbody>

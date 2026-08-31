@@ -67,7 +67,7 @@
                             <div class="row ">
                                 <div class="col-md-12">
                                     <div class="section-title">Order Summary</div>
-                                    <div class="table-responsive">
+                                    <div class="table-responsive" style="overflow-x:auto;">
                                         <table class="table table-striped table-hover table-md">
                                             <tr>
                                                 <th data-width="40">#</th>
@@ -217,7 +217,7 @@
                         <div class="row ">
                             <div class="col-md-12">
                                 <div class="section-title">Order Summary</div>
-                                <div class="table-responsive">
+                                <div class="table-responsive" style="overflow-x:auto;">
                                     <table class="table table-striped table-hover table-md">
                                         <tr>
                                             <th data-width="40">#</th>

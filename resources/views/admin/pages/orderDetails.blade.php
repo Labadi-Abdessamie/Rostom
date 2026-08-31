@@ -102,7 +102,7 @@
                         <div class="card-body">
                             <h4 class="header-title mb-3">Items in this Order</h4>
 
-                            <div class="table-responsive">
+                            <div class="table-responsive" style="overflow-x:auto;">
                                 <table class="table table-centered mb-0">
                                     <thead class="table-light">
                                         <tr>

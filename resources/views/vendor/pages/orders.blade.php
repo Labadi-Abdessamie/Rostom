@@ -80,7 +80,7 @@
                             <div class="col-12">
                                 <div class="card">
                                     <div class="card-body">
-                                        <div class="table-responsive">
+                                        <div class="table-responsive" style="overflow-x:auto;">
                                             <table class="table table-striped" id="table-{{ $loop->index + 1 }}">
                                                 <thead>
                                                     <tr>
