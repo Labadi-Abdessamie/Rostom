@@ -76,7 +76,11 @@
             color: #64748b !important;
             font-size: .82rem;
         }
-        .main-content { background: #f1f5f9 !important; }
+        .main-sidebar { z-index: 880 !important; }
+        .main-content { background: #f1f5f9 !important; padding-left: 280px !important; padding-top: 80px !important; position: relative !important; z-index: 890 !important; }
+        @media (max-width: 1024px) {
+            .main-content { padding-left: 30px !important; }
+        }
         /* Card base */
         .card { border-radius: 14px !important; border: none !important; box-shadow: 0 2px 16px rgba(0,0,0,.06) !important; }
         .vendor-sidebar-close { display: none; }

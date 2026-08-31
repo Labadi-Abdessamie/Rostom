@@ -5,10 +5,10 @@
         </button>
         <div class="sidebar-brand">
             <a
-                href="{{ route('frontend.vendor_details', ['id' => Auth::user()->magasin->id]) }}">{{ Auth::user()->magasin()->exists() ? Auth::user()->magasin->name : 'Magasin' }}</a>
+                href="{{ Auth::user()->magasin ? route('frontend.vendor_details', ['id' => Auth::user()->magasin->id]) : '#' }}">{{ Auth::user()->magasin ? Auth::user()->magasin->name : 'Magasin' }}</a>
         </div>
         <div class="sidebar-brand sidebar-brand-sm">
-            <a href="{{ route('frontend.vendor_details', ['id' => Auth::user()->magasin->id]) }}">MG</a>
+            <a href="{{ Auth::user()->magasin ? route('frontend.vendor_details', ['id' => Auth::user()->magasin->id]) : '#' }}">MG</a>
         </div>
         <ul class="sidebar-menu">
             <li class="menu-header">Dashboard</li>

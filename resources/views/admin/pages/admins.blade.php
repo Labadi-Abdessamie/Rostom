@@ -48,8 +48,9 @@
                             <div class="row mb-2">
                                 <div class="col-sm-4 mb-3">
                                     <button type="button" class="btn btn-danger waves-effect waves-light"
-                                        data-bs-toggle="modal" data-bs-target="#custom-modal"><i
-                                            class="mdi mdi-plus-circle me-1"></i> Add Admin</button>
+                                        onclick="document.getElementById('custom-modal').classList.add('show');document.getElementById('custom-modal').style.display='block';document.body.classList.add('modal-open');document.body.style.overflow='hidden';">
+                                        <i class="mdi mdi-plus-circle me-1"></i> Add Admin
+                                    </button>
                                 </div>
 
                                 <div class="table-responsive" style="overflow-x:auto;">
@@ -85,7 +86,7 @@
                                                     <td class="table-user">
                                                         <img src="{{ $admin->profilePicture ? asset('storage/profile_pictures/' . $admin->id . '/' . $admin->profilePicture) : asset('frontend/images/No_Image.png') }}"
                                                             alt="admin-image" class="me-2 rounded-circle">
-                                                        <a href="{{ $admin->id == Auth::id() ? route('admin.profile') : route('admin.edit_user', ['id' => $admin->id]) }}"
+                                                        <a href="{{ $admin->id == Auth::id() ? route('admin.profile') : route('admin.edit_user', ['id' => $admin->id]) . '?return_url=' . urlencode(url()->full()) }}"
                                                             class="text-body fw-semibold">{{ $admin->name }}</a>
                                                     </td>
                                                     <td>{{ $admin->phoneNumber }}</td>
@@ -99,20 +100,17 @@
                                                         </span>
                                                     </td>
                                                     <td>
-                                                        <a href="{{ $admin->id == Auth::id() ? route('admin.profile') : route('admin.edit_user', ['id' => $admin->id]) }}"
+                                                        <a href="{{ $admin->id == Auth::id() ? route('admin.profile') : route('admin.edit_user', ['id' => $admin->id]) . '?return_url=' . urlencode(url()->full()) }}"
                                                             class="action-icon"> <i
                                                                 class="mdi mdi-square-edit-outline"></i></a>
-                                                        @if ($admin->id == Auth::id())
-                                                        @else
-                                                            <form
-                                                                action="{{ route('admin.delete_user', ['id' => $admin->id]) }}"
-                                                                method="POST">
+                                                        @if ($admin->id != Auth::id())
+                                                            <a href="#" class="action-icon text-danger" onclick="if(confirm('Delete this admin?')){document.getElementById('delete-admin-{{ $admin->id }}').submit();}return false;">
+                                                                <i class="mdi mdi-delete"></i>
+                                                            </a>
+                                                            <form id="delete-admin-{{ $admin->id }}" action="{{ route('admin.delete_user', $admin->id) }}" method="POST" style="display:none;">
                                                                 @csrf
                                                                 @method('DELETE')
                                                                 <input type="hidden" name="return_url" value="{{ url()->current() }}">
-                                                                <button class="btn action-icon">
-                                                                    <i class="mdi mdi-delete"></i>
-                                                                </button>
                                                             </form>
                                                         @endif
                                                     </td>

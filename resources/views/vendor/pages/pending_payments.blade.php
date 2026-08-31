@@ -48,7 +48,8 @@
                                     @forelse($orders as $order)
                                         @php
                                             $client = $order->user;
-                                            $vendorItems = $order->orderItems->filter(fn($item) => $item->product->magasin_id === Auth::user()->magasin->id);
+                                            $vendorMagasinId = Auth::user()->magasin ? Auth::user()->magasin->id : null;
+                                            $vendorItems = $vendorMagasinId ? $order->orderItems->filter(fn($item) => $item->product->magasin_id === $vendorMagasinId) : collect();
                                             $vendorTotal = $vendorItems->sum(fn($item) => $item->product->price * $item->quantity);
                                         @endphp
                                         <tr>

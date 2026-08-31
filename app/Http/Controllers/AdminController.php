@@ -193,36 +193,60 @@ class AdminController extends Controller
 
     public function customers($type = null)
     {
-        if (is_null($type)) {
-            $title = "Clients";
-            $users = User::where('role', 'client')->get();
-        } elseif ($type === "blocked") {
+        $search = request('search');
+        $perPage = request('per_page', 10);
+        if ($perPage === 'all') $perPage = 9999;
+
+        $query = User::where('role', 'client');
+        if ($type === 'blocked') {
+            $query->where('status', 'blocked');
             $title = "Blocked Clients";
-            $users = User::where('role', 'client')->where('status', 'blocked')->get();
-        } elseif ($type === "inactive") {
+        } elseif ($type === 'inactive') {
+            $query->where('status', 'inactive');
             $title = "Inactive Clients";
-            $users = User::where('role', 'client')->where('status', 'inactive')->get();
         } else {
-            return redirect()->route('admin.customers');
+            $title = "Clients";
         }
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                  ->orWhere('email', 'like', '%' . $search . '%')
+                  ->orWhere('phoneNumber', 'like', '%' . $search . '%');
+            });
+        }
+
+        $users = $query->paginate($perPage)->appends(request()->all());
         return view('admin.pages.customers', compact('users', 'title'));
     }
 
     public function vendors($type = null)
     {
-        $perPage = 10;
-        if (is_null($type)) {
-            $title = "Vendors";
-            $vendors = User::where('role', 'vendor')->paginate($perPage);
-        } elseif ($type === "blocked") {
+        $search = request('search');
+        $perPage = request('per_page', 10);
+        if ($perPage === 'all') $perPage = 9999;
+
+        $query = User::where('role', 'vendor');
+
+        if ($type === 'blocked') {
+            $query->where('status', 'blocked');
             $title = "Blocked Vendors";
-            $vendors = User::where('role', 'vendor')->where('status', 'blocked')->paginate($perPage);
-        } elseif ($type === "firstOpening") {
+        } elseif ($type === 'firstOpening') {
+            $query->whereHas('magasin', fn($q) => $q->where('status', 'firstOpening'));
             $title = "Pending Approval";
-            $vendors = User::where('role', 'vendor')->whereHas('magasin', fn($q) => $q->where('status', 'firstOpening'))->paginate($perPage);
         } else {
-            return redirect()->route('admin.vendors');
+            $title = "Vendors";
         }
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                  ->orWhere('email', 'like', '%' . $search . '%')
+                  ->orWhere('phoneNumber', 'like', '%' . $search . '%');
+            });
+        }
+
+        $vendors = $query->with('magasin')->paginate($perPage)->appends(request()->all());
         return view('admin.pages.vendors', compact('vendors', 'title'));
     }
 
@@ -244,7 +268,21 @@ class AdminController extends Controller
     //! Products
     public function products()
     {
-        $products = Product::with('magasin')->paginate(10);
+        $search = request('search');
+        $perPage = request('per_page', 10);
+        if ($perPage === 'all') $perPage = 9999;
+
+        $query = Product::with('magasin')->withCount('orderItems');
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                  ->orWhere('price', 'like', '%' . $search . '%')
+                  ->orWhereHas('magasin', fn($mq) => $mq->where('name', 'like', '%' . $search . '%'));
+            });
+        }
+
+        $products = $query->paginate($perPage)->appends(request()->all());
         $totalProducts = Product::count();
         return view('admin.pages.products', compact('products', 'totalProducts'));
     }

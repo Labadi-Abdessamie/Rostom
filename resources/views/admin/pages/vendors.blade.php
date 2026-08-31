@@ -1,100 +1,71 @@
 @extends('admin.master')
 
-
-@section('styles')
-    <link href="{{ asset('assets/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet"
-        type="text/css" />
-    <link href="{{ asset('assets/libs/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css') }}" rel="stylesheet"
-        type="text/css" />
-@endsection
-
-@section('scripts')
-    <!-- third party js -->
-    <script src="{{ asset('assets/libs/datatables.net/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/datatables.net-bs5/js/dataTables.bootstrap5.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/jquery-datatables-checkboxes/js/dataTables.checkboxes.min.js') }}"></script>
-    <!-- third party js ends -->
-
-    <!-- Datatables init -->
-    <script src="{{ asset('assets/js/pages/customers.init.js') }}"></script>
-@endsection
-
 @section('content')
     <div class="content">
-
-        <!-- Start Content-->
         <div class="container-fluid">
 
             <!-- start page title -->
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box">
-                        @if (false)
-                            <div class="page-title-right">
-                                <ol class="breadcrumb m-0">
-                                    <li class="breadcrumb-item active">Admin</li>
-                                </ol>
-                            </div>
-                        @endif
-                        <h4 class="page-title">Vendors</h4>
+                        <h4 class="page-title">{{ $title }}</h4>
                     </div>
                 </div>
             </div>
-            <!-- end page title -->
-            @if (false)
-                <div class="row mb-2">
-                    <div class="col-sm-4">
-                        <button type="button" class="btn btn-danger waves-effect waves-light" data-bs-toggle="modal"
-                            data-bs-target="#custom-modal"><i class="mdi mdi-plus-circle me-1"></i> Add Vendor</button>
-                    </div>
-                    <div class="col-sm-8">
-                        <div class="text-sm-end mt-2 mt-sm-0">
-                            <button type="button" class="btn btn-success mb-2 me-1"><i class="mdi mdi-cog"></i></button>
-                            <button type="button" class="btn btn-light mb-2 me-1">Import</button>
-                            <button type="button" class="btn btn-light mb-2">Export</button>
-                        </div>
-                    </div><!-- end col-->
-                </div>
-            @endif
+
             <div class="row">
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
+
+                            <!-- Toolbar -->
+                            <form method="GET" action="{{ url()->current() }}" class="d-flex gap-2 mb-3 flex-wrap align-items-center">
+                                <div class="input-group" style="max-width:360px;">
+                                    <span class="input-group-text"><i class="mdi mdi-magnify"></i></span>
+                                    <input type="text" name="search" class="form-control"
+                                        placeholder="Search by name, email or phone..."
+                                        value="{{ request('search') }}">
+                                </div>
+                                <select name="per_page" class="form-select" style="width:auto;" onchange="this.form.submit()">
+                                    <option value="10" {{ request('per_page',10)==10?'selected':'' }}>10</option>
+                                    <option value="20" {{ request('per_page')==20?'selected':'' }}>20</option>
+                                    <option value="all" {{ request('per_page')==='all'?'selected':'' }}>All</option>
+                                </select>
+                                <button type="submit" class="btn btn-primary">Apply</button>
+                                <a href="{{ url()->current() }}" class="btn btn-outline-secondary">Reset</a>
+                            </form>
+
                             <div class="table-responsive" style="overflow-x:auto;">
-                                <table class="table table-centered table-striped dt-responsive nowrap w-100"
-                                    id="products-datatable">
+                                <table class="table table-centered table-striped dt-responsive nowrap w-100">
                                     <thead>
                                         <tr>
-                                            <th class="d-none">#</th>
                                             <th>#</th>
                                             <th>Vendor</th>
                                             <th>Email</th>
-                                            <th>Phone Number</th>
+                                            <th>Phone</th>
                                             <th>Create Date</th>
                                             <th>Status</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($vendors as $vendor)
+                                        @forelse ($vendors as $vendor)
                                             <tr>
-                                                <td class="d-none"></td>
-                                                <td>{{ $loop->iteration + ($vendors->currentPage() - 1) * $vendors->perPage() }}
-                                                </td>
+                                                <td>{{ $loop->iteration + ($vendors->currentPage() - 1) * $vendors->perPage() }}</td>
                                                 <td class="table-user">
                                                     <img src="{{ $vendor->profilePicture ? asset('storage/profile_pictures/' . $vendor->id . '/' . $vendor->profilePicture) : asset('frontend/images/No_Image.png') }}"
-                                                        alt="vendor-image" class="me-2 rounded-circle" width="32"
-                                                        height="32">
-                                                    <a href="{{ route('admin.edit_user', ['id' => $vendor->id]) }}"
+                                                        alt="vendor-image" class="me-2 rounded-circle" width="32" height="32">
+                                                    <a href="{{ route('admin.edit_user', ['id' => $vendor->id]) }}?return_url={{ urlencode(url()->full()) }}"
                                                         class="text-body fw-semibold">{{ $vendor->name }}</a>
                                                 </td>
                                                 <td>{{ $vendor->email }}</td>
                                                 <td>{{ $vendor->phoneNumber }}</td>
                                                 <td>{{ $vendor->created_at->format('d/m/Y') }}</td>
                                                 <td>
-                                                    @if ($vendor->status == 'active')
+                                                    @php $vendorMagasinStatus = $vendor->magasin->status ?? null; @endphp
+                                                    @if ($vendorMagasinStatus === 'firstOpening')
+                                                        <span class="badge" style="background:#fef3c7;color:#92400e;">Pending Approval</span>
+                                                    @elseif ($vendor->status == 'active')
                                                         <span class="badge bg-soft-success text-success">Active</span>
                                                     @elseif ($vendor->status == 'inactive')
                                                         <span class="badge bg-soft-warning text-warning">Inactive</span>
@@ -103,7 +74,7 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    <a href="{{ route('admin.edit_user', ['id' => $vendor->id]) }}"
+                                                    <a href="{{ route('admin.edit_user', ['id' => $vendor->id]) }}?return_url={{ urlencode(url()->full()) }}"
                                                         class="action-icon">
                                                         <i class="mdi mdi-square-edit-outline"></i>
                                                     </a>
@@ -120,22 +91,27 @@
                                                     </form>
                                                 </td>
                                             </tr>
-                                        @endforeach
+                                        @empty
+                                            <tr><td colspan="7" class="text-center text-muted py-4">No vendors found.</td></tr>
+                                        @endforelse
                                     </tbody>
                                 </table>
                             </div>
 
-                            <div class="d-flex justify-content-end">
-                                {{ $vendors->links() }}
-                            </div>
+                            @if ($vendors->hasPages())
+                                <div class="d-flex justify-content-between align-items-center mt-3">
+                                    <div class="text-muted" style="font-size:.85rem;">
+                                        Showing {{ $vendors->firstItem() ?? 0 }}–{{ $vendors->lastItem() ?? 0 }} of {{ $vendors->total() }}
+                                    </div>
+                                    {{ $vendors->withQueryString()->links() }}
+                                </div>
+                            @endif
 
-                        </div> <!-- end card-body-->
-                    </div> <!-- end card-->
-                </div> <!-- end col -->
+                        </div>
+                    </div>
+                </div>
             </div>
-            <!-- end row -->
 
-        </div> <!-- container -->
-
-    </div> <!-- content -->
+        </div>
+    </div>
 @endsection

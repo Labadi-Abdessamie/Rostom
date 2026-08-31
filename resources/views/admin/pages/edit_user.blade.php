@@ -13,6 +13,7 @@
             <form action="{{ route('admin.update_user', $user->id) }}" method="POST">
                 @csrf
                 @method('PUT')
+                <input type="hidden" name="return_url" value="{{ request('return_url') ?? url()->previous() }}">
 
                 <div class="form-group mb-2">
                     <label for="name">{{ $type }} Name</label>

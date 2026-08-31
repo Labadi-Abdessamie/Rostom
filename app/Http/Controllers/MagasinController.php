@@ -13,18 +13,54 @@ class MagasinController extends Controller
 {
     public function magasins($filtre = null)
     {
-        if (is_null($filtre)) {
-            $magasins = Magasin::with('user')->paginate(10);
-        } else if ($filtre === "demands") {
-            $magasins = Magasin::with('user')->where('status', 'firstOpening')->paginate(10); // Maybe me(Mus) changes it
-        } else {
-            return redirect()->route('admin.magasins');
+        $search = request('search');
+        $perPage = request('per_page', 10);
+        if ($perPage === 'all') $perPage = 9999;
+
+        $query = Magasin::with('user');
+        if (!is_null($filtre) && $filtre === 'demands') {
+            $query->where('status', 'firstOpening');
         }
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                  ->orWhere('location', 'like', '%' . $search . '%')
+                  ->orWhere('email', 'like', '%' . $search . '%')
+                  ->orWhereHas('user', function ($uq) use ($search) {
+                      $uq->where('name', 'like', '%' . $search . '%');
+                  });
+            });
+        }
+
+        $magasins = $query->paginate($perPage)->appends(request()->all());
         return view('admin.pages.magasins', compact('magasins', 'filtre'));
     }
 
     public function create()
     {
+        $user = Auth::user();
+
+        // Only vendors can access
+        if ($user->role !== 'vendor') {
+            return redirect()->route('frontend.index')->with('message', 'Access denied.');
+        }
+
+        // Blocked or inactive accounts
+        if ($user->status === 'inactive') {
+            Auth::logout();
+            return redirect()->route('frontend.index')->with('message', 'Account is inactive. Please contact admin.');
+        }
+        if ($user->status === 'blocked') {
+            Auth::logout();
+            return redirect()->route('frontend.index')->with('message', 'Account is blocked. Please contact admin.');
+        }
+
+        // Already has a magasin — redirect to settings
+        if ($user->magasin_id || $user->magasin) {
+            return redirect()->route('vendor.magasin')->with('message', 'You already have a magasin.');
+        }
+
         $categories = Category::whereNull('parentId')->get();
         return view('vendor.pages.create_magasin', ['categories' => $categories]);
     }
@@ -103,7 +139,7 @@ class MagasinController extends Controller
             $file->storeAs($customPath, $filename, 'local');
         }
 
-        return redirect()->back()->with('success', 'Magasin created successfully! It will be active after admin approval.');
+        return redirect()->route('vendor.dashboard')->with('success', 'Magasin created successfully! It will be active after admin approval.');
     }
 
     public function showRegister($id)

@@ -29,10 +29,18 @@
 
                             <!-- Top Bar -->
                             <div class="row justify-content-between mb-3">
-                                <div class="col-md-6">
-                                    <form class="search-bar position-relative">
-                                        <input type="text" class="form-control" placeholder="Search...">
-                                        <span class="mdi mdi-magnify"></span>
+                                <div class="col-md-8">
+                                    <form method="GET" action="{{ url()->current() }}" class="d-flex gap-2">
+                                        <div class="input-group" style="max-width:360px;">
+                                            <input type="text" name="search" class="form-control" placeholder="Search by name, location, owner..." value="{{ request('search') }}">
+                                            <button type="submit" class="btn btn-primary"><i class="mdi mdi-magnify"></i></button>
+                                        </div>
+                                        <select name="per_page" class="form-select" style="width:auto;" onchange="this.form.submit()">
+                                            <option value="10" {{ request('per_page',10)==10?'selected':'' }}>10</option>
+                                            <option value="20" {{ request('per_page')==20?'selected':'' }}>20</option>
+                                            <option value="all" {{ request('per_page')==='all'?'selected':'' }}>All</option>
+                                        </select>
+                                        <a href="{{ url()->current() }}" class="btn btn-outline-secondary">Reset</a>
                                     </form>
                                 </div>
                             </div>
@@ -143,9 +151,14 @@
                             </div>
 
                             <!-- Pagination -->
-                            <div class="mt-3 d-flex justify-content-end">
-                                {{ $magasins->links() }}
-                            </div>
+                            @if ($magasins->hasPages())
+                                <div class="mt-3 d-flex justify-content-between align-items-center">
+                                    <div class="text-muted" style="font-size:.85rem;">
+                                        Showing {{ $magasins->firstItem() ?? 0 }}–{{ $magasins->lastItem() ?? 0 }} of {{ $magasins->total() }}
+                                    </div>
+                                    {{ $magasins->withQueryString()->links() }}
+                                </div>
+                            @endif
 
                         </div>
                     </div>

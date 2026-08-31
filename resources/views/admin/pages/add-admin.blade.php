@@ -1,10 +1,10 @@
 <!-- Modal -->
-<div class="modal fade" id="custom-modal" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="custom-modal" tabindex="-1" role="dialog" aria-hidden="true" style="display:none;background:rgba(0,0,0,.5);">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-light">
-                <h4 class="modal-title" id="myCenterModalLabel">Add New Customers</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title" id="myCenterModalLabel">Add New Admin</h4>
+                <button type="button" class="btn-close" onclick="document.getElementById('custom-modal').classList.remove('show');document.getElementById('custom-modal').style.display='none';document.body.classList.remove('modal-open');document.body.style.overflow='';" aria-hidden="true"></button>
             </div>
             <div class="modal-body p-4">
                 <form action="{{ route('admin.store_admin') }}" method="POST">

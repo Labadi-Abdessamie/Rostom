@@ -137,6 +137,10 @@ class ProfileController extends Controller
             'status' => $request->status,
         ]);
 
+        $returnUrl = $request->input('return_url');
+        if ($returnUrl && filter_var($returnUrl, FILTER_VALIDATE_URL) && str_contains($returnUrl, url('/'))) {
+            return redirect($returnUrl)->with('success', 'User updated successfully.');
+        }
         return redirect()->back()->with('success', 'User updated successfully.');
     }
     public function deleteUser(Request $request, $id)

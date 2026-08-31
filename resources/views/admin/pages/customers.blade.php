@@ -46,6 +46,18 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="table-responsive" style="overflow-x:auto;">
+                                <form method="GET" action="{{ url()->current() }}" class="d-flex gap-2 mb-3">
+                                    <div class="input-group" style="max-width:360px;">
+                                        <input type="text" name="search" class="form-control" placeholder="Search..." value="{{ request('search') }}">
+                                        <button type="submit" class="btn btn-primary"><i class="mdi mdi-magnify"></i></button>
+                                    </div>
+                                    <select name="per_page" class="form-select" style="width:auto;" onchange="this.form.submit()">
+                                        <option value="10" {{ request('per_page',10)==10?'selected':'' }}>10</option>
+                                        <option value="20" {{ request('per_page')==20?'selected':'' }}>20</option>
+                                        <option value="all" {{ request('per_page')==='all'?'selected':'' }}>All</option>
+                                    </select>
+                                    <a href="{{ url()->current() }}" class="btn btn-outline-secondary">Reset</a>
+                                </form>
                                 <table class="table table-centered table-striped dt-responsive nowrap w-100"
                                     id="products-datatable">
                                     <thead>
@@ -82,7 +94,7 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    <a href="{{ route('admin.edit_user', ['id' => $user->id]) }}"
+                                                    <a href="{{ route('admin.edit_user', ['id' => $user->id]) }}?return_url={{ urlencode(url()->full()) }}"
                                                         class="action-icon text-primary" title="View">
                                                         <i class="mdi mdi-eye"></i>
                                                     </a>
@@ -105,6 +117,14 @@
                                     </tbody>
                                 </table>
                             </div>
+                            @if ($users->hasPages())
+                                <div class="d-flex justify-content-between align-items-center mt-3">
+                                    <div class="text-muted" style="font-size:.85rem;">
+                                        Showing {{ $users->firstItem() ?? 0 }}–{{ $users->lastItem() ?? 0 }} of {{ $users->total() }}
+                                    </div>
+                                    {{ $users->withQueryString()->links() }}
+                                </div>
+                            @endif
                         </div> <!-- end card-body-->
                     </div> <!-- end card-->
                 </div> <!-- end col -->
