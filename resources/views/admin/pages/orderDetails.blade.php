@@ -107,13 +107,15 @@
                                     <thead class="table-light">
                                         <tr>
                                             <th>Product</th>
+                                            <th>Vendor / Magasin</th>
                                             <th>Quantity</th>
+                                            <th>Status</th>
                                             <th>Price</th>
                                             <th class="text-end">Total</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @forelse ($order->orderItems as $item)
+                                        @forelse ($order->orderItems->where('status', 'available') as $item)
                                             <tr>
                                                 <td>
                                                     <div class="d-flex align-items-center">
@@ -124,19 +126,25 @@
                                                         <span class="fw-semibold">{{ $item->product->name ?? 'Product deleted' }}</span>
                                                     </div>
                                                 </td>
+                                                <td>
+                                                    <span class="fw-semibold">{{ $item->product->magasin->name ?? 'N/A' }}</span>
+                                                </td>
                                                 <td>{{ $item->quantity }}</td>
+                                                <td>
+                                                    <span class="badge bg-success-subtle text-success" style="font-size:.8rem;">Available</span>
+                                                </td>
                                                 <td>{{ number_format($item->product->price ?? 0, 2) }} DZD</td>
                                                 <td class="text-end fw-semibold">{{ number_format(($item->product->price ?? 0) * $item->quantity, 2) }} DZD</td>
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="4" class="text-center text-muted py-4">No items found for this order.</td>
+                                                <td colspan="6" class="text-center text-muted py-4">No available items found for this order.</td>
                                             </tr>
                                         @endforelse
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <th colspan="3" class="text-end">Total :</th>
+                                            <th colspan="5" class="text-end">Total :</th>
                                             <th class="text-end">{{ number_format($order->totalAmount, 2) }} DZD</th>
                                         </tr>
                                     </tfoot>

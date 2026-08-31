@@ -6,7 +6,7 @@
 
 @section('content')
     <div class="row">
-        <div class="col-xl-9 col-xxl-10 col-lg-9 ms-auto">
+        <div class="col-12">
             <div class="dashboard_content">
                 <!-- Page Header -->
                 <div class="dash-page-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">

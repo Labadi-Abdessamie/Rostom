@@ -6,7 +6,7 @@
 
 @section('content')
     <div class="row">
-        <div class="col-xl-9 col-xxl-10 col-lg-9 ms-auto">
+        <div class="col-12">
             <div class="dashboard_content">
                 <div class="wsus__invoice_area">
                     <div class="wsus__invoice_header">

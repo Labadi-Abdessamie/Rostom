@@ -7,7 +7,7 @@
 @section('content')
     <div class="row">
 
-        <div class="col-xl-9 col-xxl-10 col-lg-9 ms-auto">
+        <div class="col-12">
             <div class="dashboard_content">
                 <div class="dash-page-header">
                     <h1><i class="fas fa-map-marker-alt"></i>Edit Address</h1>

@@ -75,6 +75,7 @@ class VendorInterfaceController extends Controller
             $deliveredOrderIds = $totalOrders->where('status', 'delivered')->pluck('id');
             $pendingPaymentOrderItems = OrderItem::with(['product', 'order'])
                 ->whereIn('order_id', $deliveredOrderIds)
+                ->where('status', 'available')
                 ->whereHas('order', fn($q) => $q->where('paymentStatus', 'pending'))
                 ->whereHas('product', fn($q) => $q->where('magasin_id', $vendor->magasin->id))
                 ->get();
@@ -85,8 +86,15 @@ class VendorInterfaceController extends Controller
                 ->whereIn('id', $deliveredOrderIds)
                 ->where('paymentStatus', 'pending')
                 ->whereHas('orderItems.product', fn($q) => $q->where('magasin_id', $vendor->magasin->id))
-                ->latest()
-                ->get();
+                ->get()
+                ->filter(fn($order) => $order->orderItems
+                    ->where('product.magasin_id', $vendor->magasin->id)
+                    ->where('status', 'available')
+                    ->count() > 0
+                )
+                ->values()
+                ->sortByDesc('id')
+                ->values();
         }
 
         // ===== Monthly Revenue (last 6 months) =====
@@ -225,15 +233,19 @@ class VendorInterfaceController extends Controller
                 ->where('status', 'delivered')
                 ->where('paymentStatus', 'pending')
                 ->whereHas('orderItems.product', fn($q) => $q->where('magasin_id', $magasin->id))
-                ->latest()
-                ->get();
-
-            $totalPending = 0;
-            foreach ($orders as $order) {
-                $totalPending += $order->orderItems
+                ->get()
+                ->filter(fn($order) => $order->orderItems
                     ->where('product.magasin_id', $magasin->id)
-                    ->sum(fn($item) => $item->product->price * $item->quantity);
-            }
+                    ->where('status', 'available')
+                    ->count() > 0
+                )
+                ->values();
+
+            $totalPending = $orders->sum(fn($order) => $order->orderItems
+                ->where('product.magasin_id', $magasin->id)
+                ->where('status', 'available')
+                ->sum(fn($item) => $item->product->price * $item->quantity)
+            );
         }
 
         return view('vendor.pages.pending_payments', [

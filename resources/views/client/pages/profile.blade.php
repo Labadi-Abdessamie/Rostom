@@ -6,7 +6,7 @@
 
 @section('content')
     <div class="row">
-        <div class="col-xl-9 col-xxl-10 col-lg-9 ms-auto">
+        <div class="col-12">
             <div class="dashboard_content">
                 <!-- Page Header -->
                 <div class="dash-page-header">

@@ -72,6 +72,35 @@
         </div>
     </form>
     <ul class="navbar-nav navbar-right">
+        <li class="dropdown"><a href="#" data-toggle="dropdown"
+                class="nav-link dropdown-toggle nav-link-lg notification-toggle nav-link-user">
+                <i class="far fa-bell"></i>
+                @if(isset($newOrderCount) && $newOrderCount > 0)
+                    <span class="badge badge-danger" style="font-size:10px;position:absolute;top:2px;right:2px;border-radius:50%;padding:2px 5px;">{{ $newOrderCount }}</span>
+                @endif
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" style="width:320px;padding:0;border-radius:14px;box-shadow:0 10px 40px rgba(0,0,0,.15);">
+                <div class="dropdown-header" style="padding:14px 16px;border-bottom:1px solid #f1f5f9;font-weight:700;color:#1e293b;display:flex;justify-content:space-between;align-items:center;">
+                    <span>New Orders</span>
+                    <a href="{{ route('vendor.orders') }}" style="font-size:11px;color:#6366f1;font-weight:600;">View All →</a>
+                </div>
+                <div style="max-height:320px;overflow-y:auto;padding:8px 0;">
+                    @if(isset($newOrderCount) && $newOrderCount > 0)
+                        <a href="{{ route('vendor.orders') }}" class="dropdown-item" style="padding:12px 16px;display:flex;gap:12px;align-items:center;border-bottom:1px solid #f8fafc;text-decoration:none;color:#1e293b;">
+                            <div style="width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">
+                                <i class="fas fa-box"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight:600;color:#1e293b;font-size:.88rem;">{{ $newOrderCount }} New Pending Order{{ $newOrderCount > 1 ? 's' : '' }}</div>
+                                <div style="font-size:.78rem;color:#94a3b8;margin-top:2px;">Click to process</div>
+                            </div>
+                        </a>
+                    @else
+                        <div class="dropdown-item text-center" style="padding:20px;color:#94a3b8;font-size:.85rem;">No new orders</div>
+                    @endif
+                </div>
+            </div>
+        </li>
         @if (false)
             <li class="dropdown dropdown-list-toggle"><a href="#" data-toggle="dropdown"
                     class="nav-link nav-link-lg message-toggle beep"><i class="far fa-envelope"></i></a>

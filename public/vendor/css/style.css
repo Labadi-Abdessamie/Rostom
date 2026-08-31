@@ -4109,7 +4109,7 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
     }
 
     body.sidebar-show {
-        overflow: hidden;
+        overflow: auto;
     }
 
     body.search-show:before,

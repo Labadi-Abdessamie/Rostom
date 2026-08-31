@@ -163,6 +163,7 @@ class OrderController extends Controller
         $order->status = 'delivered';
         $order->save();
         foreach ($order->orderItems as $item) {
+            if ($item->status !== 'available') continue;
             $item->product->actual_quantity -= $item->quantity;
             $item->product->save();
         }
@@ -181,8 +182,9 @@ class OrderController extends Controller
             return redirect()->back()->with('error', 'Order must be delivered before payment can be confirmed.');
         }
 
-        // Vendor can only confirm payment for their own products
+        // Vendor can only confirm payment for their available products
         foreach ($order->orderItems as $item) {
+            if ($item->status !== 'available') continue;
             $magasin = $item->product->magasin;
             if ($magasin->user_id !== Auth::id()) {
                 return redirect()->back()->with('error', 'You are not authorized to confirm payment for this order.');
@@ -193,6 +195,7 @@ class OrderController extends Controller
         $order->save();
 
         foreach ($order->orderItems as $item) {
+            if ($item->status !== 'available') continue;
             $magasin = Magasin::findOrFail($item->product->magasin->id);
             $magasin->balance += $item->product->price * $item->quantity;
             $magasin->save();
