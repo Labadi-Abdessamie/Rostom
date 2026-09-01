@@ -1,0 +1,27 @@
+# Deny access to dotfiles and sensitive files
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule "(^|/)\.(?!well-known)" - [F]
+</IfModule>
+
+# Disable directory browsing
+Options -Indexes -MultiViews
+
+# Prevent access to .env
+<FilesMatch "^\.env">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+<FilesMatch "(^\.env|\.env\.example|\.env\.production|\.git|\.gitignore|\.env\.backup)">
+    Require all denied
+</FilesMatch>
+
+# Block access to storage and bootstrap cache from web
+<IfModule mod_alias.c>
+    RedirectMatch 403 ^/storage/.*\.(log|sql|sqlite)$
+    RedirectMatch 403 ^/bootstrap/cache/.*\.php$
+</IfModule>
+<FilesMatch "\.env">
+    Require all denied
+</FilesMatch>
