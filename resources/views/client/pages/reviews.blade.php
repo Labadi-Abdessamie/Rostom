@@ -63,7 +63,7 @@
 
                                         <!-- Edit Form (Hidden) -->
                                         <div id="editForm-{{ $review->id }}" style="display: none; margin-top: 16px; padding-top: 16px; border-top: 1px solid #f1f5f9;">
-                                            <form action="{{ route('client.review.update', $review->id) }}" method="POST">
+                                            <form action="{{ route('review.update', $review->id) }}" method="POST">
                                                 @csrf
                                                 @method('PUT')
 
@@ -97,7 +97,7 @@
 
                             <!-- Delete Form -->
                             <form id="delete-review-{{ $review->id }}"
-                                action="{{ route('client.review.delete', $review->id) }}" method="POST"
+                                action="{{ route('review.delete', $review->id) }}" method="POST"
                                 style="display: none;">
                                 @csrf
                                 @method('DELETE')
