@@ -21,7 +21,11 @@
             .vd-stat-row { grid-template-columns: repeat(2, 1fr); }
         }
         @media (max-width: 576px) {
-            .vd-stat-row { grid-template-columns: 1fr; }
+            .vd-stat-row { grid-template-columns: 1fr; gap: 10px; }
+            .section { padding: 16px 12px 0 !important; }
+            .vd-stat-card { padding: 18px 14px 14px !important; }
+            .vd-stat-card .stat-value { font-size: 1.4rem !important; }
+            .vd-chart-card { padding: 14px !important; }
         }
         .vd-stat-card {
             border-radius: 18px;
