@@ -726,113 +726,316 @@
             font-size: 16px;
         }
 
-        /* Responsive all pages - make layout work on phones/tablets/desktop */
+        /* ============================================
+           MOBILE-ONLY HEADER (<= 575px)
+           ============================================ */
         @media (max-width: 575px) {
-            /* HEADER — top bar */
+            /* HEADER — compact dark navbar, single row */
             .wsus__header {
-                padding: 14px 0 !important;
-                background: #fff;
-                box-shadow: 0 4px 18px rgba(15, 23, 42, 0.06);
+                padding: 10px 0 !important;
+                background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
+                box-shadow: 0 2px 12px rgba(0,0,0,0.3) !important;
             }
-            .wsus__header > .container { padding: 0 14px !important; }
+            .wsus__header > .container { padding: 0 12px !important; }
+
             .wsus__header_inner {
-                flex-wrap: wrap !important;
+                display: grid !important;
+                grid-template-columns: auto 1fr auto !important;
+                grid-template-areas: "hamburger logo right" !important;
+                align-items: center !important;
                 gap: 10px !important;
-                row-gap: 10px !important;
+                width: 100% !important;
             }
+
+            /* Each child in the inner row must be inline-flex, no wrapping */
+            .wsus__header_inner > * {
+                flex-shrink: 0 !important;
+            }
+
+            /* Hamburger — TOP-LEFT corner, first child */
+            .wsus__mobile_hamburger {
+                grid-area: hamburger !important;
+                flex-shrink: 0 !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                width: 42px !important;
+                height: 42px !important;
+                border-radius: 8px !important;
+                background: rgba(255,255,255,0.1) !important;
+                border: 1px solid rgba(255,255,255,0.2) !important;
+                color: #fff !important;
+                font-size: 16px !important;
+                cursor: pointer !important;
+                transition: all .2s ease !important;
+            }
+            .wsus__mobile_hamburger:hover,
+            .wsus__mobile_hamburger.active {
+                background: rgba(255,255,255,0.2) !important;
+            }
+
+            /* Logo — CENTERED in the top row */
             .wsus__header_logo {
-                width: auto !important;
+                grid-area: logo !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                width: 100% !important;
                 flex: 0 0 auto !important;
             }
             .wsus__header_logo img {
-                max-height: 38px !important;
-                max-width: 120px !important;
-            }
-            /* Push right-side icons to the right */
-            .wsus__header_right {
-                margin-left: auto !important;
-                gap: 8px !important;
-            }
-            .wsus__header_contact { display: none !important; }
-            /* Search goes to its own row */
-            .wsus__header_search {
-                flex: 1 1 100% !important;
-                max-width: 100% !important;
-                min-width: 100% !important;
-                margin: 4px 0 0 !important;
-                order: 99;
-            }
-            .wsus__header_search input {
-                height: 42px !important;
-                font-size: 14px !important;
-                padding: 8px 14px !important;
-                border-radius: 10px !important;
-            }
-            .wsus__search_btn {
-                height: 42px !important;
-                width: 48px !important;
-                border-radius: 10px !important;
+                max-height: 42px !important;
+                max-width: 130px !important;
+                width: auto !important;
+                height: auto !important;
+                object-fit: contain !important;
             }
 
-            /* MAIN MENU — give it breathing room + clean look */
-            .wsus__main_menu {
-                background: linear-gradient(135deg, #1e293b 0%, #312e81 100%) !important;
-                padding: 12px 0 !important;
-                border-radius: 0 0 14px 14px !important;
-                box-shadow: 0 8px 22px rgba(15, 23, 42, 0.18) !important;
-                position: sticky;
-                top: 0;
-                z-index: 1000;
+            /* Right side — pushed to the right column */
+            .wsus__header_right,
+            .wsus__header_right_mobile {
+                grid-area: right !important;
+                flex: 0 0 auto !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: flex-end !important;
+                gap: 5px !important;
+                margin-left: 0 !important;
+                flex-wrap: nowrap !important;
+                min-width: 0 !important;
+                overflow: visible !important;
+                max-width: none !important;
             }
-            .wsus__main_menu > .container { padding: 0 14px !important; }
-            .wsus__main_menu .row { gap: 10px !important; row-gap: 10px !important; }
-            .wsus__main_menu .col,
-            .wsus__main_menu .col-auto {
-                flex: 1 1 100% !important;
-                max-width: 100% !important;
-                width: 100% !important;
+
+            /* Auth links — compact pill buttons outside hamburger */
+            .wsus__mobile_auth_links {
+                display: flex !important;
+                align-items: center !important;
+                gap: 3px !important;
+                flex-shrink: 0 !important;
             }
-            .wsus__menu_item {
-                flex-wrap: wrap !important;
-                justify-content: center !important;
-                gap: 8px !important;
-            }
-            .wsus__menu_item > li > a {
-                padding: 9px 13px !important;
-                font-size: 13px !important;
-                font-weight: 500 !important;
-                border-radius: 10px !important;
-                background: rgba(255, 255, 255, 0.08) !important;
-                color: rgba(226, 232, 240, 0.92) !important;
-                border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            .wsus__mobile_auth_btn {
                 display: inline-flex !important;
                 align-items: center !important;
-                gap: 6px !important;
-                transition: all .2s ease;
-                white-space: nowrap;
-            }
-            .wsus__menu_item > li > a i { font-size: 13px !important; }
-            .wsus__menu_item > li > a:hover,
-            .wsus__menu_item > li > a.active {
-                background: rgba(244, 63, 94, 0.25) !important;
-                color: #fff !important;
-                border-color: rgba(244, 63, 94, 0.5) !important;
-                transform: translateY(-1px);
-            }
-            .wsus__menu_item_right {
                 justify-content: center !important;
-                border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
-                padding-top: 10px !important;
-                margin-top: 4px !important;
+                padding: 7px 12px !important;
+                border-radius: 999px !important;
+                font-size: 13px !important;
+                font-weight: 700 !important;
+                text-decoration: none !important;
+                white-space: nowrap !important;
+                transition: all .2s ease !important;
+                flex-shrink: 0 !important;
             }
-            .wsus__menu_auth_btn {
-                background: linear-gradient(135deg, #f43f5e 0%, #f59e0b 100%) !important;
+            .wsus__mobile_auth_btn:not(.wsus__mobile_auth_btn_primary) {
+                background: rgba(255,255,255,0.1) !important;
+                color: rgba(255,255,255,0.85) !important;
+                border: 1px solid rgba(255,255,255,0.2) !important;
+            }
+            .wsus__mobile_auth_btn:not(.wsus__mobile_auth_btn_primary):hover {
+                background: rgba(255,255,255,0.18) !important;
+                color: #fff !important;
+            }
+            .wsus__mobile_auth_btn_primary {
+                background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)) !important;
                 color: #fff !important;
                 border: none !important;
-                padding: 10px 18px !important;
-                font-weight: 700 !important;
-                border-radius: 10px !important;
             }
+            .wsus__mobile_auth_btn_primary:hover {
+                opacity: 0.85 !important;
+            }
+
+            /* Hide the original desktop search bar on mobile */
+            .wsus__header_search:not(.wsus__header_search_mobile) {
+                display: none !important;
+            }
+
+            /* Compact mobile search — own row below, full width */
+            .wsus__header_search_mobile {
+                grid-area: right !important;
+                grid-row: 2 !important;
+                grid-column: 1 / -1 !important;
+                display: flex !important;
+                align-items: stretch !important;
+                max-width: 100% !important;
+                min-width: 0 !important;
+                margin: 8px 0 0 0 !important;
+                min-height: 40px !important;
+            }
+            .wsus__header_search_mobile input {
+                flex: 1 1 auto !important;
+                height: 40px !important;
+                font-size: 14px !important;
+                padding: 4px 14px !important;
+                border-radius: 999px 0 0 999px !important;
+                min-width: 0 !important;
+                width: auto !important;
+            }
+            .wsus__header_search_mobile .wsus__search_btn {
+                flex: 0 0 48px !important;
+                width: 48px !important;
+                min-width: 48px !important;
+                height: 40px !important;
+                border-radius: 0 999px 999px 0 !important;
+                padding: 0 !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: relative !important;
+                clip: auto !important;
+                clip-path: none !important;
+            }
+
+            /* Hide contact on mobile */
+            .wsus__header_contact { display: none !important; }
+
+            /* MAIN MENU — hide entirely on mobile (navigation goes into hamburger menu) */
+            .wsus__main_menu { display: none !important; }
+
+            /* Icon area — shrink badges on mobile */
+            .wsus__icon_area li { margin: 0 !important; }
+            .wsus__icon_btn {
+                width: 34px !important;
+                height: 34px !important;
+                font-size: 0.9rem !important;
+            }
+            .wsus__icon_badge {
+                min-width: 16px !important;
+                height: 16px !important;
+                font-size: 0.6rem !important;
+                top: -4px !important;
+                right: -4px !important;
+            }
+
+            /* Mobile nav overlay */
+            .wsus__mobile_nav_overlay {
+                display: block !important;
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                bottom: 0 !important;
+                background: rgba(0,0,0,0.5) !important;
+                z-index: 99998 !important;
+                opacity: 0 !important;
+                pointer-events: none !important;
+                transition: opacity .3s ease !important;
+            }
+            .wsus__mobile_nav_overlay.active {
+                opacity: 1 !important;
+                pointer-events: all !important;
+            }
+
+            /* Mobile nav menu — slides in from LEFT to right */
+            .wsus__mobile_nav_menu {
+                display: flex !important;
+                flex-direction: column !important;
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 280px !important;
+                height: 100vh !important;
+                background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%) !important;
+                z-index: 99999 !important;
+                transform: translateX(-100%) !important;
+                transition: transform .3s ease !important;
+                overflow-y: auto !important;
+                scrollbar-width: none !important;
+                box-shadow: 4px 0 24px rgba(0,0,0,0.4) !important;
+            }
+            .wsus__mobile_nav_menu.active {
+                transform: translateX(0) !important;
+            }
+
+            /* Mobile nav header */
+            .wsus__mobile_nav_header {
+                display: flex !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+                padding: 14px 16px !important;
+                border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+                background: rgba(0,0,0,0.2) !important;
+            }
+            .wsus__mobile_nav_header .wsus__mobile_nav_title {
+                font-size: 16px !important;
+                font-weight: 700 !important;
+                color: #fff !important;
+                margin: 0 !important;
+                letter-spacing: 0.5px !important;
+            }
+            .wsus__mobile_nav_close {
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                width: 32px !important;
+                height: 32px !important;
+                border-radius: 8px !important;
+                background: rgba(255,255,255,0.1) !important;
+                border: none !important;
+                color: #fff !important;
+                font-size: 14px !important;
+                cursor: pointer !important;
+                transition: background .2s ease !important;
+            }
+            .wsus__mobile_nav_close:hover {
+                background: rgba(220,53,69,0.4) !important;
+            }
+
+            /* Mobile nav links */
+            .wsus__mobile_nav_links {
+                list-style: none !important;
+                margin: 0 !important;
+                padding: 8px 0 !important;
+            }
+            .wsus__mobile_nav_links li a {
+                display: flex !important;
+                align-items: center !important;
+                gap: 12px !important;
+                padding: 13px 18px !important;
+                color: rgba(255,255,255,0.85) !important;
+                font-size: 14px !important;
+                font-weight: 500 !important;
+                text-decoration: none !important;
+                border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+                transition: all .2s ease !important;
+            }
+            .wsus__mobile_nav_links li a:hover,
+            .wsus__mobile_nav_links li a.active {
+                background: rgba(245,158,11,0.12) !important;
+                color: var(--color-primary) !important;
+            }
+            .wsus__mobile_nav_links li a i {
+                width: 20px !important;
+                text-align: center !important;
+                font-size: 15px !important;
+                flex-shrink: 0 !important;
+                color: rgba(255,255,255,0.5) !important;
+            }
+            .wsus__mobile_nav_links li a:hover i,
+            .wsus__mobile_nav_links li a.active i {
+                color: var(--color-primary) !important;
+            }
+
+            /* Mobile nav section label */
+            .wsus__mobile_nav_section_label {
+                padding: 10px 18px 4px !important;
+                font-size: 11px !important;
+                font-weight: 700 !important;
+                color: rgba(255,255,255,0.35) !important;
+                text-transform: uppercase !important;
+                letter-spacing: 1px !important;
+            }
+        }
+
+        /* Hide mobile-only elements on desktop */
+        @media (min-width: 576px) {
+            .wsus__mobile_hamburger { display: none !important; }
+            .wsus__mobile_auth_links { display: none !important; }
+            .wsus__header_search_mobile { display: none !important; }
+            .wsus__mobile_nav_overlay { display: none !important; }
+            .wsus__mobile_nav_menu { display: none !important; }
         }
         @media (min-width: 576px) and (max-width: 767px) {
             .wsus__header { padding: 12px 0 !important; }
@@ -870,6 +1073,55 @@
     <!-- ========== mobile_menu Start ========== -->
     @include('frontend.body.mobile_menu')
     <!-- mobile_menu End -->
+
+    <!-- ========== Mobile Hamburger Nav (hidden on desktop) ========== -->
+    <div class="wsus__mobile_nav_overlay" id="mobileNavOverlay" onclick="toggleMobileNavMenu()"></div>
+    <nav class="wsus__mobile_nav_menu" id="mobileNavMenu" aria-label="Mobile navigation">
+        <div class="wsus__mobile_nav_header">
+            <h2 class="wsus__mobile_nav_title">TiarShop Menu</h2>
+            <button type="button" class="wsus__mobile_nav_close" onclick="toggleMobileNavMenu()" aria-label="Close menu">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <ul class="wsus__mobile_nav_links">
+            <li><a href="{{ route('frontend.index') }}" class="{{ Route::currentRouteName() == 'frontend.index' ? 'active' : '' }}"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="{{ route('frontend.products') }}" class="{{ Route::currentRouteName() == 'frontend.products' ? 'active' : '' }}"><i class="fas fa-box-open"></i> Products</a></li>
+            <li><a href="{{ route('frontend.vendor') }}" class="{{ Route::currentRouteName() == 'frontend.vendor' ? 'active' : '' }}"><i class="fas fa-store"></i> Vendors</a></li>
+            @auth
+                @if(Auth::user()->role === 'client')
+                    <li><a href="{{ route('frontend.cart') }}" class="{{ Route::currentRouteName() == 'frontend.cart' ? 'active' : '' }}"><i class="fas fa-shopping-cart"></i> Cart</a></li>
+                @endif
+            @else
+                <li><a href="{{ route('frontend.cart') }}" class="{{ Route::currentRouteName() == 'frontend.cart' ? 'active' : '' }}"><i class="fas fa-shopping-cart"></i> Cart</a></li>
+            @endauth
+            <li><a href="{{ route('frontend.contact') }}" class="{{ Route::currentRouteName() == 'frontend.contact' ? 'active' : '' }}"><i class="fas fa-envelope"></i> Contact</a></li>
+        </ul>
+        <div class="wsus__mobile_nav_section_label">Account</div>
+        <ul class="wsus__mobile_nav_links">
+            @auth
+                <li><a href="{{ route('dashboard') }}"><i class="fas fa-user-circle"></i>
+                    @switch(Auth::user()->role)
+                        @case('client') My Dashboard @break
+                        @case('vendor') Magasin @break
+                        @case('admin') Dashboard @break
+                        @default Dashboard
+                    @endswitch
+                </a></li>
+                <li><a href="{{ route('frontend.logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            @else
+                <li><a href="{{ route('login') }}"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+                @if (Route::has('register'))
+                    <li><a href="{{ route('register') }}"><i class="fas fa-user-plus"></i> Register</a></li>
+                @endif
+            @endauth
+        </ul>
+        @auth
+            <form id="logout-form" action="{{ route('frontend.logout') }}" method="POST" class="d-none">
+                @csrf
+            </form>
+        @endauth
+    </nav>
+    <!-- Mobile Hamburger Nav End -->
 
     <livewire:notification />
     {{--    ! Popup same as product-details
@@ -932,6 +1184,56 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     @stack('scripts')
+    <script>
+        // Mobile hamburger toggle
+        function toggleMobileNavMenu() {
+            var menu = document.getElementById('mobileNavMenu');
+            var overlay = document.getElementById('mobileNavOverlay');
+            var btn = document.getElementById('mobileHamburgerBtn');
+            var icon = document.getElementById('hamburgerIcon');
+            if (!menu || !overlay) return;
+            var isActive = menu.classList.contains('active');
+            if (isActive) {
+                menu.classList.remove('active');
+                overlay.classList.remove('active');
+                if (btn) btn.classList.remove('active');
+                if (icon) { icon.classList.remove('fa-times'); icon.classList.add('fa-bars'); }
+                document.body.style.overflow = '';
+            } else {
+                menu.classList.add('active');
+                overlay.classList.add('active');
+                if (btn) btn.classList.add('active');
+                if (icon) { icon.classList.remove('fa-bars'); icon.classList.add('fa-times'); }
+                document.body.style.overflow = 'hidden';
+            }
+        }
+        // Close mobile menu on ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                var menu = document.getElementById('mobileNavMenu');
+                if (menu && menu.classList.contains('active')) {
+                    toggleMobileNavMenu();
+                }
+            }
+        });
+        // Close mobile menu on resize to desktop
+        var resizeTimer;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function() {
+                if (window.innerWidth > 575) {
+                    var menu = document.getElementById('mobileNavMenu');
+                    var overlay = document.getElementById('mobileNavOverlay');
+                    var btn = document.getElementById('mobileHamburgerBtn');
+                    if (menu) menu.classList.remove('active');
+                    if (overlay) overlay.classList.remove('active');
+                    if (btn) btn.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            }, 150);
+        });
+    </script>
+
     <script>
         @if ($errors->any())
             @foreach ($errors->all() as $error)
