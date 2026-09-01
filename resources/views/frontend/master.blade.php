@@ -1107,7 +1107,7 @@
                         @default Dashboard
                     @endswitch
                 </a></li>
-                <li><a href="{{ route('frontend.logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                <li><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
             @else
                 <li><a href="{{ route('login') }}"><i class="fas fa-sign-in-alt"></i> Login</a></li>
                 @if (Route::has('register'))
@@ -1116,7 +1116,7 @@
             @endauth
         </ul>
         @auth
-            <form id="logout-form" action="{{ route('frontend.logout') }}" method="POST" class="d-none">
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                 @csrf
             </form>
         @endauth

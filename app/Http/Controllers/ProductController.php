@@ -20,16 +20,13 @@ class ProductController extends Controller
         $categoryId = $request->query('category', null);
         $sort = $request->query('sort', null);
         $perPage = $request->query('number', 12);
+        if ($perPage === 'all') $perPage = 9999;
 
         $queryFilter = $request->query('name', null);
         if ($queryFilter) {
-            $products = Product::where('name', 'like', '%' . $queryFilter . '%')->paginate(12);
+            $products = Product::where('name', 'like', '%' . $queryFilter . '%')->paginate($perPage);
         } else {
-            $query = Product::whereHas('magasin', function ($q) {
-                $q->where('status', 'active');
-            })->whereHas('category', function ($q) {
-                $q->where('status', 'active');
-            })->with('productImages');
+            $query = Product::with('productImages');
 
             if ($categoryId) {
                 $category = Category::find($categoryId);
