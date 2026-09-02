@@ -34,39 +34,31 @@
             <div class="row">
 
                 {{-- ═══ SIDEBAR FILTER ═══ --}}
-                <div class="col-xl-3 col-lg-4">
+                <div class="col-xl-3 col-lg-4" style="max-width:280px; flex:0 0 280px;">
 
-                    {{-- Mobile toggle --}}
                     <button class="wsus__sidebar_filter d-lg-none w-100 mb-3"
-                            type="button"
-                            data-bs-toggle="collapse"
-                            data-bs-target="#vendorFilters"
-                            aria-expanded="false"
-                            aria-controls="vendorFilters">
+                            type="button" data-bs-toggle="collapse" data-bs-target="#vendorFilters"
+                            aria-expanded="false" aria-controls="vendorFilters">
                         <i class="fas fa-sliders-h me-2"></i> Filters
                     </button>
 
-                    {{-- Filter card --}}
                     <div class="collapse d-lg-block" id="vendorFilters">
                         <form method="GET" action="{{ route('frontend.vendor') }}" id="filterForm">
 
-                            {{-- Search --}}
                             <div class="wsus__product_sidebar wsus__vendor_sidebar" id="sticky_sidebar">
                                 <h5 class="mb-3 fw-bold text-uppercase" style="font-size:.75rem; letter-spacing:.08em; color:#64748b;">
                                     <i class="fas fa-search me-1"></i> Search
                                 </h5>
                                 <div class="input-group mb-3">
                                     <input type="text" name="name" class="form-control"
-                                        placeholder="Vendor name..."
-                                        value="{{ $name ?? '' }}">
+                                        placeholder="Vendor name or location..." value="{{ $name ?? '' }}">
                                 </div>
 
-                                {{-- Category Filter --}}
                                 <div class="wsus__vendor_sidebar_select">
                                     <h5 class="mb-3 fw-bold text-uppercase" style="font-size:.75rem; letter-spacing:.08em; color:#64748b;">
                                         <i class="fas fa-tags me-1"></i> Category
                                     </h5>
-                                    <select name="category" class="form-select select_2 mb-3" id="categorySelect">
+                                    <select name="category" class="form-control mb-3">
                                         <option value="">All Categories</option>
                                         @foreach($categories as $category)
                                             <option value="{{ $category->id }}"
@@ -77,49 +69,43 @@
                                     </select>
                                 </div>
 
-                                {{-- Rating Filter --}}
                                 <div class="wsus__vendor_sidebar_select">
                                     <h5 class="mb-3 fw-bold text-uppercase" style="font-size:.75rem; letter-spacing:.08em; color:#64748b;">
                                         <i class="fas fa-star me-1"></i> Min Rating
                                     </h5>
                                     <div class="d-flex flex-wrap gap-2">
-                                        @foreach([0, 3, 4, 4.5] as $r)
-                                            <button type="button"
-                                                    class="btn btn-sm rating-filter-btn {{ ($minRating ?? 0) == $r ? 'btn-primary' : 'btn-outline-secondary' }}"
-                                                    data-rating="{{ $r }}">
-                                                @if($r == 0)
-                                                    All
-                                                @else
-                                                    <i class="fas fa-star text-warning me-1"></i>{{ $r }}+
+                                        @foreach([0, 1, 2, 3, 4, 5] as $r)
+                                            <a href="{{ route('frontend.vendor', array_filter(array_merge(request()->query(), ['min_rating' => $r]))) }}"
+                                               class="btn btn-sm rating-filter-btn {{ ($minRating ?? 0) == $r ? 'btn-primary' : 'btn-outline-secondary' }}"
+                                               style="text-decoration:none; font-weight:600; font-size:.8rem; padding:5px 12px; border-radius:20px;">
+                                                @if($r == 0) All
+                                                @else <i class="fas fa-star text-warning me-1"></i>{{ $r }}+
                                                 @endif
-                                            </button>
+                                            </a>
                                         @endforeach
                                     </div>
-                                    <input type="hidden" name="min_rating" id="minRatingInput" value="{{ $minRating ?? 0 }}">
                                 </div>
 
-                                {{-- Sort (moved here on mobile) --}}
                                 <div class="wsus__vendor_sidebar_select mt-3">
                                     <h5 class="mb-3 fw-bold text-uppercase" style="font-size:.75rem; letter-spacing:.08em; color:#64748b;">
                                         <i class="fas fa-sort me-1"></i> Sort By
                                     </h5>
-                                    <select name="sort_by" class="form-select select_2 mb-3">
-                                        <option value="default"         {{ ($sortBy ?? 'default') === 'default'       ? 'selected' : '' }}>Featured</option>
-                                        <option value="rating_high"     {{ ($sortBy ?? '') === 'rating_high'         ? 'selected' : '' }}>Highest Rated</option>
-                                        <option value="rating_low"      {{ ($sortBy ?? '') === 'rating_low'           ? 'selected' : '' }}>Lowest Rated</option>
-                                        <option value="latest"           {{ ($sortBy ?? '') === 'latest'              ? 'selected' : '' }}>Newest First</option>
-                                        <option value="oldest"           {{ ($sortBy ?? '') === 'oldest'              ? 'selected' : '' }}>Oldest First</option>
-                                        <option value="name_asc"         {{ ($sortBy ?? '') === 'name_asc'           ? 'selected' : '' }}>Name (A–Z)</option>
-                                        <option value="name_desc"        {{ ($sortBy ?? '') === 'name_desc'          ? 'selected' : '' }}>Name (Z–A)</option>
+                                    <select name="sort_by" class="form-control mb-3">
+                                        <option value="default"     {{ ($sortBy ?? 'default') === 'default'    ? 'selected' : '' }}>Featured</option>
+                                        <option value="rating_high" {{ ($sortBy ?? '') === 'rating_high'     ? 'selected' : '' }}>Highest Rated</option>
+                                        <option value="rating_low"  {{ ($sortBy ?? '') === 'rating_low'       ? 'selected' : '' }}>Lowest Rated</option>
+                                        <option value="latest"     {{ ($sortBy ?? '') === 'latest'          ? 'selected' : '' }}>Newest First</option>
+                                        <option value="oldest"     {{ ($sortBy ?? '') === 'oldest'          ? 'selected' : '' }}>Oldest First</option>
+                                        <option value="name_asc"   {{ ($sortBy ?? '') === 'name_asc'        ? 'selected' : '' }}>Name (A–Z)</option>
+                                        <option value="name_desc"  {{ ($sortBy ?? '') === 'name_desc'       ? 'selected' : '' }}>Name (Z–A)</option>
                                     </select>
                                 </div>
 
-                                {{-- Per Page --}}
                                 <div class="wsus__vendor_sidebar_select">
                                     <h5 class="mb-3 fw-bold text-uppercase" style="font-size:.75rem; letter-spacing:.08em; color:#64748b;">
                                         <i class="fas fa-th me-1"></i> Show
                                     </h5>
-                                    <select name="per_page" class="form-select select_2">
+                                    <select name="per_page" class="form-control">
                                         <option value="12" {{ ($perPage ?? 12) == 12 ? 'selected' : '' }}>12 per page</option>
                                         <option value="18" {{ ($perPage ?? 12) == 18 ? 'selected' : '' }}>18 per page</option>
                                         <option value="24" {{ ($perPage ?? 12) == 24 ? 'selected' : '' }}>24 per page</option>
@@ -127,7 +113,6 @@
                                     </select>
                                 </div>
 
-                                {{-- Action buttons --}}
                                 <div class="d-flex gap-2 mt-3">
                                     <button type="submit" class="btn btn-primary flex-grow-1">
                                         <i class="fas fa-filter me-1"></i> Apply
@@ -142,7 +127,7 @@
                 </div>
 
                 {{-- ═══ VENDOR GRID ═══ --}}
-                <div class="col-xl-9 col-lg-8">
+                <div class="col-xl-9 col-lg-8" style="padding-left:10px; max-width:calc(100% - 280px); flex:1;">
 
                     {{-- Top bar (desktop) --}}
                     <div class="wsus__product_topbar d-none d-lg-flex justify-content-between align-items-center mb-4">
@@ -153,19 +138,19 @@
                         <div class="d-flex align-items-center gap-2">
                             <label class="text-muted mb-0" style="font-size:.8rem;">Sort:</label>
                             <form method="GET" id="topbarSortForm" class="d-flex align-items-center gap-2">
-                                <input type="hidden" name="name"      value="{{ $name ?? '' }}">
-                                <input type="hidden" name="category"  value="{{ $categoryId ?? '' }}">
+                                <input type="hidden" name="name"       value="{{ $name ?? '' }}">
+                                <input type="hidden" name="category"   value="{{ $categoryId ?? '' }}">
                                 <input type="hidden" name="min_rating" value="{{ $minRating ?? 0 }}">
-                                <input type="hidden" name="per_page"  value="{{ $perPage ?? 12 }}">
+                                <input type="hidden" name="per_page"   value="{{ $perPage ?? 12 }}">
                                 <select name="sort_by" class="form-select form-select-sm" style="width:auto;"
                                         onchange="document.getElementById('topbarSortForm').submit()">
                                     <option value="default"     {{ ($sortBy ?? 'default') === 'default'    ? 'selected' : '' }}>Featured</option>
                                     <option value="rating_high" {{ ($sortBy ?? '') === 'rating_high'     ? 'selected' : '' }}>Highest Rated</option>
                                     <option value="rating_low"  {{ ($sortBy ?? '') === 'rating_low'       ? 'selected' : '' }}>Lowest Rated</option>
-                                    <option value="latest"      {{ ($sortBy ?? '') === 'latest'          ? 'selected' : '' }}>Newest First</option>
-                                    <option value="oldest"      {{ ($sortBy ?? '') === 'oldest'          ? 'selected' : '' }}>Oldest First</option>
-                                    <option value="name_asc"    {{ ($sortBy ?? '') === 'name_asc'        ? 'selected' : '' }}>Name (A–Z)</option>
-                                    <option value="name_desc"   {{ ($sortBy ?? '') === 'name_desc'       ? 'selected' : '' }}>Name (Z–A)</option>
+                                    <option value="latest"     {{ ($sortBy ?? '') === 'latest'          ? 'selected' : '' }}>Newest First</option>
+                                    <option value="oldest"     {{ ($sortBy ?? '') === 'oldest'          ? 'selected' : '' }}>Oldest First</option>
+                                    <option value="name_asc"   {{ ($sortBy ?? '') === 'name_asc'        ? 'selected' : '' }}>Name (A–Z)</option>
+                                    <option value="name_desc"  {{ ($sortBy ?? '') === 'name_desc'       ? 'selected' : '' }}>Name (Z–A)</option>
                                 </select>
                             </form>
                         </div>
@@ -182,21 +167,18 @@
                                         'sort_by'    => $sortBy ?? null,
                                         'min_rating' => $minRating ?? null,
                                         'per_page'   => $perPage ?? null,
-                                    ])) }}"
-                                       class="text-white text-decoration-none ms-1 fw-bold">&times;</a>
+                                    ])) }}" class="text-white text-decoration-none ms-1 fw-bold">&times;</a>
                                 </span>
                             @endif
                             @if($categoryId)
-                                @php $catName = $categories->firstWhere('id', $categoryId)?->name ?? 'Category'; @endphp
                                 <span class="badge bg-info d-flex align-items-center gap-1 px-3 py-2">
-                                    <i class="fas fa-tag"></i> {{ $catName }}
+                                    <i class="fas fa-tag"></i> {{ $categories->firstWhere('id', $categoryId)?->name ?? 'Category' }}
                                     <a href="{{ route('frontend.vendor', array_filter([
-                                        'name'      => $name ?? null,
-                                        'sort_by'   => $sortBy ?? null,
-                                        'min_rating'=> $minRating ?? null,
-                                        'per_page'  => $perPage ?? null,
-                                    ])) }}"
-                                       class="text-white text-decoration-none ms-1 fw-bold">&times;</a>
+                                        'name'       => $name ?? null,
+                                        'sort_by'    => $sortBy ?? null,
+                                        'min_rating' => $minRating ?? null,
+                                        'per_page'   => $perPage ?? null,
+                                    ])) }}" class="text-white text-decoration-none ms-1 fw-bold">&times;</a>
                                 </span>
                             @endif
                             @if(($minRating ?? 0) > 0)
@@ -207,78 +189,73 @@
                                         'category' => $categoryId ?? null,
                                         'sort_by'  => $sortBy ?? null,
                                         'per_page' => $perPage ?? null,
-                                    ])) }}"
-                                       class="text-dark text-decoration-none ms-1 fw-bold">&times;</a>
+                                    ])) }}" class="text-dark text-decoration-none ms-1 fw-bold">&times;</a>
                                 </span>
                             @endif
                         </div>
                     @endif
 
                     {{-- Vendors Grid --}}
-                    <div class="row" id="vendorGrid">
+                    <div class="row">
                         @forelse($vendors as $vendor)
-                            <div class="col-xl-6 col-md-6 mb-4">
-                                <div class="wsus__vendor_single">
-                                    <div class="wsus__vendor_img_wrapper">
-                                        <img src="{{ $vendor->magasinPicture
-                                            ? asset('storage/magasins_images/' . $vendor->id . '/' . $vendor->magasinPicture)
-                                            : asset('frontend/images/vendor_details_banner.jpg') }}"
-                                             alt="{{ $vendor->name }}"
-                                             class="img-fluid w-100"
-                                             onerror="this.onerror=null;this.src='{{ asset('frontend/images/vendor_details_banner.jpg') }}';">
-
-                                        {{-- Rating overlay --}}
+                            <div class="col-xl-4 col-lg-6 col-md-6 mb-4" style="height: 500px;">
+                                <div class="vendor-card" style="height: 100%;">
+                                    {{-- Cover image --}}
+                                    <div class="vendor-card__cover">
+                                        <a href="{{ route('frontend.vendor_details', ['id' => $vendor->id]) }}">
+                                            <img src="{{ $vendor->magasinPicture
+                                                ? asset('storage/magasins_images/' . $vendor->id . '/' . $vendor->magasinPicture)
+                                                : asset('frontend/images/vendor_details_banner.jpg') }}"
+                                                 alt="{{ $vendor->name }}"
+                                                 onerror="this.onerror=null;this.src='{{ asset('frontend/images/vendor_details_banner.jpg') }}';">
+                                            <div class="vendor-card__overlay"></div>
+                                        </a>
                                         @if($vendor->rate > 0)
-                                            <div class="wsus__vendor_rating_overlay">
-                                                <span class="badge bg-warning text-dark">
-                                                    <i class="fas fa-star"></i> {{ number_format($vendor->rate, 1) }}
-                                                </span>
+                                            <div class="vendor-card__rating">
+                                                <i class="fas fa-star"></i> {{ number_format($vendor->rate, 1) }}
                                             </div>
                                         @endif
                                     </div>
 
-                                    <div class="wsus__vendor_text">
-                                        <div class="wsus__vendor_text_center">
-                                            <h4 class="mb-1">{{ $vendor->name }}</h4>
-
-                                            @if($vendor->location || $vendor->address)
-                                                <p class="mb-2 text-muted" style="font-size:.8rem;">
-                                                    <i class="fas fa-map-marker-alt me-1 text-danger"></i>
-                                                    {{ $vendor->location ?? $vendor->address ?? '' }}
-                                                </p>
-                                            @endif
-
-                                            <p class="wsus__vendor_rating mb-2">
-                                                @for($i = 1; $i <= 5; $i++)
-                                                    @if($i <= floor($vendor->rate))
-                                                        <i class="fas fa-star"></i>
-                                                    @elseif($i - 0.5 <= $vendor->rate)
-                                                        <i class="fas fa-star-half-alt"></i>
-                                                    @else
-                                                        <i class="far fa-star"></i>
-                                                    @endif
-                                                @endfor
-                                                <span class="text-muted ms-1">({{ number_format($vendor->rate, 1) }})</span>
-                                            </p>
-
-                                            <div class="wsus__vendor_contact">
-                                                @if($vendor->phoneNumber)
-                                                    <a href="tel:{{ $vendor->phoneNumber }}" class="d-block mb-1">
-                                                        <i class="far fa-phone-alt me-1"></i> {{ $vendor->phoneNumber }}
-                                                    </a>
-                                                @endif
-                                                @if($vendor->email)
-                                                    <a href="mailto:{{ $vendor->email }}" class="d-block mb-3">
-                                                        <i class="fal fa-envelope me-1"></i> {{ strlen($vendor->email) > 25 ? substr($vendor->email, 0, 25) . '...' : $vendor->email }}
-                                                    </a>
-                                                @endif
-                                            </div>
-
-                                            <a href="{{ route('frontend.vendor_details', ['id' => $vendor->id]) }}"
-                                               class="common_btn">
-                                                <i class="fas fa-store me-1"></i> Visit Store
+                                    {{-- Body --}}
+                                    <div class="vendor-card__body">
+                                        <div class="vendor-card__avatar">{{ strtoupper(mb_substr($vendor->name, 0, 1)) }}</div>
+                                        <h5 class="vendor-card__title">
+                                            <a href="{{ route('frontend.vendor_details', ['id' => $vendor->id]) }}">
+                                                {{ $vendor->name }}
                                             </a>
+                                        </h5>
+
+                                        @if($vendor->location)
+                                            <p class="vendor-card__location">
+                                                <i class="fas fa-map-marker-alt"></i> {{ $vendor->location }}
+                                            </p>
+                                        @endif
+
+                                        <div class="vendor-card__meta">
+                                            <div class="vendor-card__meta-item">
+                                                <i class="fas fa-star"></i> {{ number_format($vendor->rate, 1) }} / 5
+                                            </div>
+                                            <div class="vendor-card__divider"></div>
+                                            <div class="vendor-card__meta-item">
+                                                <i class="fas fa-comments"></i> {{ $vendor->rate_count ?? 0 }} reviews
+                                            </div>
                                         </div>
+
+                                        <div class="vendor-card__contact-row">
+                                            @if($vendor->phoneNumber)
+                                                <span><i class="fas fa-phone-alt me-1 text-primary"></i> {{ $vendor->phoneNumber }}</span>
+                                            @endif
+                                            @if($vendor->email)
+                                                <span class="vendor-card__email" title="{{ $vendor->email }}"><i class="fas fa-envelope me-1 text-primary"></i> {{ $vendor->email }}</span>
+                                            @endif
+                                        </div>
+
+                                        <a href="{{ route('frontend.vendor_details', ['id' => $vendor->id]) }}"
+                                           class="vendor-card__btn">
+                                            <span style="color:#fff;font-weight:900;">Visit Store</span>
+                                            <i class="fas fa-arrow-right"></i>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -311,8 +288,177 @@
     ==============================-->
 @endsection
 
-@push('styles')
 <style>
+    .vendor-card {
+        background: #fff;
+        border-radius: 14px;
+        overflow: hidden;
+        border: 1px solid #e8eaf0;
+        transition: box-shadow .25s ease, transform .25s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    .vendor-card:hover {
+        box-shadow: 0 10px 28px rgba(0,0,0,.10);
+        transform: translateY(-3px);
+    }
+    .vendor-card__cover {
+        position: relative;
+        height: 220px;
+        overflow: hidden;
+        flex-shrink: 0;
+    }
+    .vendor-card__cover a {
+        display: block;
+        height: 100%;
+    }
+    .vendor-card__cover img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform .35s ease;
+    }
+    .vendor-card:hover .vendor-card__cover img {
+        transform: scale(1.07);
+    }
+    .vendor-card__overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(0,0,0,.5) 0%, rgba(0,0,0,.05) 60%, transparent 100%);
+        pointer-events: none;
+    }
+    .vendor-card__rating {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: rgba(255,255,255,.92);
+        color: #f59e0b;
+        border-radius: 20px;
+        padding: 3px 9px;
+        font-size: .75rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 3px;
+        backdrop-filter: blur(4px);
+    }
+    .vendor-card__avatar {
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        color: #fff;
+        font-size: 1.6rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 4px solid #fff;
+        box-shadow: 0 3px 12px rgba(0,0,0,.22);
+        margin: -50px auto 12px;
+        position: relative;
+        z-index: 10;
+    }
+    .vendor-card__body {
+        padding: 0 14px 14px;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        text-align: center;
+    }
+    .vendor-card__title {
+        font-size: .95rem;
+        font-weight: 700;
+        margin: 0 0 4px;
+        line-height: 1.3;
+        text-align: center;
+    }
+    .vendor-card__title a {
+        color: #1e293b;
+        text-decoration: none;
+        transition: color .2s;
+    }
+    .vendor-card__title a:hover { color: #6366f1; }
+    .vendor-card__location {
+        font-size: .9rem;
+        color: #94a3b8;
+        margin: 0 0 10px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+    .vendor-card__location i { color: #ef4444; font-size: .8rem; }
+    .vendor-card__meta {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
+        justify-content: center;
+    }
+    .vendor-card__meta-item {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: .75rem;
+        color: #64748b;
+    }
+    .vendor-card__meta-item i { color: #f59e0b; font-size: .7rem; }
+    .vendor-card__divider {
+        width: 1px;
+        height: 12px;
+        background: #e2e8f0;
+    }
+    .vendor-card__contact-row {
+        font-size: .78rem;
+        color: #64748b;
+        margin-bottom: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+    .vendor-card__contact-row span { display: flex; align-items: center; gap: 6px; justify-content: center; word-break: break-word; font-size: .78rem; }
+    .vendor-card__email { white-space: normal !important; word-break: break-word; font-size: .75rem; }
+    .vendor-card__contact a {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: #f1f5f9;
+        color: #64748b;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: .75rem;
+        text-decoration: none;
+        transition: background .2s, color .2s;
+    }
+    .vendor-card__contact a:hover { background: #6366f1; color: #fff; }
+    .vendor-card__btn {
+        margin-top: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        background: linear-gradient(90deg, #08C 0%, #0077cc 100%);
+        color: #fff;
+        border-radius: 8px;
+        padding: 14px 22px;
+        font-size: 1rem;
+        font-weight: 800;
+        letter-spacing: .03em;
+        text-decoration: none;
+        transition: background .2s, transform .2s, box-shadow .2s;
+        border: none;
+    }
+    .vendor-card__btn:hover {
+        background: #0070bb;
+        color: #fff;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0,136,204,.3);
+    }
+    .vendor-card__btn i { font-size: .72rem; transition: transform .2s; }
+    .vendor-card__btn:hover i { transform: translateX(3px); }
     .wsus__sidebar_filter {
         cursor: pointer;
         padding: 10px 16px;
@@ -323,10 +469,7 @@
         color: #475569;
         font-size: .9rem;
     }
-    .wsus__sidebar_filter:hover {
-        background: #f1f5f9;
-        border-color: #cbd5e1;
-    }
+    .wsus__sidebar_filter:hover { background: #f1f5f9; }
     .wsus__product_sidebar {
         background: #fff;
         border: 1px solid #e2e8f0;
@@ -334,84 +477,8 @@
         padding: 16px;
         margin-bottom: 16px;
     }
-    .wsus__vendor_sidebar_select h5 {
-        margin-bottom: 12px !important;
-    }
-    .rating-filter-btn {
-        font-size: .8rem;
-        padding: 4px 10px;
-        border-radius: 20px;
-    }
-    .wsus__vendor_single {
-        border-radius: 12px;
-        overflow: hidden;
-        border: 1px solid #e2e8f0;
-        transition: all .25s ease;
-        background: #fff;
-        height: 100%;
-    }
-    .wsus__vendor_single:hover {
-        box-shadow: 0 8px 24px rgba(0,0,0,.12);
-        transform: translateY(-3px);
-        border-color: #cbd5e1;
-    }
-    .wsus__vendor_img_wrapper {
-        position: relative;
-        height: 200px;
-        overflow: hidden;
-    }
-    .wsus__vendor_img_wrapper img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform .3s ease;
-    }
-    .wsus__vendor_single:hover .wsus__vendor_img_wrapper img {
-        transform: scale(1.05);
-    }
-    .wsus__vendor_rating_overlay {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-    }
-    .wsus__vendor_text {
-        padding: 16px;
-    }
-    .wsus__vendor_text_center h4 {
-        font-size: 1.1rem;
-        font-weight: 700;
-        color: #1e293b;
-    }
-    .wsus__vendor_text_center .common_btn {
-        background: linear-gradient(135deg, #6366f1, #8b5cf6);
-        border: none;
-        color: #fff;
-        padding: 8px 20px;
-        border-radius: 8px;
-        font-size: .85rem;
-        text-decoration: none;
-        display: inline-block;
-        transition: all .2s ease;
-    }
-    .wsus__vendor_text_center .common_btn:hover {
-        opacity: .9;
-        color: #fff;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(99, 102, 241, .4);
-    }
-    .wsus__vendor_contact a {
-        color: #64748b;
-        font-size: .82rem;
-        text-decoration: none;
-        transition: color .2s;
-    }
-    .wsus__vendor_contact a:hover {
-        color: #6366f1;
-    }
-    .wsus__vendor_rating {
-        color: #f59e0b;
-        font-size: .85rem;
-    }
+    .wsus__vendor_sidebar_select h5 { margin-bottom: 12px !important; }
+    .rating-filter-btn { font-size: .8rem; padding: 4px 10px; border-radius: 20px; }
     @media (max-width: 991px) {
         #vendorFilters {
             background: #fff;
@@ -422,23 +489,4 @@
         }
     }
 </style>
-@endpush
 
-@push('scripts')
-<script>
-    // Rating filter buttons
-    document.querySelectorAll('.rating-filter-btn').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-            var rating = this.dataset.rating;
-            document.getElementById('minRatingInput').value = rating;
-            document.querySelectorAll('.rating-filter-btn').forEach(function(b) {
-                b.classList.remove('btn-primary');
-                b.classList.add('btn-outline-secondary');
-            });
-            this.classList.remove('btn-outline-secondary');
-            this.classList.add('btn-primary');
-            document.getElementById('filterForm').submit();
-        });
-    });
-</script>
-@endpush
