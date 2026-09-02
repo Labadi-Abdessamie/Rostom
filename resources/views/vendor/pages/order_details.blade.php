@@ -96,12 +96,17 @@
                                                     <td class="text-center">
                                                         <select class="form-control text-center" name="{{ $item->id }}"
                                                             id="{{ $item->id }}">
-                                                            <option value="1"
-                                                                @if ($item->status == 'available' || $item->status == 'pending') selected @endif>Yes
-                                                            </option>
-                                                            <option value="0"
-                                                                @if ($item->status == 'notAvailable') selected @endif>No
-                                                            </option>
+                                                            @if ($item->product->actual_quantity >= $item->quantity)
+                                                                <option value="1"
+                                                                    @if ($item->status == 'available' || $item->status == 'pending') selected @endif>Yes
+                                                                </option>
+                                                                <option value="0"
+                                                                    @if ($item->status == 'notAvailable') selected @endif>No
+                                                                </option>
+                                                            @else
+                                                                <option value="1" disabled>Yes (Out of Stock)</option>
+                                                                <option value="0" selected>No</option>
+                                                            @endif
                                                         </select>
                                                         <!-- <input type="checkbox"> -->
                                                     </td>

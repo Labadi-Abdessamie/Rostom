@@ -162,11 +162,19 @@ class OrderController extends Controller
         $order = Order::findOrFail($id);
         $order->status = 'delivered';
         $order->save();
+
         foreach ($order->orderItems as $item) {
             if ($item->status !== 'available') continue;
+
+            $product = $item->product;
+            if ($product->actual_quantity < $item->quantity) {
+                return redirect()->back()->with('error', 'Not enough stock available for this item.');
+            }
+
             $item->product->actual_quantity -= $item->quantity;
             $item->product->save();
         }
+
         return redirect()->back()->with('message', 'Order confirmed successfully.');
     }
 
