@@ -19,7 +19,7 @@ class VendorInterfaceController extends Controller
         $totalProducts = Product::where('magasin_id', $vendor->magasin->id)->count();
         //! 2
         $totalOrderItems = $vendor->magasin->orderItems()->with('order')->get()
-            ->filter(fn ($item) => $item->order !== null);
+            ->filter(function ($item) { return $item->order !== null; });
         $totalOrders = $totalOrderItems->groupBy('order_id')->map(function ($items, $orderId) {
             return [
                 'id' => $orderId,
@@ -76,22 +76,22 @@ class VendorInterfaceController extends Controller
             $pendingPaymentOrderItems = OrderItem::with(['product', 'order'])
                 ->whereIn('order_id', $deliveredOrderIds)
                 ->where('status', 'available')
-                ->whereHas('order', fn($q) => $q->where('paymentStatus', 'pending'))
-                ->whereHas('product', fn($q) => $q->where('magasin_id', $vendor->magasin->id))
+                ->whereHas('order', function ($q) { return $q->where('paymentStatus', 'pending'); })
+                ->whereHas('product', function ($q) use ($vendor) { return $q->where('magasin_id', $vendor->magasin->id); })
                 ->get();
 
-            $pendingBalance = $pendingPaymentOrderItems->sum(fn($item) => $item->product->price * $item->quantity);
+            $pendingBalance = $pendingPaymentOrderItems->sum(function ($item) { return $item->product->price * $item->quantity; });
 
             $pendingPaymentOrders = Order::with(['user', 'orderItems.product'])
                 ->whereIn('id', $deliveredOrderIds)
                 ->where('paymentStatus', 'pending')
-                ->whereHas('orderItems.product', fn($q) => $q->where('magasin_id', $vendor->magasin->id))
+                ->whereHas('orderItems.product', function ($q) use ($vendor) { return $q->where('magasin_id', $vendor->magasin->id); })
                 ->get()
-                ->filter(fn($order) => $order->orderItems
+                ->filter(function ($order) use ($vendor) { return $order->orderItems
                     ->where('product.magasin_id', $vendor->magasin->id)
                     ->where('status', 'available')
-                    ->count() > 0
-                )
+                    ->count() > 0;
+                })
                 ->values()
                 ->sortByDesc('id')
                 ->values();
@@ -114,11 +114,11 @@ class VendorInterfaceController extends Controller
             $chartLabels[]  = $date->format('M Y');
 
             $revenueByMonth[] = (float) $completedItemsFlat
-                ->filter(fn ($item) =>
-                    Carbon::parse($item->created_at)->year  === $date->year &&
-                    Carbon::parse($item->created_at)->month === $date->month
-                )
-                ->sum(fn ($item) => $item->product->price * $item->quantity);
+                ->filter(function ($item) use ($date) {
+                    return Carbon::parse($item->created_at)->year  === $date->year &&
+                    Carbon::parse($item->created_at)->month === $date->month;
+                })
+                ->sum(function ($item) { return $item->product->price * $item->quantity; });
         }
 
         // ===== Order Status Breakdown =====
@@ -159,7 +159,7 @@ class VendorInterfaceController extends Controller
         $vendor = Auth::user();
         //$magasinId = $vendor->magasin->id;
         $orderItems = $vendor->magasin->orderItems()->with(['product', 'order'])->get()
-            ->filter(fn ($item) => $item->order !== null);
+            ->filter(function ($item) { return $item->order !== null; });
 
         $orders = $orderItems->groupBy('order_id')->map(function ($items, $orderId) {
             return [
@@ -232,9 +232,11 @@ class VendorInterfaceController extends Controller
             $orders = Order::with(['user', 'orderItems.product'])
                 ->where('status', 'delivered')
                 ->whereIn('paymentStatus', ['pending'])
-                ->whereHas('orderItems.product', fn($q) => $q->where('magasin_id', $magasin->id))
+                ->whereHas('orderItems.product', function ($q) use ($magasin) {
+                    return $q->where('magasin_id', $magasin->id);
+                })
                 ->get()
-                ->filter(fn($order) => {
+                ->filter(function ($order) use ($magasin) {
                     // Hide orders that this vendor has already confirmed (no remaining available items for this vendor)
                     $vendorAvailableCount = $order->orderItems
                         ->where('product.magasin_id', $magasin->id)
@@ -244,11 +246,14 @@ class VendorInterfaceController extends Controller
                 })
                 ->values();
 
-            $totalPending = $orders->sum(fn($order) => $order->orderItems
-                ->where('product.magasin_id', $magasin->id)
-                ->where('status', 'available')
-                ->sum(fn($item) => $item->product->price * $item->quantity)
-            );
+            $totalPending = $orders->sum(function ($order) use ($magasin) {
+                return $order->orderItems
+                    ->where('product.magasin_id', $magasin->id)
+                    ->where('status', 'available')
+                    ->sum(function ($item) {
+                        return $item->product->price * $item->quantity;
+                    });
+            });
         }
 
         return view('vendor.pages.pending_payments', [
