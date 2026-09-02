@@ -191,19 +191,36 @@ class OrderController extends Controller
         }
 
         // Vendor can only confirm payment for their available products
+        $vendorItems = collect();
+        foreach ($order->orderItems as $item) {
+            if ($item->status !== 'available') continue;
+            $magasin = $item->product->magasin;
+            if ($magasin->user_id === Auth::id()) {
+                $vendorItems->push($item);
+            }
+        }
+
+        if ($vendorItems->isEmpty()) {
+            return redirect()->back()->with('error', 'You have no available products in this order to confirm payment.');
+        }
+
+        // Only set order payment to success if no other vendors have unconfirmed available items
+        $otherVendorHasPending = false;
         foreach ($order->orderItems as $item) {
             if ($item->status !== 'available') continue;
             $magasin = $item->product->magasin;
             if ($magasin->user_id !== Auth::id()) {
-                return redirect()->back()->with('error', 'You are not authorized to confirm payment for this order.');
+                $otherVendorHasPending = true;
+                break;
             }
         }
 
-        $order->paymentStatus = 'success';
-        $order->save();
+        if (!$otherVendorHasPending) {
+            $order->paymentStatus = 'success';
+            $order->save();
+        }
 
-        foreach ($order->orderItems as $item) {
-            if ($item->status !== 'available') continue;
+        foreach ($vendorItems as $item) {
             $magasin = Magasin::findOrFail($item->product->magasin->id);
             $magasin->balance += $item->product->price * $item->quantity;
             $magasin->save();
