@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Magasin;
 use Illuminate\Http\Request;
 
@@ -12,14 +13,68 @@ class VendorController extends Controller
      */
     public function index(Request $request)
     {
-        $queryFilter = $request->query('name', null);
-
-        if ($queryFilter) {
-            $vendors = Magasin::where('name', 'like', '%' . $queryFilter . '%')->paginate(12);
-        } else {
-            $vendors = Magasin::where('status', 'active')->inRandomOrder()->paginate(12);
+        $name          = $request->query('name', null);
+        $categoryId    = $request->query('category', null);
+        $sortBy        = $request->query('sort_by', 'default');
+        $minRating     = (int) $request->query('min_rating', 0);
+        $perPage       = (int) $request->query('per_page', 12);
+        if (!in_array($perPage, [12, 15, 18, 21, 24, 48])) {
+            $perPage = 12;
         }
-        return view('frontend.pages.vendor', compact('vendors', 'queryFilter'));
+
+        $query = Magasin::query()->where('status', 'active');
+
+        if ($name) {
+            $query->where(function ($q) use ($name) {
+                $q->where('name', 'like', "%{$name}%")
+                  ->orWhere('email', 'like', "%{$name}%")
+                  ->orWhere('phoneNumber', 'like', "%{$name}%")
+                  ->orWhere('location', 'like', "%{$name}%");
+            });
+        }
+
+        if ($categoryId) {
+            $query->whereHas('products.category', function ($q) use ($categoryId) {
+                $q->where('categories.id', $categoryId)
+                  ->orWhere('categories.parentId', $categoryId);
+            });
+        }
+
+        if ($minRating > 0) {
+            $query->where('rate', '>=', $minRating);
+        }
+
+        switch ($sortBy) {
+            case 'rating_high':
+                $query->orderByDesc('rate');
+                break;
+            case 'rating_low':
+                $query->orderBy('rate');
+                break;
+            case 'latest':
+                $query->latest();
+                break;
+            case 'oldest':
+                $query->oldest();
+                break;
+            case 'name_asc':
+                $query->orderBy('name');
+                break;
+            case 'name_desc':
+                $query->orderByDesc('name');
+                break;
+            default:
+                $query->inRandomOrder();
+        }
+
+        $vendors       = $query->paginate($perPage)->appends($request->query());
+        $categories    = Category::where('status', 'active')->orderBy('name')->get();
+        $totalVendors  = $vendors->total();
+
+        return view('frontend.pages.vendor', compact(
+            'vendors', 'name', 'categoryId', 'sortBy', 'minRating',
+            'perPage', 'categories', 'totalVendors'
+        ));
     }
 
     /**
@@ -78,3 +133,4 @@ class VendorController extends Controller
         //
     }
 }
+

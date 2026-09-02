@@ -61,19 +61,27 @@
                                                 </a>
                                             </td>
                                             <td>{{ $order->created_at->format('d M Y') }}</td>
-                                            <td>{{ $vendorItems->count() }} item{{ $vendorItems->count() === 1 ? '' : 's' }}</td>
+                                            <td>
+                                                @foreach($vendorItems as $item)
+                                                    <span class="badge bg-light text-dark me-1">{{ $item->product->name ?? 'Product' }} ({{ $item->quantity }})</span>
+                                                @endforeach
+                                            </td>
                                             <td class="fw-bold">{{ number_format($vendorTotal) }}</td>
                                             <td>
                                                 <span class="badge badge-warning">Delivered</span>
                                                 <span class="badge badge-secondary">Payment Pending</span>
                                             </td>
                                             <td>
-                                                <form action="{{ route('vendor.order.confirm_payment', $order->id) }}" method="POST" style="display:inline;">
-                                                    @csrf
-                                                    <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Confirm receipt of payment for this order?')">
-                                                        <i class="fas fa-check me-1"></i> Confirm Payment
-                                                    </button>
-                                                </form>
+                                                @if($vendorTotal > 0)
+                                                    <form action="{{ route('vendor.order.confirm_payment', $order->id) }}" method="POST" style="display:inline;">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Confirm receipt of payment for this order?')">
+                                                            <i class="fas fa-check me-1"></i> Confirm Payment
+                                                        </button>
+                                                    </form>
+                                                @else
+                                                    <span class="text-muted"><i class="fas fa-minus-circle me-1"></i> No items</span>
+                                                @endif
                                             </td>
                                         </tr>
                                     @empty

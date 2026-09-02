@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\Magasin;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -220,13 +221,19 @@ class AdminController extends Controller
         return view('admin.pages.customers', compact('users', 'title'));
     }
 
-    public function vendors($type = null)
+    public function vendors(Request $request, $type = null)
     {
-        $search = request('search');
-        $perPage = request('per_page', 10);
+        $search      = $request->input('search');
+        $status      = $request->input('status');
+        $magasinStatus = $request->input('magasin_status');
+        $dateFrom    = $request->input('date_from');
+        $dateTo      = $request->input('date_to');
+        $sortBy      = $request->input('sort_by', 'created_at');
+        $sortDir     = $request->input('sort_dir', 'desc');
+        $perPage     = $request->input('per_page', 10);
         if ($perPage === 'all') $perPage = 9999;
 
-        $query = User::where('role', 'vendor');
+        $query = User::with('magasin')->where('role', 'vendor');
 
         if ($type === 'blocked') {
             $query->where('status', 'blocked');
@@ -238,16 +245,44 @@ class AdminController extends Controller
             $title = "Vendors";
         }
 
+        // Text search: name, email, phone
         if ($search) {
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', '%' . $search . '%')
-                  ->orWhere('email', 'like', '%' . $search . '%')
-                  ->orWhere('phoneNumber', 'like', '%' . $search . '%');
+                $q->where('name',        'like', "%{$search}%")
+                  ->orWhere('email',     'like', "%{$search}%")
+                  ->orWhere('phoneNumber','like', "%{$search}%");
             });
         }
 
-        $vendors = $query->with('magasin')->paginate($perPage)->appends(request()->all());
-        return view('admin.pages.vendors', compact('vendors', 'title'));
+        // Vendor user-level status filter
+        if ($status && in_array($status, ['active', 'inactive', 'blocked'])) {
+            $query->where('status', $status);
+        }
+
+        // Magasin status filter
+        if ($magasinStatus && in_array($magasinStatus, ['active', 'inactive', 'blocked', 'firstOpening'])) {
+            $query->whereHas('magasin', fn($q) => $q->where('status', $magasinStatus));
+        }
+
+        // Date range filter
+        if ($dateFrom) {
+            $query->whereDate('created_at', '>=', $dateFrom);
+        }
+        if ($dateTo) {
+            $query->whereDate('created_at', '<=', $dateTo);
+        }
+
+        // Sorting
+        $allowedSorts = ['created_at', 'name', 'email', 'phoneNumber'];
+        if (in_array($sortBy, $allowedSorts)) {
+            $query->orderBy($sortBy, $sortDir === 'asc' ? 'asc' : 'desc');
+        }
+
+        $vendors = $query->paginate($perPage)->appends($request->query());
+        return view('admin.pages.vendors', compact(
+            'vendors', 'title', 'search', 'status', 'magasinStatus',
+            'dateFrom', 'dateTo', 'sortBy', 'sortDir', 'perPage', 'type'
+        ));
     }
 
     public function admins()
