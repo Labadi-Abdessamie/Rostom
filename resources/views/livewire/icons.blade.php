@@ -24,20 +24,11 @@
         </a>
     </li>
 
-    {{-- Cart --}}
-    @if(Auth::check() && Auth::user()->role === 'client')
-        <li>
-            <a href="{{ route('frontend.cart') }}" title="Cart" class="wsus__icon_btn">
-                <i class="fas fa-shopping-cart"></i>
-                <span class="wsus__icon_badge">{{ $cartCount }}</span>
-            </a>
-        </li>
-    @else
-        <li>
-            <a href="{{ route('login') }}" title="Cart" class="wsus__icon_btn">
-                <i class="fas fa-shopping-cart"></i>
-                <span class="wsus__icon_badge">0</span>
-            </a>
-        </li>
-    @endif
+    {{-- Cart — opens side panel --}}
+    <li>
+        <a href="#" onclick="openCartPanel();return false;" title="Cart" class="wsus__icon_btn">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="wsus__icon_badge" id="cartIconBadge">{{ $cartCount }}</span>
+        </a>
+    </li>
 </ul>

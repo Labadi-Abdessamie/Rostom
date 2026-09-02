@@ -29,7 +29,7 @@
                         @auth
                             @if(Auth::user()->role === 'client')
                                 <li>
-                                    <a href="{{ route('frontend.cart') }}"
+                                    <a href="javascript:void(0)" onclick="openCartPanel()"
                                        class="{{ Route::currentRouteName() == 'frontend.cart' ? 'active' : '' }}">
                                         <i class="fas fa-shopping-cart"></i> Cart
                                     </a>

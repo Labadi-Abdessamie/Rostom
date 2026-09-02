@@ -34,15 +34,9 @@
             <div class="row">
 
                 {{-- ═══ SIDEBAR FILTER ═══ --}}
-                <div class="col-xl-3 col-lg-4" style="max-width:280px; flex:0 0 280px;">
+                <div class="col-xl-3 col-lg-4 d-none d-lg-block" style="max-width:280px; flex:0 0 280px;">
 
-                    <button class="wsus__sidebar_filter d-lg-none w-100 mb-3"
-                            type="button" data-bs-toggle="collapse" data-bs-target="#vendorFilters"
-                            aria-expanded="false" aria-controls="vendorFilters">
-                        <i class="fas fa-sliders-h me-2"></i> Filters
-                    </button>
-
-                    <div class="collapse d-lg-block" id="vendorFilters">
+                    <div class="collapse d-lg-block" id="vendorFilters" style="position:sticky;top:20px;">
                         <form method="GET" action="{{ route('frontend.vendor') }}" id="filterForm">
 
                             <div class="wsus__product_sidebar wsus__vendor_sidebar" id="sticky_sidebar">
@@ -127,7 +121,22 @@
                 </div>
 
                 {{-- ═══ VENDOR GRID ═══ --}}
-                <div class="col-xl-9 col-lg-8" style="padding-left:10px; max-width:calc(100% - 280px); flex:1;">
+                <div class="col-xl-9 col-lg-8" style="padding-left:10px; max-width:100%; flex:1;">
+
+                    {{-- Mobile filter button above cards --}}
+                    <button class="wsus__sidebar_filter d-lg-none w-100 mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#vendorFiltersMobile" aria-expanded="false" aria-controls="vendorFiltersMobile" style="background: linear-gradient(135deg,#f59e0b,#ef4444); color:#fff; font-weight:700; border:none; padding:8px 12px; border-radius:8px; font-size:.9rem;">
+                        <i class="fas fa-sliders-h me-2"></i> Filters
+                    </button>
+
+                    <!-- Mobile dropdown -->
+                    <div class="collapse d-lg-none mb-3" id="vendorFiltersMobile" style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:16px; box-shadow:0 4px 12px rgba(0,0,0,.05);">
+                        <form method="GET" action="{{ route('frontend.vendor') }}">
+                            <div class="input-group mb-2"><input type="text" name="name" class="form-control form-control-sm" placeholder="Search..." value="{{ $name ?? '' }}"></div>
+                            <select name="category" class="form-select form-select-sm mb-2"><option value="">All Categories</option>@foreach($categories as $c)<option value="{{ $c->id }}" {{ ($categoryId ?? '') == $c->id ? 'selected' : '' }}>{{ $c->name }}</option>@endforeach</select>
+                            <select name="sort_by" class="form-select form-select-sm mb-2"><option value="default" {{ ($sortBy ?? 'default')=='default'?'selected':'' }}>Featured</option><option value="rating_high" {{ ($sortBy ?? '')=='rating_high'?'selected':'' }}>Highest Rated</option></select>
+                            <div class="d-flex gap-2"><button type="submit" class="btn btn-primary btn-sm flex-grow-1"><i class="fas fa-filter me-1"></i>Apply</button><a href="{{ route('frontend.vendor') }}" class="btn btn-outline-secondary btn-sm"><i class="fas fa-times"></i></a></div>
+                        </form>
+                    </div>
 
                     {{-- Top bar (desktop) --}}
                     <div class="wsus__product_topbar d-none d-lg-flex justify-content-between align-items-center mb-4">
@@ -198,8 +207,8 @@
                     {{-- Vendors Grid --}}
                     <div class="row">
                         @forelse($vendors as $vendor)
-                            <div class="col-xl-4 col-lg-6 col-md-6 mb-4" style="height: 500px;">
-                                <div class="vendor-card" style="height: 100%;">
+                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 mb-4">
+                                <div class="vendor-card">
                                     {{-- Cover image --}}
                                     <div class="vendor-card__cover">
                                         <a href="{{ route('frontend.vendor_details', ['id' => $vendor->id]) }}">
@@ -305,7 +314,7 @@
     }
     .vendor-card__cover {
         position: relative;
-        height: 220px;
+        height: 200px;
         overflow: hidden;
         flex-shrink: 0;
     }
@@ -479,6 +488,11 @@
     }
     .wsus__vendor_sidebar_select h5 { margin-bottom: 12px !important; }
     .rating-filter-btn { font-size: .8rem; padding: 4px 10px; border-radius: 20px; }
+    @media (max-width: 575px) {
+        .vendor-card__cover { height: 160px; }
+        .vendor-card__avatar { width: 56px; height: 56px; font-size: 1.2rem; margin-top: -30px; }
+        .vendor-card__body { padding: 0 10px 10px; }
+    }
     @media (max-width: 991px) {
         #vendorFilters {
             background: #fff;
