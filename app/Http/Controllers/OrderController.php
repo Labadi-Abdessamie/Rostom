@@ -224,6 +224,10 @@ class OrderController extends Controller
             $magasin = Magasin::findOrFail($item->product->magasin->id);
             $magasin->balance += $item->product->price * $item->quantity;
             $magasin->save();
+
+            // Mark this vendor's item as confirmed so it disappears from pending
+            $item->status = 'confirmed';
+            $item->save();
         }
 
         return redirect()->back()->with('message', 'Payment confirmed successfully.');

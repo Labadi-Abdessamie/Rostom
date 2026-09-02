@@ -231,14 +231,17 @@ class VendorInterfaceController extends Controller
         } else {
             $orders = Order::with(['user', 'orderItems.product'])
                 ->where('status', 'delivered')
-                ->where('paymentStatus', 'pending')
+                ->whereIn('paymentStatus', ['pending'])
                 ->whereHas('orderItems.product', fn($q) => $q->where('magasin_id', $magasin->id))
                 ->get()
-                ->filter(fn($order) => $order->orderItems
-                    ->where('product.magasin_id', $magasin->id)
-                    ->where('status', 'available')
-                    ->count() > 0
-                )
+                ->filter(fn($order) => {
+                    // Hide orders that this vendor has already confirmed (no remaining available items for this vendor)
+                    $vendorAvailableCount = $order->orderItems
+                        ->where('product.magasin_id', $magasin->id)
+                        ->where('status', 'available')
+                        ->count();
+                    return $vendorAvailableCount > 0;
+                })
                 ->values();
 
             $totalPending = $orders->sum(fn($order) => $order->orderItems
