@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="{{ asset('frontend/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/responsive.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/toastr.css') }}">
+    @stack('styles')
     <style>
         /* ===== CART SIDE PANEL ===== */
         .wsus__cart_panel_root {

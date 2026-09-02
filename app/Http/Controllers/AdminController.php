@@ -303,23 +303,65 @@ class AdminController extends Controller
     //! Products
     public function products()
     {
-        $search = request('search');
-        $perPage = request('per_page', 10);
+        $search       = request('search');
+        $stockStatus  = request('stock_status');
+        $categoryId   = request('category_id');
+        $priceFrom    = request('price_from');
+        $priceTo      = request('price_to');
+        $sortBy       = request('sort_by', 'created_at');
+        $sortDir      = request('sort_dir', 'desc');
+        $perPage      = request('per_page', 12);
         if ($perPage === 'all') $perPage = 9999;
 
-        $query = Product::with('magasin')->withCount('orderItems');
+        $query = Product::with(['magasin', 'category'])->withCount('orderItems');
 
+        // Text search
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', '%' . $search . '%')
-                  ->orWhere('price', 'like', '%' . $search . '%')
                   ->orWhereHas('magasin', fn($mq) => $mq->where('name', 'like', '%' . $search . '%'));
             });
         }
 
-        $products = $query->paginate($perPage)->appends(request()->all());
-        $totalProducts = Product::count();
-        return view('admin.pages.products', compact('products', 'totalProducts'));
+        // Stock status filter
+        if ($stockStatus === 'in') {
+            $query->where('actual_quantity', '>=', 5);
+        } elseif ($stockStatus === 'low') {
+            $query->whereBetween('actual_quantity', [1, 4]);
+        } elseif ($stockStatus === 'out') {
+            $query->where('actual_quantity', '<=', 0);
+        }
+
+        // Category filter
+        if ($categoryId) {
+            $query->where('category_id', $categoryId);
+        }
+
+        // Price range filter
+        if ($priceFrom !== null && $priceFrom !== '') {
+            $query->where('price', '>=', (float) $priceFrom);
+        }
+        if ($priceTo !== null && $priceTo !== '') {
+            $query->where('price', '<=', (float) $priceTo);
+        }
+
+        // Sorting
+        $allowedSorts = ['created_at', 'name', 'price', 'actual_quantity', 'rate_average'];
+        if (in_array($sortBy, $allowedSorts)) {
+            $query->orderBy($sortBy, $sortDir === 'asc' ? 'asc' : 'desc');
+        } else {
+            $query->orderBy('created_at', 'desc');
+        }
+
+        $products = $query->paginate($perPage)->appends(request()->query());
+
+        // Get categories for filter dropdown
+        $categories = \App\Models\Category::orderBy('name')->get();
+
+        return view('admin.pages.products', compact(
+            'products', 'search', 'stockStatus', 'categoryId',
+            'priceFrom', 'priceTo', 'sortBy', 'sortDir', 'perPage', 'categories'
+        ));
     }
 
     //! REVIEWS

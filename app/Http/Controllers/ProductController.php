@@ -22,11 +22,17 @@ class ProductController extends Controller
         $perPage = $request->query('number', 12);
         if ($perPage === 'all') $perPage = 9999;
 
-        $queryFilter = $request->query('name', null);
+        $queryFilter = $request->query('query', null);
+        $min = $request->query('min', null);
+        $max = $request->query('max', null);
+        $categories = Category::where('status', 'active')->orderBy('name')->get();
+
         if ($queryFilter) {
-            $products = Product::where('name', 'like', '%' . $queryFilter . '%')->paginate($perPage);
+            $products = Product::where('name', 'like', '%'. $queryFilter .'%')
+                ->with('category')
+                ->paginate($perPage)->appends($request->except('page'));
         } else {
-            $query = Product::with('productImages');
+            $query = Product::with(['category', 'magasin'])->withCount('orderItems');
 
             if ($categoryId) {
                 $category = Category::find($categoryId);
@@ -34,20 +40,17 @@ class ProductController extends Controller
                     return redirect()->route('frontend.products')
                         ->with('message', 'This category is not active');
                 }
-
-
-                $subCategoryIds = Category::where('parentId', $categoryId)
-                    ->where('status', 'active')
-                    ->pluck('id')
-                    ->toArray();
-                $subSubCategoryIds = Category::whereIn('parentId', $subCategoryIds)
-                    ->where('status', 'active')
-                    ->pluck('id')
-                    ->toArray();
-
+                $subCategoryIds = Category::where('parentId', $categoryId)->where('status', 'active')->pluck('id')->toArray();
+                $subSubCategoryIds = Category::whereIn('parentId', $subCategoryIds)->where('status', 'active')->pluck('id')->toArray();
                 $allCategoryIds = array_merge([$categoryId], $subCategoryIds, $subSubCategoryIds);
-
                 $query->whereIn('category_id', $allCategoryIds);
+            }
+
+            if ($min !== null && $min !== '') {
+                $query->where('price', '>=', (float)$min);
+            }
+            if ($max !== null && $max !== '') {
+                $query->where('price', '<=', (float)$max);
             }
 
             switch ($sort) {
@@ -67,10 +70,10 @@ class ProductController extends Controller
                     $query->latest();
                     break;
             }
-            $products = $query->paginate($perPage)->appends($request->query());
+            $products = $query->paginate($perPage)->appends($request->except('page'));
         }
 
-        return view('frontend.pages.product_view', compact('products', 'queryFilter'));
+        return view('frontend.pages.product_view', compact('products', 'queryFilter', 'categories', 'min', 'max'));
 
 
         //! Precedent code works without filters

@@ -86,219 +86,95 @@
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 PRODUCT DETAILS START
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             ==============================-->
     <section id="wsus__product_details">
-        <div class="container">
+        <div class="container product-detail-wrapper">
             <div class="wsus__details_bg">
                 <div class="row">
                     <div class="col-xl-4 col-md-5 col-lg-5">
                         <div id="sticky_pro_zoom">
-                            <div class="exzoom hidden" id="exzoom">
-                                <div class="exzoom_img_box">
-                                    @if (false)
-                                        <a class="venobox wsus__pro_det_video" data-autoplay="true" data-vbtype="video"
-                                            href="https://youtu.be/7m16dFI1AF8">
-                                            <i class="fas fa-play"></i>
-                                        </a>
-                                    @endif
-                                    <ul class='exzoom_img_ul'>
-                                        <li><img class="zoom ing-fluid w-100"
-                                                src="{{ asset('storage/products_images/' . $product->id . '/' . $product->principalImage) }}"
-                                                alt="product"></li>
-                                        @if ($product->productImages)
-                                            @foreach ($product->productImages as $image)
-                                                <li><img class="zoom ing-fluid w-100"
-                                                        src="{{ asset('storage/products_images/' . $product->id . '/' . $image->path) }}"
-                                                        alt="product"></li>
-                                            @endforeach
-                                        @endif
-                                    </ul>
-                                </div>
-                                <div class="exzoom_nav"></div>
-                                <p class="exzoom_btn">
-                                    <a href="javascript:void(0);" class="exzoom_prev_btn"> <i
-                                            class="far fa-chevron-left"></i> </a>
-                                    <a href="javascript:void(0);" class="exzoom_next_btn"> <i
-                                            class="far fa-chevron-right"></i> </a>
-                                </p>
+                            <div class="detail-gallery">
+                                @php
+                                    $galleryImages = collect([
+                                        (object)['path' => $product->principalImage],
+                                    ])->merge($product->productImages ?? collect());
+                                @endphp
+                                @if ($galleryImages->count() > 1)
+                                    <div class="detail-gallery-row">
+                                        <button type="button" class="detail-gallery-nav prev" onclick="detailSliderPrev()" aria-label="Previous image">
+                                            <i class="far fa-chevron-left"></i>
+                                        </button>
+                                        <div class="detail-gallery-slider">
+                                            <img class="main-img"
+                                                id="mainImage"
+                                                src="{{ asset('storage/products_images/' . $product->id . '/' . $galleryImages->first()->path) }}"
+                                                alt="{{ $product->name }}">
+                                        </div>
+                                        <button type="button" class="detail-gallery-nav next" onclick="detailSliderNext()" aria-label="Next image">
+                                            <i class="far fa-chevron-right"></i>
+                                        </button>
+                                    </div>
+                                @else
+                                    <div class="detail-gallery-slider">
+                                        <img class="main-img"
+                                            id="mainImage"
+                                            src="{{ asset('storage/products_images/' . $product->id . '/' . $galleryImages->first()->path) }}"
+                                            alt="{{ $product->name }}">
+                                    </div>
+                                @endif
+                                @if ($galleryImages->count() > 1)
+                                    <div class="detail-thumb-row" id="detailThumbRow">
+                                        @foreach ($galleryImages as $idx => $image)
+                                            <img src="{{ asset('storage/products_images/' . $product->id . '/' . $image->path) }}"
+                                                alt="thumb"
+                                                data-index="{{ $idx }}"
+                                                class="{{ $idx === 0 ? 'active' : '' }}"
+                                                onclick="detailSliderGoTo({{ $idx }})">
+                                        @endforeach
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>
                     <div class="col-xl-5 col-md-7 col-lg-7">
-                        <div class="wsus__pro_details_text">
-                            <a class="title">{{ $product->name }}</a>
-                            <p class="wsus__stock_area">
-                                @if ($product->actual_quantity > 0)
-                                    <span class="in_stock">in stock</span>
-                                @else
-                                    <span class="out_stock">out of stock</span>
-                                @endif
-                                ({{ $product->actual_quantity }} item)
-                            </p>
-                            <h4>DZ
-                                <span id="product_price">{{ $product->price }}</span>
-                                @if (false)
-                                    <del>DZ 60.00</del>
-                                @endif
-                            </h4>
-                            <p class="review">
-                                @if ($product->rate_average != 0)
+                        <div class="detail-info-header">
+                            <span class="category-badge">{{ $product->category->name ?? 'General' }}</span>
+                            <h2>{{ $product->name }}</h2>
+                            <div class="detail-rating-row">
+                                @if ($product->rate_average > 0)
                                     @for ($i = 1; $i <= $product->rate_average; $i++)
-                                        <i class="fas fa-star "></i>
+                                        <i class="fas fa-star star"></i>
                                     @endfor
                                     @if ($product->rate_average != floor($product->rate_average))
-                                        <i class="fas fa-star-half-alt"></i>
+                                        <i class="fas fa-star-half-alt star"></i>
                                     @endif
                                 @else
-                                    <i class="far fa-star"></i>
-                                    <i class="far fa-star"></i>
-                                    <i class="far fa-star"></i>
-                                    <i class="far fa-star"></i>
-                                    <i class="far fa-star"></i>
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        <i class="far fa-star star-empty"></i>
+                                    @endfor
                                 @endif
-                                <span>({{ $product->rate_count }} review)</span>
-                            </p>
-                            <!-- <p class="description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        neque
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        sint obcaecati asperiores dolor cumque. ad voluptate dolores reprehenderit hic adipisci
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        Similique eaque illum.</p> -->
-                            @if (false)
-                                <div class="wsus_pro_hot_deals">
-                                    <h5>offer ending time : </h5>
-                                    <div class="simply-countdown simply-countdown-one"></div>
-                                </div>
-                            @endif
-                            <div class="wsus_pro_det_color">
-                                @php
-                                    $product->colorVar = json_decode($product->colorVar);
-                                @endphp
-                                <ul>
-                                    @if ($product->colorVar)
-                                        <h5>color :</h5>
-                                        @foreach ($product->colorVar as $color)
-                                            <input type="checkbox">
-                                            <li>
-                                                <a class="{{ $color }}"><i class="far fa-check"></i></a>
-                                            </li>
-                                            </input>
-                                        @endforeach
-                                    @endif
-                                </ul>
+                                <span class="count">({{ $product->rate_count ?? 0 }} reviews)</span>
                             </div>
-                            <div class="wsus_pro__det_size">
-                                @php
-                                    $product->sizeVar = json_decode($product->sizeVar);
-                                @endphp
-                                <ul>
-                                    @if ($product->sizeVar)
-                                        <h5>size :</h5>
-                                        @foreach ($product->sizeVar as $size)
-                                            <li><a href="">{{ $size }}</a></li>
-                                        @endforeach
-                                    @endif
-                                </ul>
+                            <div class="detail-price-block">
+                                <h3>DZ {{ $product->price }}</h3>
                             </div>
-                            @if (false)
-                                <div class="wsus__quentity">
-                                    <h5>quantity :</h5>
-                                    <form class="select_number">
-                                        <!-- Maybe we change the css here to make it work -->
-                                        <input class="number_area" id="number_input" type="number" min="1"
-                                            max="100" value="1" />
-                                    </form>
-                                    @push('scripts')
-                                        <script>
-                                            let numberInput = document.getElementById('number_input');
-                                            numberInput.addEventListener('input', function() {
-                                                let totalPrice = document.getElementById('product_total_price');
-                                                let quantity = numberInput = document.getElementById('number_input').value;
-                                                let price = document.getElementById('product_price').innerText;
-                                                let priceValue = parseFloat(price);
-                                                let quantityValue;
-                                                if (numberInput >= 0) {
-                                                    quantityValue = parseInt(numberInput) || 1;
-                                                } else {
-                                                    quantityValue = 1;
-                                                }
-                                                totalPrice.innerText = (priceValue * quantityValue).toFixed(2);
-                                            });
-                                        </script>
-                                    @endpush
+                            <div class="detail-stock-badge {{ $product->actual_quantity > 0 ? 'in' : 'out' }}">
+                                <i class="fas fa-{{ $product->actual_quantity > 0 ? 'check' : 'times' }}"></i>
+                                <span>{{ $product->actual_quantity > 0 ? 'In stock' : 'Out of stock' }}</span>
+                            </div>
 
-                                    <h3>DZ
-                                        <span id="product_total_price">
-                                            {{ $product->price }}
-                                        </span>
-                                    </h3>
-                                </div>
-                            @endif
-
-                            @if (false)
-                                <div class="wsus__selectbox">
-                                    <div class="row">
-                                        <div class="col-xl-6 col-sm-6">
-                                            <h5 class="mb-2">select:</h5>
-                                            <select class="select_2" name="state">
-                                                <option>default select</option>
-                                                <option>select 1</option>
-                                                <option>select 2</option>
-                                                <option>select 3</option>
-                                                <option>select 4</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-xl-6 col-sm-6">
-                                            <h5 class="mb-2">select:</h5>
-                                            <select class="select_2" name="state">
-                                                <option>default select</option>
-                                                <option>select 1</option>
-                                                <option>select 2</option>
-                                                <option>select 3</option>
-                                                <option>select 4</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endif
-                            <ul class="wsus__button_area">
+                            <ul class="wsus__button_area d-flex gap-2 mt-3">
                                 @if ($product->actual_quantity > 0)
                                     <li>
-                                        @livewire('add-to-cart', ['product' => $product], key($product->id))
-                                        {{-- <a class="add_cart" href="#">add to cart</a> --}}
+                                        @livewire('add-to-cart', ['product' => $product], key('cart-' . $product->id))
                                     </li>
-                                    <li class="cursor-pointer">
-                                        @livewire('buy-now', ['product' => $product], key($product->id))
+                                    <li>
+                                        @livewire('buy-now', ['product' => $product], key('buy-' . $product->id))
                                     </li>
                                 @else
                                     <li>
-                                        <button class="btn btn--danger bg-danger add_cart">
-                                            Out of stock
-                                        </button>
+                                        <button class="detail-action-btn secondary" disabled>Out of stock</button>
                                     </li>
                                 @endif
-                                <li class="cursor-pointer">
-                                    @livewire('add-to-wishlist', ['product' => $product], key($product->id))
-                                </li>
-                                <li class="cursor-pointer">
-                                    @livewire('add-to-compare', ['productId' => $product->id])
-                                </li>
                             </ul>
-                            @if (false)
-                                <p class="brand_model"><span>model :</span> 12345670</p>
-                                <p class="brand_model"><span>brand :</span> The Northland</p>
-                            @endif
-                            <div class="wsus__pro_det_share">
-                                <h5>share :</h5>
-                                <ul class="d-flex">
-                                    <li><a class="facebook" href="#"><i class="fab fa-facebook-f"></i></a></li>
-                                    <li><a class="twitter" href="#"><i class="fab fa-twitter"></i></a></li>
-                                    <li><a class="whatsapp" href="#"><i class="fab fa-whatsapp"></i></a></li>
-                                    <li><a class="instagram" href="#"><i class="fab fa-instagram"></i></a></li>
-                                </ul>
-                            </div>
-                            @if (false)
-                                <a class="wsus__pro_report" href="#" data-bs-toggle="modal"
-                                    data-bs-target="#exampleModal"><i class="fal fa-comment-alt-smile"></i> Report
-                                    incorrect
-                                    product information.</a>
-                            @endif
                         </div>
                     </div>
                     <div class="col-xl-3 col-md-12 mt-md-5 mt-lg-0">
@@ -1172,4 +1048,82 @@
                                                 RELATED PRODUCT END
                                             ==============================-->
 --}}
+@push('scripts')
+<script>
+(function() {
+    const thumbRow = document.getElementById('detailThumbRow');
+    const allImages = thumbRow ? Array.from(thumbRow.querySelectorAll('img')) : [];
+    let currentIndex = 0;
+    window.detailSliderNext = function() {
+        if (allImages.length === 0) return;
+        currentIndex = (currentIndex + 1) % allImages.length;
+        detailSliderGoTo(currentIndex);
+    };
+    window.detailSliderPrev = function() {
+        if (allImages.length === 0) return;
+        currentIndex = (currentIndex - 1 + allImages.length) % allImages.length;
+        detailSliderGoTo(currentIndex);
+    };
+    window.detailSliderGoTo = function(idx) {
+        currentIndex = idx;
+        if (allImages[idx]) {
+            document.getElementById('mainImage').src = allImages[idx].src;
+            allImages.forEach((img, i) => img.classList.toggle('active', i === idx));
+        }
+    };
+})();
+</script>
+@endpush
+
+@push('styles')
+<style>
+.product-detail-wrapper { background:#fff; border-radius:16px; border:1px solid #e8eaf0; box-shadow:0 4px 20px rgba(30,27,75,.05); overflow:hidden; }
+.detail-gallery { background:linear-gradient(135deg,#f8fafc,#f1f5f9); padding:24px; border-radius:12px; }
+.detail-gallery-row { display:flex; align-items:center; gap:14px; }
+.detail-gallery-slider { flex:1; border-radius:12px; overflow:hidden; }
+.detail-gallery img.main-img { width:100%; border-radius:12px; box-shadow:0 8px 24px rgba(0,0,0,.08); transition:transform .3s ease; display:block; }
+.detail-gallery-nav { flex-shrink:0; width:42px; height:42px; border-radius:50%; background:#fff; border:2px solid #e2e8f0; color:#1e293b; font-size:1rem; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; box-shadow:0 4px 14px rgba(15,23,42,.12); transition:background .2s, color .2s, transform .2s; }
+.detail-gallery-nav:hover { background:#4f46e5; color:#fff; border-color:#4f46e5; transform:scale(1.06); }
+.detail-gallery-nav:active { transform:scale(.95); }
+.detail-thumb-row { display:flex; gap:10px; margin-top:12px; overflow-x:auto; padding-bottom:4px; }
+.detail-thumb-row img { width:80px; height:80px; object-fit:cover; border-radius:8px; border:2px solid transparent; cursor:pointer; transition:border-color .2s, transform .2s; flex-shrink:0; }
+.detail-thumb-row img:hover, .detail-thumb-row img.active { border-color:#4f46e5; transform:translateY(-2px); }
+.detail-info-header { padding:24px 28px 0; }
+.detail-info-header .category-badge { display:inline-block; padding:4px 10px; background:#f1f5f9; border-radius:6px; font-size:.75rem; font-weight:600; color:#64748b; text-transform:uppercase; letter-spacing:.05em; margin-bottom:10px; }
+.detail-info-header h2 { font-size:1.6rem; font-weight:800; color:#1e293b; line-height:1.25; letter-spacing:-.02em; }
+.detail-rating-row { display:flex; align-items:center; gap:8px; margin:8px 0 12px; }
+.detail-rating-row .star { color:#f59e0b; font-size:.85rem; }
+.detail-rating-row .star-empty { color:#e2e8f0; }
+.detail-rating-row .count { font-size:.8rem; color:#94a3b8; }
+.detail-price-block h3 { font-size:2rem; font-weight:800; color:#4f46e5; margin:0; line-height:1.2; }
+.detail-price-block .original-price { font-size:1rem; color:#94a3b8; text-decoration:line-through; margin-left:8px; }
+.detail-stock-badge { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:999px; font-weight:700; font-size:.85rem; margin-top:8px; }
+.detail-stock-badge.in { background:#dcfce7; color:#166534; }
+.detail-stock-badge.out { background:#fee2e2; color:#991b1b; }
+.detail-action-btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:14px 28px; border-radius:10px; font-weight:700; font-size:1rem; text-decoration:none; transition:all .2s; border:none; cursor:pointer; width:100%; }
+.detail-action-btn.primary { background:linear-gradient(135deg,#4f46e5,#7c3aed); color:#fff; box-shadow:0 4px 14px rgba(79,70,229,.35); }
+.detail-action-btn.primary:hover { background:linear-gradient(135deg,#4338ca,#6d28d9); transform:translateY(-2px); box-shadow:0 8px 22px rgba(79,70,229,.45); }
+.detail-action-btn.secondary { background:#fff; color:#1e293b; border:2px solid #e2e8f0; }
+.detail-action-btn.secondary:hover { border-color:#4f46e5; color:#4f46e5; }
+.detail-meta-row { display:flex; gap:16px; margin-top:16px; flex-wrap:wrap; }
+.detail-meta-row .meta-item { background:#f8fafc; border-radius:10px; padding:10px 16px; display:flex; align-items:center; gap:8px; font-size:.85rem; color:#475569; }
+.detail-meta-row .meta-item i { color:#4f46e5; font-size:1.1rem; }
+.detail-sidebar-card { border-radius:14px; overflow:hidden; border:1px solid #e8eaf0; box-shadow:0 2px 12px rgba(0,0,0,.04); }
+.detail-sidebar-card .overlay-text { padding:20px; text-align:center; color:#fff; background:linear-gradient(to top,rgba(30,27,75,.85),rgba(30,27,75,.3)); }
+.detail-sidebar-card .overlay-text h4 { font-weight:800; font-size:1.3rem; margin-bottom:4px; }
+.detail-sidebar-card .overlay-text a { display:inline-block; margin-top:8px; padding:8px 22px; background:#fff; color:#4f46e5; border-radius:8px; font-weight:700; text-decoration:none; transition:background .2s; }
+.detail-sidebar-card .overlay-text a:hover { background:#4f46e5; color:#fff; }
+.vendor-card-compact { background:#fff; border-radius:14px; border:1px solid #e8eaf0; padding:20px; box-shadow:0 2px 12px rgba(0,0,0,.04); }
+.vendor-card-compact .vendor-avatar { width:70px; height:70px; border-radius:50%; object-fit:cover; border:3px solid #fff; box-shadow:0 4px 12px rgba(0,0,0,.15); }
+.review-tab-btn { border-radius:8px; padding:8px 16px; font-weight:600; font-size:.9rem; border:none; background:#f1f5f9; color:#475569; transition:all .2s; }
+.review-tab-btn.active { background:#4f46e5; color:#fff; }
+.review-tab-btn:hover:not(.active) { background:#e2e8f0; }
+.wsus__description_area { padding:20px; background:#fff; border-radius:12px; border:1px solid #e8eaf0; }
+.wsus__description_area h1 { font-size:1.2rem; font-weight:700; color:#1e293b; margin-bottom:10px; }
+.wsus__description_area p { color:#475569; line-height:1.75; font-size:.95rem; }
+@media (max-width:991px) { .detail-info-header h2 { font-size:1.3rem; } .detail-price-block h3 { font-size:1.5rem; } .product-detail-wrapper { border-radius:12px; } }
+@media (max-width:575px) { .detail-meta-row { flex-direction:column; gap:8px; } .detail-action-btn { padding:12px 20px; font-size:.9rem; } }
+</style>
+@endpush
+
 @endsection
