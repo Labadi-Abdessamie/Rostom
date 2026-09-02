@@ -21,15 +21,20 @@
                                 <div class="dash-card" style="padding: 0; overflow: hidden; margin-bottom: 0;">
                                     <!-- Product Image -->
                                     <div style="height: 200px; overflow: hidden; background: #f8f7ff;">
-                                        <img src="{{ asset('storage/products_images/' . $review->product->id . '/' . $review->product->principalImage) }}"
-                                            alt="product" style="width: 100%; height: 100%; object-fit: cover;">
+                                        @if($review->product)
+                                            <img src="{{ asset('storage/products_images/' . $review->product->id . '/' . $review->product->principalImage) }}"
+                                                alt="product" style="width: 100%; height: 100%; object-fit: cover;">
+                                        @else
+                                            <img src="{{ asset('storage/products_images/default.jpg') }}"
+                                                alt="Product not found" style="width: 100%; height: 100%; object-fit: cover;">
+                                        @endif
                                     </div>
 
                                     <!-- Review Content -->
                                     <div style="padding: 20px;">
                                         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
                                             <h5 style="margin: 0; color: var(--dash-ink); font-weight: 600; font-size: 16px;">
-                                                {{ $review->product->name ?? 'Product Deleted' }}
+                                                {{ $review->product?->name ?? 'Product Deleted' }}
                                             </h5>
                                             <span style="color: var(--dash-muted); font-size: 12px;">{{ $review->created_at->format('d M Y') }}</span>
                                         </div>
@@ -63,7 +68,7 @@
 
                                         <!-- Edit Form (Hidden) -->
                                         <div id="editForm-{{ $review->id }}" style="display: none; margin-top: 16px; padding-top: 16px; border-top: 1px solid #f1f5f9;">
-                                            <form action="{{ route('review.update', $review->id) }}" method="POST">
+                                            <form action="{{ route('client.review.update', $review->id) }}" method="POST">
                                                 @csrf
                                                 @method('PUT')
 
@@ -97,7 +102,7 @@
 
                             <!-- Delete Form -->
                             <form id="delete-review-{{ $review->id }}"
-                                action="{{ route('review.delete', $review->id) }}" method="POST"
+                                action="{{ route('client.review.delete', $review->id) }}" method="POST"
                                 style="display: none;">
                                 @csrf
                                 @method('DELETE')
