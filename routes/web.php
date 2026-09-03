@@ -111,6 +111,7 @@ Route::middleware(['auth',  RoleMiddleware::class . ':vendor'])->group(function 
             Route::get('dashboard', [VendorInterfaceController::class, 'dashboard'])->name('dashboard');
 
             Route::get('products', [VendorInterfaceController::class, 'products'])->name('products');
+            Route::post('product/{id}/toggle-listing', [VendorInterfaceController::class, 'toggleProductListing'])->name('toggle_product_listing');
             Route::get('add-product', [ProductController::class, 'create'])->name('add_product');
             Route::post('store-product', [ProductController::class, 'store'])->name('store_product');
             Route::get('edit-product/{id}', [ProductController::class, 'edit'])->name('edit_product');

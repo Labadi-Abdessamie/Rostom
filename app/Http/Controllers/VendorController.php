@@ -34,9 +34,13 @@ class VendorController extends Controller
         }
 
         if ($categoryId) {
-            $query->whereHas('products.category', function ($q) use ($categoryId) {
-                $q->where('categories.id', $categoryId)
-                  ->orWhere('categories.parentId', $categoryId);
+            $query->whereHas('products', function ($q) use ($categoryId) {
+                $q->where('is_listed', true)->where(function ($sub) use ($categoryId) {
+                    $sub->whereHas('category', function ($cat) use ($categoryId) {
+                        $cat->where('categories.id', $categoryId)
+                            ->orWhere('categories.parentId', $categoryId);
+                    });
+                });
             });
         }
 
@@ -100,7 +104,7 @@ class VendorController extends Controller
     {
         $vendor = Magasin::findorFail($id);
         if ($vendor->status === 'active') {
-            $products = $vendor->products()->with('productImages')->paginate(12);
+            $products = $vendor->products()->where('is_listed', true)->with('productImages')->paginate(12);
             return view('frontend.pages.vendor_details', compact('vendor', 'products'));
         } elseif ($vendor->status === 'inactive') {
             return view('frontend.pages.vendor')->with('message', "This Magasin is inactive for now");

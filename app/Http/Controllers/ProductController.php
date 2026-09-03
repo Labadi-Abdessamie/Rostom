@@ -28,11 +28,11 @@ class ProductController extends Controller
         $categories = Category::where('status', 'active')->orderBy('name')->get();
 
         if ($queryFilter) {
-            $products = Product::where('name', 'like', '%'. $queryFilter .'%')
+            $products = Product::where('is_listed', true)->where('name', 'like', '%'. $queryFilter .'%')
                 ->with('category')
                 ->paginate($perPage)->appends($request->except('page'));
         } else {
-            $query = Product::with(['category', 'magasin'])->withCount('orderItems');
+            $query = Product::where('is_listed', true)->with(['category', 'magasin'])->withCount('orderItems');
 
             if ($categoryId) {
                 $category = Category::find($categoryId);
@@ -152,6 +152,7 @@ class ProductController extends Controller
 
         $product->rate_average = 0;
         $product->rate_count = 0;
+        $product->is_listed = false; // new product is hidden until vendor publishes
 
         $product->save();
 
@@ -171,7 +172,7 @@ class ProductController extends Controller
     public function show(string $id)
     {
         // Existing show code - no changes needed
-        $product = Product::whereHas('magasin', function ($query) {
+        $product = Product::where('is_listed', true)->whereHas('magasin', function ($query) {
             $query->where('status', 'active');
         })->whereHas('category', function ($q) {
             $q->where('status', 'active');

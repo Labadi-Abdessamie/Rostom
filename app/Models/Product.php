@@ -21,6 +21,7 @@ class Product extends Model
         'rate_average',
         'rate_count',
         'category_id',
+        'is_listed',
         'magasin_id',
     ];
 

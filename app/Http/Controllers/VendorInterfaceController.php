@@ -154,6 +154,26 @@ class VendorInterfaceController extends Controller
         return view('vendor.pages.products', compact('products'));
     }
 
+    public function toggleProductListing(Request $request, $id)
+    {
+        $user = Auth::user();
+        $product = Product::where('id', $id)
+            ->where('magasin_id', $user->magasin->id)
+            ->firstOrFail();
+
+        $product->is_listed = !$product->is_listed;
+        $product->save();
+
+        $status = $product->is_listed ? 'listed' : 'unlisted';
+        $message = "Product \"{$product->name}\" is now {$status}.";
+
+        if ($request->ajax()) {
+            return response()->json(['success' => true, 'is_listed' => $product->is_listed, 'message' => $message]);
+        }
+
+        return redirect()->back()->with('success', $message);
+    }
+
     public function orders()
     {
         $vendor = Auth::user();
