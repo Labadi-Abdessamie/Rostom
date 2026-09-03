@@ -114,6 +114,10 @@ Route::middleware(['auth',  RoleMiddleware::class . ':vendor'])->group(function 
             Route::post('product/{id}/toggle-listing', [VendorInterfaceController::class, 'toggleProductListing'])->name('toggle_product_listing');
             Route::get('add-product', [ProductController::class, 'create'])->name('add_product');
             Route::post('store-product', [ProductController::class, 'store'])->name('store_product');
+
+            Route::get('import-products', [ProductController::class, 'showImportForm'])->name('import_products_form');
+            Route::post('import-products', [ProductController::class, 'importProducts'])->name('import_products');
+            Route::get('download-product-template', [ProductController::class, 'downloadProductTemplate'])->name('download_product_template');
             Route::get('edit-product/{id}', [ProductController::class, 'edit'])->name('edit_product');
             Route::put('update-product/{id}', [ProductController::class, 'update'])->name('update_product');
             Route::delete('delete-product/{id}', [ProductController::class, 'destroy'])->name('delete_product');
