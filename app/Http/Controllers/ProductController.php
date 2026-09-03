@@ -255,12 +255,12 @@ class ProductController extends Controller
         $product->price = $request->price;
 
         if ($request->hasFile('principalImage')) {
-            if ($product->principalImage && Storage::disk('public')->exists($product->principalImage)) {
-                Storage::disk('public')->delete($product->principalImage);
+            if ($product->principalImage && Storage::disk('public')->exists('products_images/' . $product->id . '/' . $product->principalImage)) {
+                Storage::disk('public')->delete('products_images/' . $product->id . '/' . $product->principalImage);
             }
 
-            $imagePath = $request->file('principalImage')->store('products', 'public');
-            $product->principalImage = $imagePath;
+            $imagePath = $request->file('principalImage')->store('products_images/' . $product->id, 'public');
+            $product->principalImage = basename($imagePath);
         }
 
         $product->category_id = $request->subcategory ? $request->subcategory : $request->category;

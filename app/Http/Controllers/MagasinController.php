@@ -115,7 +115,7 @@ class MagasinController extends Controller
 
         if ($request->hasFile('magasinPicture')) {
             $file = $request->file('magasinPicture');
-            $path = $file->store('magasins_images' . $magasin->id, 'public');
+            $path = $file->store('magasins_images/' . $magasin->id, 'public');
             $magasin->magasinPicture = basename($path);
         }
 
@@ -255,11 +255,11 @@ class MagasinController extends Controller
         }
 
         if ($request->hasFile('magasinPicture')) {
-            if ($magasin->magasinPicture && Storage::exists('public/' . $magasin->magasinPicture)) {
-                Storage::delete('public/' . $magasin->magasinPicture);
+            if ($magasin->magasinPicture && Storage::exists('public/magasins_images/' . $magasin->id . '/' . $magasin->magasinPicture)) {
+                Storage::delete('public/magasins_images/' . $magasin->id . '/' . $magasin->magasinPicture);
             }
 
-            $magasin->magasinPicture = $request->file('magasinPicture')->store('magasinPictures', 'public');
+            $magasin->magasinPicture = basename($request->file('magasinPicture')->store('magasins_images/' . $magasin->id, 'public'));
         }
 
         if ($request->hasFile('vitrineVideo')) {
@@ -267,7 +267,7 @@ class MagasinController extends Controller
                 Storage::delete('public/' . $magasin->vitrineVideo);
             }
 
-            $magasin->vitrineVideo = $request->file('vitrineVideo')->store('vitrineVideos', 'public');
+            $magasin->vitrineVideo = $request->file('vitrineVideo')->store('vitrine_videos', 'public');
         }
 
         $magasin->save();

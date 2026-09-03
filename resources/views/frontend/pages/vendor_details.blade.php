@@ -100,6 +100,7 @@
                     <div class="wsus__pro_page_bammer vendor_det_banner">
                         <img src="{{ $vendor->magasinPicture ? asset('storage/magasins_images/' . $vendor->id . '/' . $vendor->magasinPicture) : asset('frontend/images/vendor_details_banner.jpg') }}"
                             alt="banner" class="img-fluid w-100"
+                            style="object-fit: cover; height: 400px; width: 100%;"
                             onerror="this.onerror=null;this.src='{{ asset('frontend/images/vendor_details_banner.jpg') }}';">
                         <div class="wsus__pro_page_bammer_text wsus__vendor_det_banner_text">
                             <div class="wsus__vendor_text_center">
