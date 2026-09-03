@@ -119,6 +119,7 @@ Route::middleware(['auth',  RoleMiddleware::class . ':vendor'])->group(function 
             Route::delete('delete-product/{id}', [ProductController::class, 'destroy'])->name('delete_product');
 
             Route::get('orders', [VendorInterfaceController::class, 'orders'])->name('orders');
+            Route::get('orders/export', [VendorInterfaceController::class, 'exportOrders'])->name('orders.export');
             Route::get('order-details/{id}', [VendorInterfaceController::class, 'orderDetails'])->name('order_details');
             Route::post('order/{id}/update', [OrderController::class, 'update'])->name('order.update');
             Route::post('order/{id}/confirm-payment', [OrderController::class, 'confirmPayment'])->name('order.confirm_payment');

@@ -25,6 +25,9 @@
     <section class="section">
         <div class="section-header">
             <h1>Orders</h1>
+            <a href="{{ route('vendor.orders.export') }}" class="btn btn-success btn-sm ml-2">
+                <i class="fa fa-file-excel"></i> Export to CSV
+            </a>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item active"><a href="{{ route('vendor.dashboard') }}">Dashboard</a></div>
                 <div class="breadcrumb-item">Orders</div>

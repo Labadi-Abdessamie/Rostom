@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Response;
 use App\Models\Magasin;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -174,6 +175,72 @@ class VendorInterfaceController extends Controller
         return redirect()->back()->with('success', $message);
     }
 
+    public function exportOrders()
+    {
+        $vendor = Auth::user();
+        $orderItems = $vendor->magasin->orderItems()->with(['product', 'order.user'])->get()
+            ->filter(function ($item) { return $item->order !== null; });
+
+        $orders = $orderItems->groupBy('order_id')->map(function ($items, $orderId) {
+            return [
+                'id' => $orderId,
+                'status' => $items[0]->order->status,
+                'clientName' => $items[0]->order->user->name ?? 'N/A',
+                'totalAmount' => $items->sum(function ($item) {
+                    return $item->quantity * $item->product->price;
+                }),
+                'items' => $items->map(function ($item) {
+                    return [
+                        'id' => $item->id,
+                        'quantity' => $item->quantity,
+                        'product' => [
+                            'id' => $item->product->id ?? null,
+                            'name' => $item->product->name ?? null,
+                            'price' => $item->product->price ?? null,
+                        ],
+                    ];
+                })->values(),
+            ];
+        })->values();
+
+        $headers = ['Order ID', 'Client Name', 'Status', 'Total Amount (DZD)', 'Products', 'Total Quantity'];
+
+        $rows = [];
+        foreach ($orders as $order) {
+            $items = $order['items'] ?? [];
+            $productNames = collect($items)->map(function ($item) {
+                return $item['product']['name'] ?? 'N/A';
+            })->implode(', ');
+
+            $totalQty = collect($items)->sum('quantity');
+
+            $rows[] = [
+                $order['id'] ?? '-',
+                $order['clientName'] ?? '-',
+                $order['status'] ?? '-',
+                $order['totalAmount'] ?? 0,
+                $productNames,
+                $totalQty,
+            ];
+        }
+
+        $filename = 'vendor_orders_' . now()->format('Y-m-d') . '.csv';
+
+        $callback = function () use ($headers, $rows) {
+            $handle = fopen('php://output', 'w');
+            fputcsv($handle, $headers);
+            foreach ($rows as $row) {
+                fputcsv($handle, $row);
+            }
+            fclose($handle);
+        };
+
+        return Response::stream($callback, 200, [
+            'Content-Type'        => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+        ]);
+    }
+
     public function orders()
     {
         $vendor = Auth::user();
@@ -310,88 +377,3 @@ class VendorInterfaceController extends Controller
         return view('vendor.pages.magasin_info', compact('vendorName', 'magasin'));
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-    public function addProduct()
-    {
-        return view('vendor.pages.add_product');
-    }
-
-    public function storeProduct(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'price' => 'required|numeric',
-            'category_id' => 'required|exists:categories,id',
-            'image' => 'required|image|max:2048'
-        ]);
-
-        $imagePath = $request->file('image')->store('products', 'public');
-
-        Product::create([
-            'vendor_id' => Auth::id(),
-            'name' => $request->name,
-            'price' => $request->price,
-            'category_id' => $request->category_id,
-            'image' => $imagePath
-        ]);
-
-        return redirect()->route('vendor.dashboard')->with('success', 'Product added successfully!');
-    }
-
-    public function editProduct($id)
-    {
-        $product = Product::where('vendor_id', Auth::id())->findOrFail($id);
-        return view('vendor.products.edit', compact('product'));
-    }
-
-    public function updateProduct(Request $request, $id)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'price' => 'required|numeric',
-            'category_id' => 'required|exists:categories,id',
-            'image' => 'nullable|image|max:2048'
-        ]);
-
-        $product = Product::where('vendor_id', Auth::id())->findOrFail($id);
-
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('products', 'public');
-            $product->image = $imagePath;
-        }
-
-        $product->update([
-            'name' => $request->name,
-            'price' => $request->price,
-            'category_id' => $request->category_id
-        ]);
-
-        return redirect()->route('vendor.dashboard')->with('success', 'Product updated successfully!');
-    }
-
-    public function deleteProduct($id)
-    {
-        $product = Product::where('vendor_id', Auth::id())->findOrFail($id);
-        $product->delete();
-
-        return redirect()->route('vendor.dashboard')->with('success', 'Product deleted successfully!');
-    }
-    */
