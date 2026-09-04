@@ -143,6 +143,54 @@
             });
         });
     </script>
+    <script>
+        // Clean any stray backdrops on page load
+        (function() {
+            document.querySelectorAll('.modal-backdrop').forEach(function (bd) { bd.remove(); });
+            document.querySelectorAll('.modal.show').forEach(function (m) { m.classList.remove('show'); m.style.display = 'none'; });
+            document.body.classList.remove('modal-open');
+        })();
+        function openVariantModal(id) {
+            var modal = document.getElementById('variantsModal' + id);
+            if (modal) {
+                modal.style.display = 'block';
+                modal.classList.add('show');
+                document.body.classList.add('modal-open');
+                var backdrop = document.createElement('div');
+                backdrop.className = 'modal-backdrop fade show';
+                backdrop.id = 'variantModalBackdrop';
+                document.body.appendChild(backdrop);
+            }
+        }
+        function closeVariantModal(id) {
+            var modal = document.getElementById('variantsModal' + id);
+            if (modal) {
+                modal.style.display = 'none';
+                modal.classList.remove('show');
+            }
+            // Always clean all variants
+            document.querySelectorAll('.modal-backdrop').forEach(function (bd) { bd.remove(); });
+            document.querySelectorAll('.modal.show').forEach(function (m) { m.classList.remove('show'); m.style.display = 'none'; });
+            document.body.classList.remove('modal-open');
+        }
+        // Close on backdrop click and ESC key
+        document.addEventListener('click', function (e) {
+            if (e.target && (e.target.id === 'variantModalBackdrop' || e.target.closest('#variantModalBackdrop') || (e.target.classList && e.target.classList.contains('modal-backdrop')))) {
+                document.querySelectorAll('.modal-backdrop').forEach(function (bd) { bd.remove(); });
+                document.querySelectorAll('.modal.show').forEach(function (m) { m.classList.remove('show'); m.style.display = 'none'; });
+                document.body.classList.remove('modal-open');
+            }
+        });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                var backdrops = document.querySelectorAll('.modal-backdrop');
+                backdrops.forEach(function (bd) { bd.remove(); });
+                var openModals = document.querySelectorAll('.modal.show');
+                openModals.forEach(function (m) { m.classList.remove('show'); m.style.display = 'none'; });
+                document.body.classList.remove('modal-open');
+            }
+        });
+    </script>
 @endsection
 
 @section('content')
@@ -220,7 +268,24 @@
                                                 <td>{{ $product->name }}</td>
                                                 <td>{{ number_format($product->price, 2) }}</td>
                                                 <td class="text-center">
-                                                    {{ $product->actual_quantity ?? 0 }}</td>
+                                                    @php
+                                                        $variantTotal = 0;
+                                                        if ($product->combinations && $product->combinations->count() > 0) {
+                                                            $variantTotal = $product->combinations->sum('quantity');
+                                                        }
+                                                        $displayQty = ($product->combinations && $product->combinations->count() > 0) ? $variantTotal : ($product->actual_quantity ?? 0);
+                                                    @endphp
+                                                    <span class="badge badge-{{ $displayQty > 0 ? 'success' : 'danger' }} d-block mb-1" style="font-size:1rem; font-weight:700;">
+                                                        <i class="fas fa-cubes mr-1"></i> {{ $displayQty }}
+                                                    </span>
+                                                    @if($product->combinations && $product->combinations->count() > 0)
+                                                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="openVariantModal({{ $product->id }})" style="font-size:.7rem; padding:2px 8px;">
+                                                            <i class="fas fa-th-list mr-1"></i> {{ $product->combinations->count() }} Variants
+                                                        </button>
+                                                    @else
+                                                        <span class="text-muted" style="font-size:.7rem;">No variants</span>
+                                                    @endif
+                                                </td>
                                                 <td class="text-center">
                                                     @if ($product->is_listed)
                                                         <span class="status-pill listed">
@@ -292,6 +357,69 @@
                                         @endforelse
                                     </tbody>
                                 </table>
+
+                                {{-- Variant detail modals --}}
+                                @foreach($products as $product)
+                                    @if($product->combinations && $product->combinations->count() > 0)
+                                        <div class="modal fade" id="variantsModal{{ $product->id }}" tabindex="-1" role="dialog" aria-labelledby="variantsModalLabel{{ $product->id }}" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                                <div class="modal-content" style="border-radius:16px; overflow:hidden; border:none; box-shadow:0 20px 60px rgba(0,0,0,.25);">
+                                                    <div class="modal-header" style="background:linear-gradient(135deg,#4f46e5,#7c3aed); color:#fff; border-bottom:none; padding:18px 24px;">
+                                                        <h5 class="modal-title" id="variantsModalLabel{{ $product->id }}" style="font-weight:700;">
+                                                            <i class="fas fa-th-list mr-2"></i> Variant Stock — {{ $product->name }}
+                                                        </h5>
+                                                        <button type="button" class="close" aria-label="Close" onclick="closeVariantModal({{ $product->id }})" style="color:#fff; opacity:.85;">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body" style="padding:24px; background:#f8fafc;">
+                                                        <table class="table table-bordered" style="background:#fff; margin-bottom:0; border-radius:10px; overflow:hidden;">
+                                                            <thead style="background:#eef2ff;">
+                                                                <tr>
+                                                                    <th class="text-center" style="width:60px; color:#4f46e5; font-weight:700;">#</th>
+                                                                    <th style="color:#4f46e5; font-weight:700;">Variant</th>
+                                                                    <th class="text-center" style="color:#4f46e5; font-weight:700;">SKU</th>
+                                                                    <th class="text-center" style="color:#4f46e5; font-weight:700;">Extra Price</th>
+                                                                    <th class="text-center" style="color:#4f46e5; font-weight:700;">Stock</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach($product->combinations as $index => $combo)
+                                                                    <tr style="text-align:center; vertical-align:middle;">
+                                                                        <td class="text-center" style="color:#64748b; font-weight:600;">{{ $index + 1 }}</td>
+                                                                        <td style="text-align:left;">
+                                                                            @foreach($combo->combination ?? [] as $type => $val)
+                                                                                <span class="badge badge-info mr-1" style="font-weight:600; padding:6px 10px;">{{ $type }}: {{ $val }}</span>
+                                                                            @endforeach
+                                                                        </td>
+                                                                        <td class="text-center"><span class="text-muted" style="font-family:monospace;">{{ $combo->sku ?? '—' }}</span></td>
+                                                                        <td class="text-center">
+                                                                            @if(($combo->extra_price ?? 0) > 0)
+                                                                                <span class="text-success" style="font-weight:700;">+DZ {{ number_format($combo->extra_price, 2) }}</span>
+                                                                            @else
+                                                                                <span class="text-muted">—</span>
+                                                                            @endif
+                                                                        </td>
+                                                                        <td class="text-center">
+                                                                            <span class="badge badge-{{ $combo->quantity > 0 ? 'success' : 'danger' }}" style="font-size:1rem; font-weight:700; padding:8px 12px;">
+                                                                                <i class="fas fa-cubes mr-1"></i> {{ $combo->quantity }}
+                                                                            </span>
+                                                                        </td>
+                                                                    </tr>
+                                                                @endforeach
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <div class="modal-footer" style="background:#f8fafc; border-top:1px solid #e2e8f0; padding:14px 24px;">
+                                                        <button type="button" class="btn btn-primary" onclick="closeVariantModal({{ $product->id }})" style="border-radius:8px; font-weight:600; padding:8px 20px;">
+                                                            <i class="fas fa-times mr-1"></i> Close
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
+                                @endforeach
                             </div>
                         </div>
                     </div>

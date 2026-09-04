@@ -4,24 +4,24 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Variant extends Model
+class VariantCombination extends Model
 {
     protected $fillable = [
         'product_id',
-        'variant_type_id',
-        'value',
-        'extra_price',
+        'combination',
         'quantity',
-        'image',
+        'extra_price',
+        'sku',
+    ];
+
+    protected $casts = [
+        'combination' => 'array',
+        'quantity' => 'integer',
+        'extra_price' => 'float',
     ];
 
     public function product()
     {
         return $this->belongsTo(Product::class);
-    }
-
-    public function variantType()
-    {
-        return $this->belongsTo(VariantType::class);
     }
 }

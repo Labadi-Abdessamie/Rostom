@@ -85,6 +85,13 @@
             </li>
 
             <li>
+                <a href="{{ route('admin.variant_types') }}" class="{{ Route::currentRouteName() == 'admin.variant_types' || Route::currentRouteName() == 'admin.variant_type_create' || Route::currentRouteName() == 'admin.variant_type_edit' ? 'active' : '' }}">
+                    <i class="fas fa-palette"></i>
+                    <span>Variant Types</span>
+                </a>
+            </li>
+
+            <li>
                 <a href="{{ route('admin.reviews') }}" class="{{ Route::currentRouteName() == 'admin.reviews' ? 'active' : '' }}">
                     <i class="fas fa-star-half-alt"></i>
                     <span>Reviews</span>

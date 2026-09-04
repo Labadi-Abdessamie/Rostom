@@ -16,6 +16,24 @@
     <script>
         var finalCategoriesData = @json(collect($finalCategories)->map(fn($group) => $group->map(fn($c) => ['id' => $c->id, 'name' => $c->name])));
 
+        function toggleQuantityMode() {
+            var isVariant = document.getElementById('type_variant').checked;
+            var qtyWrap = document.getElementById('qty-default-wrap');
+            var qtyInput = document.getElementById('actual_quantity');
+            var variantWrap = document.getElementById('variant-types-section');
+            if (isVariant) {
+                qtyWrap.style.display = 'none';
+                qtyInput.required = false;
+                qtyInput.disabled = true;
+                if (variantWrap) variantWrap.style.display = 'block';
+            } else {
+                qtyWrap.style.display = 'block';
+                qtyInput.required = true;
+                qtyInput.disabled = false;
+                if (variantWrap) variantWrap.style.display = 'none';
+            }
+        }
+
         function updateFinalCategories(subcatId) {
             var select = $('#subcategory_id');
             select.find('option:not(:first)').remove();
@@ -39,6 +57,7 @@
         });
 
         document.addEventListener('DOMContentLoaded', function() {
+            toggleQuantityMode();
             $.uploadPreview({
                 input_field: "#image-upload",
                 preview_box: "#image-preview",
@@ -113,9 +132,23 @@
                             </div>
                         </div>
                         <div class="form-group row mb-4">
+                            <label class="col-form-label text-md-right col-12 col-md-3">Product Type</label>
+                            <div class="col-sm-12 col-md-7">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="product_type" id="type_default" value="default" checked onclick="toggleQuantityMode()">
+                                    <label class="form-check-label" for="type_default">Default (no variants)</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="product_type" id="type_variant" value="variant" onclick="toggleQuantityMode()">
+                                    <label class="form-check-label" for="type_variant">Has Variants (auto-calculate qty)</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-4" id="qty-default-wrap">
                             <label class="col-form-label text-md-right col-12 col-md-3">Quantity</label>
                             <div class="col-sm-12 col-md-7">
-                                <input type="number" name="actual_quantity" class="form-control" min="0" required>
+                                <input type="number" name="actual_quantity" id="actual_quantity" class="form-control" min="0" value="0">
                             </div>
                         </div>
 
@@ -158,6 +191,10 @@
                             </div>
                         </div>
 
+
+                        <div id="variant-types-section" style="display: none;">
+                            @include('vendor.pages.variant_section')
+                        </div>
 
                         <div class="form-group row mb-4">
                             <div class="col-sm-12 col-md-7 offset-md-3">

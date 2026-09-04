@@ -56,10 +56,18 @@ class OrderController extends Controller
         $total = 0;
         $shipping_fee = 100;
         $total += $shipping_fee;
-        foreach ($cart as $productId => $item) {
-            $total += $item['quantity'] * $item['product']['price'];
+        foreach ($cart as $cartKey => $item) {
+            // Extract product_id from cart key (format: productId or productId_combinationHash)
+            $productId = explode('_', $cartKey)[0];
+            $basePrice = $item['product']['base_price'] ?? $item['product']['price'] ?? 0;
+            $extraPrice = $item['extra_price'] ?? 0;
+            $itemTotal = $item['quantity'] * ($basePrice + $extraPrice);
+            $total += $itemTotal;
             $orderItems[$productId] = [
-                'quantity' => $item['quantity']
+                'quantity' => $item['quantity'],
+                'combination' => $item['combination'] ?? null,
+                'base_price' => $basePrice,
+                'extra_price' => $extraPrice,
             ];
         }
         $order = Order::create([
@@ -79,7 +87,10 @@ class OrderController extends Controller
             OrderItem::create([
                 'quantity' => $item['quantity'],
                 'order_id' => $order->id,
-                'product_id' => $productId
+                'product_id' => $productId,
+                'variant_combination' => $item['combination'],
+                'base_price' => $item['base_price'] ?? ($item['product']['price'] ?? 0),
+                'extra_price' => $item['extra_price'] ?? 0,
             ]);
         }
         session()->put('cart', []);
@@ -167,12 +178,33 @@ class OrderController extends Controller
             if ($item->status !== 'available') continue;
 
             $product = $item->product;
-            if ($product->actual_quantity < $item->quantity) {
-                return redirect()->back()->with('error', 'Not enough stock available for this item.');
-            }
 
-            $item->product->actual_quantity -= $item->quantity;
-            $item->product->save();
+            // If item has a variant combination, deduct from that combo stock
+            if ($item->variant_combination && !empty($item->variant_combination)) {
+                $combo = \App\Models\VariantCombination::where('product_id', $product->id)
+                    ->get()
+                    ->first(function ($c) use ($item) {
+                        $data = $c->combination ?? [];
+                        foreach ($item->variant_combination as $k => $v) {
+                            if (!isset($data[$k]) || $data[$k] !== $v) return false;
+                        }
+                        return true;
+                    });
+                if ($combo && $combo->quantity < $item->quantity) {
+                    return redirect()->back()->with('error', 'Not enough stock available for this variant item.');
+                }
+                if ($combo) {
+                    $combo->quantity -= $item->quantity;
+                    $combo->save();
+                }
+            } else {
+                // Default product stock
+                if ($product->actual_quantity < $item->quantity) {
+                    return redirect()->back()->with('error', 'Not enough stock available for this item.');
+                }
+                $product->actual_quantity -= $item->quantity;
+                $product->save();
+            }
         }
 
         return redirect()->back()->with('message', 'Order confirmed successfully.');
@@ -222,7 +254,8 @@ class OrderController extends Controller
 
         foreach ($vendorItems as $item) {
             $magasin = Magasin::findOrFail($item->product->magasin->id);
-            $magasin->balance += $item->product->price * $item->quantity;
+            $linePrice = ($item->base_price ?? $item->product->price ?? 0) + ($item->extra_price ?? 0);
+            $magasin->balance += $linePrice * $item->quantity;
             $magasin->save();
 
             // Mark this vendor's item as confirmed so it disappears from pending

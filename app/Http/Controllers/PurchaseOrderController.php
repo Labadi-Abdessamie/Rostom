@@ -6,9 +6,44 @@ use Illuminate\Http\Request;
 use App\Models\PurchaseOrder;
 use App\Models\PurchaseOrderItem;
 use App\Models\Product;
+use App\Models\VariantCombination;
 
 class PurchaseOrderController extends Controller
 {
+    /**
+     * Add the ordered quantity to either the matching variant combination
+     * stock or, if none matches, the product's base stock.
+     */
+    private function addToStock(PurchaseOrderItem $item): void
+    {
+        $product = $item->product;
+        if (!$product) {
+            return;
+        }
+
+        if ($item->variant_combination && !empty($item->variant_combination)) {
+            $combo = VariantCombination::where('product_id', $product->id)
+                ->get()
+                ->first(function ($c) use ($item) {
+                    $data = $c->combination ?? [];
+                    foreach ($item->variant_combination as $k => $v) {
+                        if (!isset($data[$k]) || $data[$k] !== $v) {
+                            return false;
+                        }
+                    }
+                    return true;
+                });
+            if ($combo) {
+                $combo->quantity += $item->quantity;
+                $combo->save();
+                return;
+            }
+        }
+
+        $product->actual_quantity += $item->quantity;
+        $product->save();
+    }
+
     public function index()
     {
         // Resolve the vendor's magasin the same way create()/store() do (via the
@@ -82,9 +117,12 @@ class PurchaseOrderController extends Controller
             $unitPrice = (float) $item['unit_price'];
             $totalAmount += $quantity * $unitPrice;
 
+            $variantCombo = !empty($item['variant_combination']) ? $item['variant_combination'] : null;
+
             PurchaseOrderItem::create([
                 'purchaseOrder_id' => $purchaseOrder->id,
                 'product_id' => $product->id,
+                'variant_combination' => $variantCombo,
                 'quantity' => $quantity,
                 'unit_price' => $unitPrice,
             ]);
@@ -127,11 +165,7 @@ class PurchaseOrderController extends Controller
         // Guarded by type === 'quote' so a re-submit can never double-count.
         if ($order->type === 'quote') {
             foreach ($order->purchaseOrderItems as $item) {
-                $product = $item->product;
-                if ($product) {
-                    $product->actual_quantity += $item->quantity;
-                    $product->save();
-                }
+                $this->addToStock($item);
             }
 
             $order->type = 'order';
@@ -144,17 +178,16 @@ class PurchaseOrderController extends Controller
     {
         $order = PurchaseOrder::findOrFail($id);
 
-        foreach ($order->purchaseOrderItems as $item) {
-            $product = $item->product;
-
-            $product->actual_quantity += $item->quantity;
-            $product->save();
+        // Guard: only transition from confirmed order to delivery.
+        // Stock was already added in confirm(); pay should not re-add it.
+        if ($order->type !== 'order') {
+            return redirect()->route('vendor.purchase_orders.show', $id)->with('error', 'This order has already been processed.');
         }
 
         $order->type = 'delivery';
         $order->save();
 
-        return redirect()->route('vendor.purchase_orders.show', $id)->with('success', 'Order paid and product quantities updated.');
+        return redirect()->route('vendor.purchase_orders.show', $id)->with('success', 'Order marked as delivered.');
     }
 
 

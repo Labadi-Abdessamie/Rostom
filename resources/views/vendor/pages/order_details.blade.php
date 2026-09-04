@@ -85,18 +85,46 @@
                                             @foreach ($orderItems as $item)
                                                 <tr>
                                                     <td>{{ ++$i }}</td>
-                                                    <td>{{ $item->product->name }}</td>
-                                                    <td class="text-center">DZ {{ $item->product->price }}</td>
+                                                    <td>
+                                                        {{ $item->product->name }}
+                                                        @if ($item->variant_combination)
+                                                            <div class="small text-muted">
+                                                                @foreach ($item->variant_combination as $type => $val)
+                                                                    <span class="badge badge-info mr-1">{{ $type }}: {{ $val }}</span>
+                                                                @endforeach
+                                                            </div>
+                                                        @endif
+                                                    </td>
+                                                    <td class="text-center">
+                                                        DZ {{ $item->base_price ?? $item->product->price }}
+                                                        @if (($item->extra_price ?? 0) > 0)
+                                                            <div class="small text-success">+DZ {{ $item->extra_price }} variant</div>
+                                                        @endif
+                                                    </td>
                                                     <td class="text-center">{{ $item->quantity }}</td>
                                                     <td class="text-right">DZ
-                                                        {{ $item->product->price * $item->quantity }}</td>
+                                                        {{ (($item->base_price ?? $item->product->price) + ($item->extra_price ?? 0)) * $item->quantity }}</td>
                                                     @php
-                                                        $total += $item->product->price * $item->quantity;
+                                                        $total += (($item->base_price ?? $item->product->price) + ($item->extra_price ?? 0)) * $item->quantity;
+                                                    @endphp
+                                                    @php
+                                                        $stockQty = $item->product->actual_quantity ?? 0;
+                                                        if ($item->variant_combination && !empty($item->variant_combination)) {
+                                                            $combo = \App\Models\VariantCombination::where('product_id', $item->product_id)
+                                                                ->get()
+                                                                ->first(function ($c) use ($item) {
+                                                                    $data = $c->combination ?? [];
+                                                                    foreach ($item->variant_combination as $k => $v) {
+                                                                        if (!isset($data[$k]) || $data[$k] !== $v) return false;
+                                                                    }
+                                                                    return true;
+                                                                });
+                                                            if ($combo) $stockQty = $combo->quantity ?? 0;
+                                                        }
                                                     @endphp
                                                     <td class="text-center">
-                                                        <select class="form-control text-center" name="{{ $item->id }}"
-                                                            id="{{ $item->id }}">
-                                                            @if ($item->product->actual_quantity >= $item->quantity)
+                                                        <select class="form-control text-center" name="{{ $item->id }}" id="{{ $item->id }}" style="font-size:1rem; height:42px;">
+                                                            @if ($stockQty >= $item->quantity)
                                                                 <option value="1"
                                                                     @if ($item->status == 'available' || $item->status == 'pending') selected @endif>Yes
                                                                 </option>
@@ -104,10 +132,13 @@
                                                                     @if ($item->status == 'notAvailable') selected @endif>No
                                                                 </option>
                                                             @else
-                                                                <option value="1" disabled>Yes (Out of Stock)</option>
-                                                                <option value="0" selected>No</option>
+                                                                <option value="1" disabled>Yes (Stock: {{ $stockQty }})</option>
+                                                                <option value="0" selected>No (Stock: {{ $stockQty }})</option>
                                                             @endif
                                                         </select>
+                                                        <div class="text-muted mt-1" style="font-size:1.1rem; font-weight:700; color:#dc3545 !important;">
+                                                            <i class="fas fa-cubes mr-1"></i> Stock: {{ $stockQty }}
+                                                        </div>
                                                         <!-- <input type="checkbox"> -->
                                                     </td>
                                                     <td class="text-center">
@@ -240,19 +271,49 @@
                                         @foreach ($orderItems as $item)
                                             <tr>
                                                 <td>{{ ++$i }}</td>
-                                                <td>{{ $item->product->name }}</td>
-                                                <td class="text-center">DZ {{ $item->product->price }}</td>
+                                                <td>
+                                                    {{ $item->product->name }}
+                                                    @if ($item->variant_combination)
+                                                        <div class="small text-muted">
+                                                            @foreach ($item->variant_combination as $type => $val)
+                                                                <span class="badge badge-info mr-1">{{ $type }}: {{ $val }}</span>
+                                                            @endforeach
+                                                        </div>
+                                                    @endif
+                                                </td>
+                                                <td class="text-center">
+                                                    DZ {{ $item->base_price ?? $item->product->price }}
+                                                    @if (($item->extra_price ?? 0) > 0)
+                                                        <div class="small text-success">+DZ {{ $item->extra_price }} variant</div>
+                                                    @endif
+                                                </td>
                                                 <td class="text-center">{{ $item->quantity }}</td>
                                                 <td class="text-right">DZ
-                                                    {{ $item->product->price * $item->quantity }}</td>
+                                                    {{ (($item->base_price ?? $item->product->price) + ($item->extra_price ?? 0)) * $item->quantity }}</td>
                                                 <td class="text-center">
+                                                    @php
+                                                        $stockQty = $item->product->actual_quantity ?? 0;
+                                                        if ($item->variant_combination && !empty($item->variant_combination)) {
+                                                            $combo = \App\Models\VariantCombination::where('product_id', $item->product_id)
+                                                                ->get()
+                                                                ->first(function ($c) use ($item) {
+                                                                    $data = $c->combination ?? [];
+                                                                    foreach ($item->variant_combination as $k => $v) {
+                                                                        if (!isset($data[$k]) || $data[$k] !== $v) return false;
+                                                                    }
+                                                                    return true;
+                                                                });
+                                                            if ($combo) $stockQty = $combo->quantity ?? 0;
+                                                        }
+                                                    @endphp
                                                     {{ $item->status }}
+                                                    <div class="small text-muted mt-1">Stock: {{ $stockQty }}</div>
                                                 </td>
                                                 <td class="text-center">
                                                     {{ $item->description }}
                                                 </td>
                                                 @php
-                                                    $total += $item->product->price * $item->quantity;
+                                                    $total += (($item->base_price ?? $item->product->price) + ($item->extra_price ?? 0)) * $item->quantity;
                                                 @endphp
                                             </tr>
                                         @endforeach

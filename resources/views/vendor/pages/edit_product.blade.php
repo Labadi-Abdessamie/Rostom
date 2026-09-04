@@ -100,9 +100,14 @@
 
                                 <div class="form-group">
                                     <label for="actual_quantity">Quantity</label>
+                                    @php $hasVariants = $product->combinations && $product->combinations->count() > 0; @endphp
                                     <input type="number" name="actual_quantity" id="actual_quantity"
-                                        class="form-control @error('actual_quantity') is-invalid @enderror"
-                                        value="{{ old('actual_quantity', $product->actual_quantity) }}" min="0" required>
+                                        class="form-control @error('actual_quantity') is-invalid @enderror {{ $hasVariants ? 'bg-light' : '' }}"
+                                        value="{{ old('actual_quantity', $product->actual_quantity) }}" min="0"
+                                        @if($hasVariants) disabled readonly style="cursor:not-allowed;" @else required @endif>
+                                    @if($hasVariants)
+                                        <small class="form-text text-muted text-info"><i class="fas fa-info-circle mr-1"></i>This product has variants — quantity is managed by variant stock sums only.</small>
+                                    @endif
                                     @error('actual_quantity')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -142,6 +147,8 @@
                                         <option value="">-- Select Category --</option>
                                     </select>
                                 </div>
+
+                                @include('vendor.pages.variant_section')
 
                                 <div class="form-group">
                                     <button type="submit" class="btn btn-primary">Update Product</button>

@@ -50,7 +50,7 @@
                                             $client = $order->user;
                                             $vendorMagasinId = Auth::user()->magasin ? Auth::user()->magasin->id : null;
                                             $vendorItems = $vendorMagasinId ? $order->orderItems->filter(fn($item) => $item->product->magasin_id === $vendorMagasinId) : collect();
-                                            $vendorTotal = $vendorItems->sum(fn($item) => $item->product->price * $item->quantity);
+                                            $vendorTotal = $vendorItems->sum(fn($item) => (($item->base_price ?? $item->product->price ?? $item->product->base_price ?? 0) + ($item->extra_price ?? 0)) * $item->quantity);
                                         @endphp
                                         <tr>
                                             <td class="text-muted">#{{ $order->id }}</td>

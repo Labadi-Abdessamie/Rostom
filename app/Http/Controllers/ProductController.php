@@ -299,19 +299,21 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'short_description' => 'nullable|string|max:255',
             'long_description' => 'nullable|string',
-            'actual_quantity' => 'required|integer|min:0|max:999999',
+            'actual_quantity' => 'nullable|integer|min:0|max:999999',
             'price' => 'required|numeric|min:0',
             'principalImage' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'category' => 'required|exists:categories,id',
             'subcategory' => 'nullable|exists:categories,id',
+            'product_type' => 'nullable|in:default,variant',
         ]);
 
+        $isVariant = $request->product_type === 'variant';
 
         $product = new Product();
         $product->name = $request->name;
         $product->short_description = $request->short_description ?? '';
-        $product->long_description = $request->long_description;
-        $product->actual_quantity = $request->actual_quantity;
+        $product->long_description = $request->long_description ?? '';
+        $product->actual_quantity = $request->actual_quantity ?? 0;
         $product->price = $request->price;
         $product->magasin_id = Auth::user()->magasin->id;
 
@@ -322,6 +324,31 @@ class ProductController extends Controller
         $product->is_listed = false; // new product is hidden until vendor publishes
 
         $product->save();
+
+        // Save combinations if provided
+        $hasCombos = false;
+        $comboTotal = 0;
+        if ($request->has('combinations')) {
+            foreach ($request->combinations as $c) {
+                if (!empty($c['combination'])) {
+                    $hasCombos = true;
+                    $qty = (int)($c['quantity'] ?? 0);
+                    $comboTotal += $qty;
+                    $product->combinations()->create([
+                        'combination' => is_string($c['combination']) ? json_decode($c['combination'], true) : ($c['combination'] ?? []),
+                        'quantity' => $qty,
+                        'extra_price' => $c['extra_price'] ?? 0,
+                        'sku' => $c['sku'] ?? null,
+                    ]);
+                }
+            }
+        }
+
+        // If variants exist, override base quantity with total of combo quantities
+        if ($hasCombos) {
+            $product->actual_quantity = $comboTotal;
+            $product->save();
+        }
 
         if ($request->hasFile('principalImage')) {
             $imagePath = $request->file('principalImage')->store('products_images/' . $product->id, 'public');
@@ -343,7 +370,7 @@ class ProductController extends Controller
             $query->where('status', 'active');
         })->whereHas('category', function ($q) {
             $q->where('status', 'active');
-        })->with('magasin')->with('productImages')->findorFail($id);
+        })->with('magasin')->with('productImages')->with(['variant.variantType', 'combinations'])->findorFail($id);
 
         $reviews = Review::where('product_id', $id)->whereHas('user', function ($query) {
             $query->where('status', '!=', 'blocked');
@@ -407,7 +434,7 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'short_description' => 'nullable|string|max:255',
             'long_description' => 'nullable|string',
-            'actual_quantity' => 'required|integer|min:0|max:999999',
+            'actual_quantity' => 'nullable|integer|min:0|max:999999',
             'price' => 'required|numeric|min:0',
             'principalImage' => 'nullable|image|mimes:png|max:2048',
             'category' => 'required|exists:categories,id',
@@ -418,7 +445,6 @@ class ProductController extends Controller
         $product->name = $request->name;
         $product->short_description = $request->short_description ?? '';
         $product->long_description = $request->long_description;
-        $product->actual_quantity = $request->actual_quantity;
         $product->price = $request->price;
 
         if ($request->hasFile('principalImage')) {
@@ -431,9 +457,34 @@ class ProductController extends Controller
         }
 
         $product->category_id = $request->subcategory ? $request->subcategory : $request->category;
+        $product->save();
 
+        // Save combinations if provided
+        $hasCombos = false;
+        $comboTotal = 0;
+        if ($request->has('combinations')) {
+            $product->combinations()->delete();
+            foreach ($request->combinations as $c) {
+                if (!empty($c['combination'])) {
+                    $hasCombos = true;
+                    $qty = (int)($c['quantity'] ?? 0);
+                    $comboTotal += $qty;
+                    $product->combinations()->create([
+                        'combination' => is_string($c['combination']) ? json_decode($c['combination'], true) : ($c['combination'] ?? []),
+                        'quantity' => $qty,
+                        'extra_price' => $c['extra_price'] ?? 0,
+                        'sku' => $c['sku'] ?? null,
+                    ]);
+                }
+            }
+        }
 
-
+        // Sync base quantity with variants
+        if ($hasCombos) {
+            $product->actual_quantity = $comboTotal;
+        } else {
+            $product->actual_quantity = (int) ($request->actual_quantity ?? 0);
+        }
         $product->save();
 
         return redirect()->route('vendor.products')->with('success', 'Product updated successfully!');

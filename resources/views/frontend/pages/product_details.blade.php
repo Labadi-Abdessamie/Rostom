@@ -154,15 +154,50 @@
                                 <span class="count">({{ $product->rate_count ?? 0 }} reviews)</span>
                             </div>
                             <div class="detail-price-block">
-                                <h3>DZ {{ $product->price }}</h3>
+                                <h3 id="variant-price">DZ {{ $product->price }}</h3>
                             </div>
-                            <div class="detail-stock-badge {{ $product->actual_quantity > 0 ? 'in' : 'out' }}">
-                                <i class="fas fa-{{ $product->actual_quantity > 0 ? 'check' : 'times' }}"></i>
-                                <span>{{ $product->actual_quantity > 0 ? 'In stock' : 'Out of stock' }}</span>
+                            <div class="detail-stock-badge" id="variant-stock-badge">
+                                <i class="fas fa-check"></i>
+                                <span id="variant-stock-text">In stock</span>
                             </div>
 
+                            {{-- Variant Selector --}}
+                            @if($product->combinations->count() > 0)
+                                @php
+                                    // Group combinations by variant_type
+                                    $typeGroups = [];
+                                    foreach($product->combinations as $combo) {
+                                        foreach($combo->combination as $typeName => $value) {
+                                            if (!isset($typeGroups[$typeName])) $typeGroups[$typeName] = [];
+                                            if (!in_array($value, $typeGroups[$typeName])) {
+                                                $typeGroups[$typeName][] = $value;
+                                            }
+                                        }
+                                    }
+                                @endphp
+                                <div id="variant-selector" class="mt-3">
+                                    @foreach($typeGroups as $typeName => $values)
+                                        <div class="variant-group mb-2">
+                                            <label class="fw-bold small text-uppercase" style="color:#64748b;">{{ $typeName }}</label>
+                                            <div class="d-flex flex-wrap gap-1">
+                                                @foreach($values as $value)
+                                                    <button type="button"
+                                                        class="variant-btn"
+                                                        data-type="{{ $typeName }}"
+                                                        data-value="{{ $value }}"
+                                                        onclick="selectVariant(this)">
+                                                        {{ $value }}
+                                                    </button>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                <input type="hidden" id="selected-combination" name="selected_combination" value="">
+                            @endif
+
                             <ul class="wsus__button_area d-flex gap-2 mt-3">
-                                @if ($product->actual_quantity > 0)
+                                @if ($product->actual_quantity > 0 || $product->combinations->count() > 0)
                                     <li>
                                         @livewire('add-to-cart', ['product' => $product], key('cart-' . $product->id))
                                     </li>
@@ -1050,6 +1085,117 @@
 --}}
 @push('scripts')
 <script>
+    // Variant selection logic
+    window.selectedCombination = {};
+    window.productCombinations = @json($product->combinations ? $product->combinations->map(function($c) { return ['combination' => $c->combination, 'quantity' => $c->quantity, 'extra_price' => $c->extra_price]; })->values()->toArray() : []);
+
+    function adjustAddToCartQty(delta) {
+        const qtyInput = document.getElementById('add-to-cart-qty');
+        if (!qtyInput) return;
+        let val = parseInt(qtyInput.value || 1, 10) + delta;
+        if (val < 1) val = 1;
+        qtyInput.value = val;
+    }
+
+    function getAddToCartQty() {
+        const qtyInput = document.getElementById('add-to-cart-qty');
+        const val = parseInt(qtyInput ? qtyInput.value : 1, 10);
+        return isNaN(val) || val < 1 ? 1 : val;
+    }
+
+    function addToCartWithValidation() {
+        if (window.productCombinations.length > 0) {
+            const requiredTypes = window.productCombinations.reduce((types, c) => {
+                Object.keys(c.combination).forEach(k => { if (!types.includes(k)) types.push(k); });
+                return types;
+            }, []);
+            const missing = requiredTypes.filter(t => !window.selectedCombination[t]);
+            if (missing.length > 0) {
+                // Show a user-friendly notification via Livewire
+                if (window.Livewire) {
+                    Livewire.dispatch('showVariantRequired', { missingTypes: missing });
+                } else {
+                    alert('Please select: ' + missing.join(', '));
+                }
+                document.getElementById('variant-selector').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+        }
+        // Dispatch to Livewire with the current selection and quantity
+        if (window.Livewire) {
+            Livewire.dispatch('addToCartWithVariant', {
+                combination: window.selectedCombination || {},
+                qty: getAddToCartQty()
+            });
+        }
+    }
+
+    function buyNowWithValidation() {
+        if (window.productCombinations.length > 0) {
+            const requiredTypes = window.productCombinations.reduce((types, c) => {
+                Object.keys(c.combination).forEach(k => { if (!types.includes(k)) types.push(k); });
+                return types;
+            }, []);
+            const missing = requiredTypes.filter(t => !window.selectedCombination[t]);
+            if (missing.length > 0) {
+                if (window.Livewire) {
+                    Livewire.dispatch('showVariantRequired', { missingTypes: missing });
+                } else {
+                    alert('Please select: ' + missing.join(', '));
+                }
+                document.getElementById('variant-selector').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+        }
+        if (window.Livewire) {
+            Livewire.dispatch('buyNowWithVariant', {
+                combination: window.selectedCombination || {},
+                qty: getAddToCartQty()
+            });
+        }
+    }
+
+    function selectVariant(btn) {
+        const type = btn.getAttribute('data-type');
+        const value = btn.getAttribute('data-value');
+        window.selectedCombination[type] = value;
+
+        // Visual selection
+        btn.closest('.variant-group').querySelectorAll('.variant-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // Update price + stock from matching combination
+        const combo = window.productCombinations.find(c => {
+            return Object.entries(window.selectedCombination).every(([k, v]) => c.combination[k] === v);
+        });
+
+        const basePrice = {{ $product->price }};
+        const priceEl = document.getElementById('variant-price');
+        const stockBadge = document.getElementById('variant-stock-badge');
+        const stockText = document.getElementById('variant-stock-text');
+        const comboInput = document.getElementById('selected-combination');
+
+        if (combo) {
+            const totalPrice = basePrice + (parseFloat(combo.extra_price) || 0);
+            priceEl.textContent = 'DZ ' + Math.round(totalPrice);
+            comboInput.value = JSON.stringify(window.selectedCombination);
+
+            if (combo.quantity <= 0) {
+                stockBadge.className = 'detail-stock-badge out';
+                stockText.textContent = 'Out of stock';
+            } else {
+                stockBadge.className = 'detail-stock-badge in';
+                stockText.textContent = combo.quantity + ' available';
+            }
+        } else {
+            priceEl.textContent = 'DZ ' + basePrice;
+            comboInput.value = '';
+            stockBadge.className = 'detail-stock-badge in';
+            stockText.textContent = 'In stock';
+        }
+    }
+</script>
+<script>
 (function() {
     const thumbRow = document.getElementById('detailThumbRow');
     const allImages = thumbRow ? Array.from(thumbRow.querySelectorAll('img')) : [];
@@ -1101,6 +1247,9 @@
 .detail-stock-badge.in { background:#dcfce7; color:#166534; }
 .detail-stock-badge.out { background:#fee2e2; color:#991b1b; }
 .detail-action-btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:14px 28px; border-radius:10px; font-weight:700; font-size:1rem; text-decoration:none; transition:all .2s; border:none; cursor:pointer; width:100%; }
+.variant-btn { padding:6px 14px; border-radius:999px; border:2px solid #e2e8f0; background:#fff; color:#1e293b; font-size:.8rem; font-weight:600; cursor:pointer; transition:all .2s; }
+.variant-btn:hover { border-color:#4f46e5; color:#4f46e5; }
+.variant-btn.active { border-color:#4f46e5; background:#4f46e5; color:#fff; }
 .detail-action-btn.primary { background:linear-gradient(135deg,#4f46e5,#7c3aed); color:#fff; box-shadow:0 4px 14px rgba(79,70,229,.35); }
 .detail-action-btn.primary:hover { background:linear-gradient(135deg,#4338ca,#6d28d9); transform:translateY(-2px); box-shadow:0 8px 22px rgba(79,70,229,.45); }
 .detail-action-btn.secondary { background:#fff; color:#1e293b; border:2px solid #e2e8f0; }

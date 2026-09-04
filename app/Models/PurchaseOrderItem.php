@@ -9,8 +9,13 @@ class PurchaseOrderItem extends Model
     protected $fillable = [
         'purchaseOrder_id',
         'product_id',
+        'variant_combination',
         'quantity',
         'unit_price',
+    ];
+
+    protected $casts = [
+        'variant_combination' => 'array',
     ];
     public function purchaseOrder()
     {

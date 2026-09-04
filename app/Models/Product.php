@@ -58,4 +58,12 @@ class Product extends Model
     {
         return $this->hasMany(Variant::class);
     }
+    public function variantTypes()
+    {
+        return $this->belongsToMany(VariantType::class);
+    }
+    public function combinations()
+    {
+        return $this->hasMany(VariantCombination::class);
+    }
 }

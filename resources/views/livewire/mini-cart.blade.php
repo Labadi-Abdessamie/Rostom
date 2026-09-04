@@ -6,25 +6,25 @@
             @foreach ($cart as $key => $item)
                 <li>
                     <div class="wsus__cart_img">
-                        <a href="{{ route('frontend.product_details', ['id' => $key]) }}"><img
-                                src="{{ asset('storage/products_images/' . $key . '/' . $item['product']['image']) }}"
+                        <a href="{{ route('frontend.product_details', ['id' => (int) $key]) }}"><img
+                                src="{{ asset('storage/products_images/' . (int) $key . '/' . $item['product']['image']) }}"
                                 alt="product" class="img-fluid w-100"></a>
                         <a wire:click="DeleteFromCart({{ $key }})" class="wsis__del_icon cursor-pointer">
                             <i class="fas fa-minus-circle"></i>
                         </a>
                     </div>
                     <div class="wsus__cart_text">
-                        <a class="wsus__cart_title" href="{{ route('frontend.product_details', ['id' => $key]) }}">
+                        <a class="wsus__cart_title" href="{{ route('frontend.product_details', ['id' => (int) $key]) }}">
                             {{ $item['product']['name'] }} </a>
                         <span> × {{ $item['quantity'] }}</span>
-                        <p>DZ {{ $item['product']['price'] }}
+                        <p>DZ {{ ($item["product"]["price"] ?? $item["product"]["base_price"] ?? 0) + ($item['extra_price'] ?? 0) }}
                             @if (false)
                                 <del>DZ 150</del>
                             @endif
                         </p>
                     </div>
                 </li>
-                @php $total += $item['product']['price'] * $item['quantity']; @endphp
+                @php $total += (($item["product"]["price"] ?? $item["product"]["base_price"] ?? 0) + ($item['extra_price'] ?? 0)) * $item['quantity']; @endphp
             @endforeach
         @else
         @endif

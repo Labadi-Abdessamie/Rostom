@@ -172,6 +172,13 @@ Route::middleware(['auth', RoleMiddleware::class . ':admin'])->group(function ()
         Route::post('admin/store', [ProfileController::class, 'store'])->name('store_admin');
 
 
+        Route::get('variant-types', [App\Http\Controllers\Admin\VariantTypeController::class, 'index'])->name('variant_types');
+        Route::get('variant-types/create', [App\Http\Controllers\Admin\VariantTypeController::class, 'create'])->name('variant_type_create');
+        Route::post('variant-types', [App\Http\Controllers\Admin\VariantTypeController::class, 'store'])->name('variant_type_store');
+        Route::get('variant-types/{variantType}/edit', [App\Http\Controllers\Admin\VariantTypeController::class, 'edit'])->name('variant_type_edit');
+        Route::put('variant-types/{variantType}', [App\Http\Controllers\Admin\VariantTypeController::class, 'update'])->name('variant_type_update');
+        Route::delete('variant-types/{variantType}', [App\Http\Controllers\Admin\VariantTypeController::class, 'destroy'])->name('variant_type_destroy');
+
         Route::get('magasin/{filtre?}', [MagasinController::class, 'magasins'])->name('magasins');
 
         Route::get('register/{id}', [MagasinController::class, 'showRegister'])->name('show.register');

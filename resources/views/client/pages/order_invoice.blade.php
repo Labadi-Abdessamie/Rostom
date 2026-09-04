@@ -77,25 +77,24 @@
                                                 </td>
                                                 <td class="name">
                                                     <p>{{ $item->product->name ?? 'Product Name' }}</p>
-                                                    @if (false)
-                                                        @if ($item->color)
-                                                            <span>Color: {{ $item->color }}</span>
-                                                        @endif
-                                                        @if ($item->size)
-                                                            <span>Size: {{ $item->size }}</span>
-                                                        @endif
+                                                    @if ($item->variant_combination)
+                                                        <div class="small text-muted">
+                                                            @foreach ($item->variant_combination as $type => $val)
+                                                                <span class="badge badge-info mr-1">{{ $type }}: {{ $val }}</span>
+                                                            @endforeach
+                                                        </div>
                                                     @endif
                                                 </td>
-                                                <td class="amount">{{ number_format($item->product->price, 2) }} DZD</td>
+                                                <td class="amount">DZ {{ (($item->base_price ?? $item->product->price ?? $item->product->base_price ?? 0) + ($item->extra_price ?? 0)) }}</td>
                                                 <td class="quentity">{{ $item->quantity }}</td>
                                                 <td class="quentity">{{ $item->status }}</td>
                                                 <td class="total">
-                                                    {{ number_format($item->product->price * $item->quantity, 2) }} DZD
+                                                    DZ {{ number_format((($item->base_price ?? $item->product->price ?? 0) + ($item->extra_price ?? 0)) * $item->quantity, 2) }}
                                                 </td>
                                             </tr>
                                             @if ($item->status == 'pending' || $item->status == 'available')
                                                 @php
-                                                    $total += $item->product->price * $item->quantity;
+                                                    $total += (($item->base_price ?? $item->product->price ?? 0) + ($item->extra_price ?? 0)) * $item->quantity;
                                                 @endphp
                                             @endif
                                         @endforeach

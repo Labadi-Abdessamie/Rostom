@@ -81,7 +81,9 @@ class VendorInterfaceController extends Controller
                 ->whereHas('product', function ($q) use ($vendor) { return $q->where('magasin_id', $vendor->magasin->id); })
                 ->get();
 
-            $pendingBalance = $pendingPaymentOrderItems->sum(function ($item) { return $item->product->price * $item->quantity; });
+            $pendingBalance = $pendingPaymentOrderItems->sum(function ($item) {
+                return (($item->base_price ?? $item->product->price ?? 0) + ($item->extra_price ?? 0)) * $item->quantity;
+            });
 
             $pendingPaymentOrders = Order::with(['user', 'orderItems.product'])
                 ->whereIn('id', $deliveredOrderIds)
@@ -187,7 +189,7 @@ class VendorInterfaceController extends Controller
                 'status' => $items[0]->order->status,
                 'clientName' => $items[0]->order->user->name ?? 'N/A',
                 'totalAmount' => $items->sum(function ($item) {
-                    return $item->quantity * $item->product->price;
+                    return (($item->base_price ?? $item->product->price ?? 0) + ($item->extra_price ?? 0)) * $item->quantity;
                 }),
                 'items' => $items->map(function ($item) {
                     return [
@@ -253,7 +255,7 @@ class VendorInterfaceController extends Controller
                 'id' => $orderId,
                 'status' => $items[0]->order->status,
                 'totalAmount' => $items->sum(function ($item) {
-                    return $item->quantity * $item->product->price;
+                    return (($item->base_price ?? $item->product->price ?? 0) + ($item->extra_price ?? 0)) * $item->quantity;
                 }),
                 'items' => $items->map(function ($item) {
                     return [
@@ -261,6 +263,9 @@ class VendorInterfaceController extends Controller
                         'quantity' => $item->quantity,
                         'status' => $item->status,
                         'description' => $item->description ?? '',
+                        'combination' => $item->variant_combination,
+                        'base_price' => $item->base_price ?? $item->product->price ?? 0,
+                        'extra_price' => $item->extra_price ?? 0,
                         'product' => [
                             'id' => $item->product->id ?? null,
                             'name' => $item->product->name ?? null,
@@ -338,7 +343,7 @@ class VendorInterfaceController extends Controller
                     ->where('product.magasin_id', $magasin->id)
                     ->where('status', 'available')
                     ->sum(function ($item) {
-                        return $item->product->price * $item->quantity;
+                        return (($item->base_price ?? $item->product->price ?? 0) + ($item->extra_price ?? 0)) * $item->quantity;
                     });
             });
         }

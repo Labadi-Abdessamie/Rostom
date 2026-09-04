@@ -70,12 +70,17 @@
                                     @foreach ($orderItems as $item)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $item->product->name }}</td>
-                                            <td class="text-center">{{ 'DZ ' . number_format($item->unit_price, 2) }}</td>
+                                            <td>{{ $item->product ? $item->product->name : '—' }}</td>
+                                            <td>{{ 'DZ ' . number_format($item->unit_price, 2) }}</td>
                                             <td class="text-center">{{ $item->quantity }}</td>
                                             <td class="text-right">
                                                 {{ 'DZ ' . number_format($item->unit_price * $item->quantity, 2) }}</td>
                                         </tr>
+                                        @if ($item->variant_combination)
+                                            <tr>
+                                                <td colspan="5" class="small text-muted pl-5">Variant: @foreach ($item->variant_combination as $type => $val) <span class="badge badge-info mr-1">{{ $type }}: {{ $val }}</span> @endforeach</td>
+                                            </tr>
+                                        @endif
                                     @endforeach
                                 </table>
                             </div>

@@ -83,7 +83,19 @@
                                     </td>
 
                                     <td class="wsus__pro_tk">
-                                        <h6>DZ {{ $item['product']['price'] * $item['quantity'] }}</h6>
+                                        @php
+                                            $basePrice = $item["product"]["price"] ?? $item["product"]["base_price"] ?? 0;
+                                            $variantExtra = $item['extra_price'] ?? 0;
+                                            $lineTotal = ($basePrice + $variantExtra) * $item['quantity'];
+                                        @endphp
+                                        <h6>DZ {{ $lineTotal }}</h6>
+                                        @if ($item['combination'])
+                                            <small class="text-muted d-block">
+                                                @foreach ($item['combination'] as $type => $val)
+                                                    {{ $type }}: {{ $val }}@if (!$loop->last) &bull; @endif
+                                                @endforeach
+                                            </small>
+                                        @endif
                                     </td>
 
                                     <td class="wsus__pro_icon">
@@ -92,7 +104,11 @@
                                         </button>
                                     </td>
                                 </tr>
-                                @php $total += $item['product']['price'] * $item['quantity']; @endphp
+                                @php
+                                    $basePrice = $item["product"]["price"] ?? $item["product"]["base_price"] ?? 0;
+                                    $variantExtra = $item['extra_price'] ?? 0;
+                                    $total += ($basePrice + $variantExtra) * $item['quantity'];
+                                @endphp
                             @endforeach
                         </tbody>
                     </table>

@@ -35,29 +35,29 @@
             <ul class="wsus__cart_panel_list" style="list-style:none;padding:0;margin:0;">
             @forelse ($cart as $key => $item)
                 <li class="wsus__cart_panel_item" wire:key="cart-item-{{ $key }}">
-                    <a class="wsus__cart_panel_img" href="{{ route('frontend.product_details', ['id' => $key]) }}">
-                        <img src="{{ asset('storage/products_images/' . $key . '/' . $item['product']['image']) }}"
+                    <a class="wsus__cart_panel_img" href="{{ route('frontend.product_details', ['id' => (int) $key]) }}">
+                        <img src="{{ asset('storage/products_images/' . (int) $key . '/' . $item['product']['image']) }}"
                              alt="{{ $item['product']['name'] }}" loading="lazy">
                     </a>
                     <div class="wsus__cart_panel_info">
-                        <a class="wsus__cart_panel_name" href="{{ route('frontend.product_details', ['id' => $key]) }}">
+                        <a class="wsus__cart_panel_name" href="{{ route('frontend.product_details', ['id' => (int) $key]) }}">
                             {{ $item['product']['name'] }}
                         </a>
                         <div class="wsus__cart_panel_price_unit">
-                            DZ {{ $item['product']['price'] }} <span>per unit</span>
+                            DZ {{ ($item["product"]["price"] ?? $item["product"]["base_price"] ?? 0) + ($item['extra_price'] ?? 0) }} <span>per unit</span>
                         </div>
 
                         {{-- Qty controls --}}
                         <div class="wsus__cart_panel_qty">
                             <button type="button" class="wsus__qty_btn"
-                                    wire:click="decreaseQuantity({{ $key }})"
+                                    wire:click="decreaseQuantity('{{ $key }}')"
                                     {{ $item['quantity'] <= 1 ? 'disabled' : '' }}
                                     aria-label="Decrease quantity">
                                 <i class="fas fa-minus"></i>
                             </button>
                             <span class="wsus__qty_value">{{ $item['quantity'] }}</span>
                             <button type="button" class="wsus__qty_btn"
-                                    wire:click="increaseQuantity({{ $key }})"
+                                    wire:click="increaseQuantity('{{ $key }}')"
                                     aria-label="Increase quantity">
                                 <i class="fas fa-plus"></i>
                             </button>
@@ -65,10 +65,10 @@
                     </div>
                     <div class="wsus__cart_panel_actions_col">
                         <div class="wsus__cart_panel_subtotal">
-                            DZ {{ $item['product']['price'] * $item['quantity'] }}
+                            DZ {{ (($item["product"]["price"] ?? $item["product"]["base_price"] ?? 0) + ($item['extra_price'] ?? 0)) * $item['quantity'] }}
                         </div>
                         <button type="button" class="wsus__cart_panel_remove"
-                                wire:click="DeleteFromCart({{ $key }})"
+                                wire:click="DeleteFromCart('{{ $key }}')"
                                 aria-label="Remove {{ $item['product']['name'] }}">
                             <i class="far fa-trash-alt"></i>
                         </button>

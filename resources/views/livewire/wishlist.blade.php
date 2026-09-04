@@ -83,7 +83,7 @@
                                         </td>
 
                                         <td class="wsus__pro_tk">
-                                            <h6>DZ {{ $item['product']['price'] * $item['quantity'] }}</h6>
+                                            <h6>DZ {{ ($item['product']['price'] ?? $item['product']['base_price'] ?? 0) * ($item['quantity'] ?? 1) }}</h6>
                                         </td>
 
                                         <td class="wsus__pro_icon">

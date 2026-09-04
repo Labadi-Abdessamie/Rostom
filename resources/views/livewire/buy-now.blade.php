@@ -1,1 +1,1 @@
-<a wire:click="buyNow({{ $product->id }})" class="buy_now">buy now</a>
+<a href="javascript:void(0)" onclick="buyNowWithValidation()" class="buy_now">buy now</a>

@@ -103,7 +103,17 @@
                                                             <td>
                                                                 @foreach ($order['items'] as $item)
                                                                     {{ $item['product']['name'] }} ×
-                                                                    {{ $item['quantity'] }}<br>
+                                                                    {{ $item['quantity'] }}
+                                                                    @if (!empty($item['combination']))
+                                                                        <span class="small text-muted">
+                                                                            (
+                                                                            @foreach ($item['combination'] as $type => $val)
+                                                                                {{ $type }}: {{ $val }}@if (!$loop->last) , @endif
+                                                                            @endforeach
+                                                                            )
+                                                                        </span>
+                                                                    @endif
+                                                                    <br>
                                                                 @endforeach
 
                                                             </td>
