@@ -54,13 +54,17 @@ class Product extends Model
     {
         return $this->hasMany(ProductImage::class);
     }
-    public function variant()
+    public function variants()
     {
         return $this->hasMany(Variant::class);
     }
+    public function visibleVariants()
+    {
+        return $this->hasMany(Variant::class)->where('is_visible', true);
+    }
     public function variantTypes()
     {
-        return $this->belongsToMany(VariantType::class);
+        return $this->belongsToMany(VariantType::class)->where('variant_types.is_visible', true);
     }
     public function combinations()
     {

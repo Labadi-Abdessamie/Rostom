@@ -13,12 +13,14 @@ class VariantType extends Model
         'options',
         'required',
         'position',
+        'is_visible',
     ];
 
     protected $casts = [
         'options' => 'array',
         'required' => 'boolean',
         'position' => 'integer',
+        'is_visible' => 'boolean',
     ];
 
     public function variants()

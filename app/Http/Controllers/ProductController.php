@@ -301,7 +301,7 @@ class ProductController extends Controller
             'long_description' => 'nullable|string',
             'actual_quantity' => 'nullable|integer|min:0|max:999999',
             'price' => 'required|numeric|min:0',
-            'principalImage' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'principalImage' => 'required|image|mimes:jpeg,png,jpg,gif|max:10240',
             'category' => 'required|exists:categories,id',
             'subcategory' => 'nullable|exists:categories,id',
             'product_type' => 'nullable|in:default,variant',
@@ -370,7 +370,7 @@ class ProductController extends Controller
             $query->where('status', 'active');
         })->whereHas('category', function ($q) {
             $q->where('status', 'active');
-        })->with('magasin')->with('productImages')->with(['variant.variantType', 'combinations'])->findorFail($id);
+        })->with('magasin')->with('productImages')->with(['visibleVariants.variantType', 'combinations'])->findorFail($id);
 
         $reviews = Review::where('product_id', $id)->whereHas('user', function ($query) {
             $query->where('status', '!=', 'blocked');
@@ -436,7 +436,7 @@ class ProductController extends Controller
             'long_description' => 'nullable|string',
             'actual_quantity' => 'nullable|integer|min:0|max:999999',
             'price' => 'required|numeric|min:0',
-            'principalImage' => 'nullable|image|mimes:png|max:2048',
+            'principalImage' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
             'category' => 'required|exists:categories,id',
             'subcategory' => 'nullable|exists:categories,id',
         ]);

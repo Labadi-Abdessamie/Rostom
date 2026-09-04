@@ -32,6 +32,7 @@ class ProductVariantController extends Controller
                     'value' => $variantData['value'] ?? null,
                     'quantity' => $variantData['quantity'],
                     'extra_price' => $variantData['extra_price'] ?? 0,
+                    'is_visible' => true,
                 ]);
             }
         }
@@ -58,25 +59,22 @@ class ProductVariantController extends Controller
         return redirect()->back()->with('success', 'Variant updated successfully.');
     }
 
-    public function destroy($id)
+    public function toggleVisibility($id)
     {
         $variant = Variant::findOrFail($id);
         $product = $variant->product;
         if ($product->magasin_id !== Auth::user()->magasin->id) {
             return redirect()->back()->with('error', 'Unauthorized access.');
         }
-
-        if ($variant->orderItems()->count() > 0) {
-            return redirect()->route('vendor.products')->with('error', 'Cannot delete variant with existing orders.');
-        }
-        $variant->delete();
-        return redirect()->route('vendor.products')->with('success', 'Variant deleted successfully.');
+        $variant->is_visible = !$variant->is_visible;
+        $variant->save();
+        return redirect()->route('vendor.products')->with('success', 'Variant ' . ($variant->is_visible ? 'shown' : 'hidden') . '.');
     }
 
     public function getTotalStock($productId)
     {
         $product = Product::findOrFail($productId);
-        $variantStock = $product->variant()->sum('quantity');
+        $variantStock = $product->variants()->sum('quantity');
         return $product->actual_quantity + $variantStock;
     }
 }

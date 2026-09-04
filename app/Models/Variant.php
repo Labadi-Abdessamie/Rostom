@@ -13,6 +13,7 @@ class Variant extends Model
         'extra_price',
         'quantity',
         'image',
+        'is_visible',
     ];
 
     public function product()

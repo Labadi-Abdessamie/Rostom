@@ -76,12 +76,11 @@
                                                 <a href="{{ route('admin.variant_type_edit', $vt->id) }}" class="btn btn-sm btn-primary">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
-                                                <form action="{{ route('admin.variant_type_destroy', $vt->id) }}" method="POST" class="d-inline"
-                                                    onsubmit="return confirm('Delete this variant type?')">
+                                                <form action="{{ route('admin.variant_type_visibility', $vt->id) }}" method="POST" class="d-inline">
                                                     @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-danger">
-                                                        <i class="fas fa-trash"></i>
+                                                    <button type="submit" class="btn btn-sm {{ ($vt->is_visible ?? true) ? 'btn-success' : 'btn-secondary' }}"
+                                                        title="Toggle visibility">
+                                                        <i class="fas {{ ($vt->is_visible ?? true) ? 'fa-eye' : 'fa-eye-slash' }}"></i>
                                                     </button>
                                                 </form>
                                             </td>

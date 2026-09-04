@@ -6,7 +6,7 @@
 
         {{-- Type selection (multi-select per type) --}}
         <div class="mb-3">
-            @foreach (\App\Models\VariantType::orderBy('position')->get() as $vt)
+            @foreach (\App\Models\VariantType::where('is_visible', true)->orderBy('position')->get() as $vt)
                 <div class="border rounded p-2 mb-2 bg-light" data-variant-type-id="{{ $vt->id }}">
                     <strong>{{ $vt->display_name }}</strong> ({{ $vt->type }})
                     <div class="mt-2">

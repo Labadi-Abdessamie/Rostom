@@ -11,6 +11,8 @@ class VariantTypeController extends Controller
     public function index()
     {
         $variantTypes = VariantType::orderBy('position')->get();
+        // Keep full list for admin list (so hidden ones can be toggled back),
+        // but forms/views that show them to vendors should filter by is_visible.
         return view('admin.pages.variant_types', compact('variantTypes'));
     }
 
@@ -37,7 +39,7 @@ class VariantTypeController extends Controller
             $validated['options'] = null;
         }
 
-        VariantType::create($validated);
+        VariantType::create(array_merge($validated, ['is_visible' => true]));
 
         return redirect()->route('admin.variant_types')->with('success', 'Variant type created successfully.');
     }
@@ -70,14 +72,10 @@ class VariantTypeController extends Controller
         return redirect()->route('admin.variant_types')->with('success', 'Variant type updated successfully.');
     }
 
-    public function destroy(VariantType $variantType)
+    public function toggleVisibility(VariantType $variantType)
     {
-        if ($variantType->variants()->exists()) {
-            return redirect()->route('admin.variant_types')->with('error', 'Cannot delete variant type that is in use.');
-        }
-
-        $variantType->delete();
-
-        return redirect()->route('admin.variant_types')->with('success', 'Variant type deleted successfully.');
+        $variantType->is_visible = !$variantType->is_visible;
+        $variantType->save();
+        return redirect()->route('admin.variant_types')->with('success', 'Variant type ' . ($variantType->is_visible ? 'shown' : 'hidden') . '.');
     }
 }
