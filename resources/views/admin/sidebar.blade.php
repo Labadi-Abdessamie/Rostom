@@ -133,6 +133,18 @@
                 </a>
             </li>
 
+            <li class="has-sub">
+                <a href="#">
+                    <i class="fas fa-globe"></i>
+                    <span>Site Content</span>
+                    <i class="fas fa-chevron-right adm-arrow"></i>
+                </a>
+                <ul class="sub-menu">
+                    <li><a href="{{ route('admin.site_info') }}" class="{{ in_array(Route::currentRouteName(), ['admin.site_info','admin.site_info.create','admin.site_info.edit']) ? 'active' : '' }}">Statistics</a></li>
+                    <li><a href="{{ route('admin.team_members') }}" class="{{ in_array(Route::currentRouteName(), ['admin.team_members','admin.team_members.create','admin.team_members.edit']) ? 'active' : '' }}">Team Members</a></li>
+                </ul>
+            </li>
+
         </ul>
     </div>
 </aside>

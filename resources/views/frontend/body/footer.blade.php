@@ -38,9 +38,9 @@
                     <div class="wsus__footer_content">
                         <h5>About Us</h5>
                         <ul class="wsus__footer_menu">
-                            <li><a href="#"><i class="fas fa-caret-right"></i> About Us</a></li>
-                            <li><a href="#"><i class="fas fa-caret-right"></i> Team Member</a></li>
-                            <li><a href="#"><i class="fas fa-caret-right"></i> Team Details</a></li>
+                            <li><a href="{{ route('frontend.about') }}"><i class="fas fa-caret-right"></i> About Us</a></li>
+                            <li><a href="{{ route('frontend.team') }}"><i class="fas fa-caret-right"></i> Team Member</a></li>
+                            <li><a href="{{ route('frontend.team_details', 1) }}"><i class="fas fa-caret-right"></i> Team Details</a></li>
                         </ul>
                     </div>
                 </div>

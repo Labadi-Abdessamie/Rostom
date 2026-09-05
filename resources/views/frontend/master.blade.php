@@ -1429,6 +1429,8 @@
             <li><a href="{{ route('frontend.index') }}" class="{{ Route::currentRouteName() == 'frontend.index' ? 'active' : '' }}"><i class="fas fa-home"></i> Home</a></li>
             <li><a href="{{ route('frontend.products') }}" class="{{ Route::currentRouteName() == 'frontend.products' ? 'active' : '' }}"><i class="fas fa-box-open"></i> Products</a></li>
             <li><a href="{{ route('frontend.vendor') }}" class="{{ Route::currentRouteName() == 'frontend.vendor' ? 'active' : '' }}"><i class="fas fa-store"></i> Vendors</a></li>
+            <li><a href="{{ route('frontend.about') }}" class="{{ Route::currentRouteName() == 'frontend.about' ? 'active' : '' }}"><i class="fas fa-building"></i> About</a></li>
+            <li><a href="{{ route('frontend.team') }}" class="{{ Route::currentRouteName() == 'frontend.team' ? 'active' : '' }}"><i class="fas fa-users"></i> Team</a></li>
             @auth
                 @if(Auth::user()->role === 'client')
                     <li><a href="javascript:void(0)" onclick="openCartPanel()"><i class="fas fa-shopping-cart"></i> Cart</a></li>

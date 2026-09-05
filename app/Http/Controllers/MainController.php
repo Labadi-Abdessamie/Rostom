@@ -203,4 +203,19 @@ class MainController extends Controller
         }
         return redirect()->route('frontend.vendor');
     }
+
+    public function about()
+    {
+        return view('frontend.pages.about');
+    }
+
+    public function team()
+    {
+        return view('frontend.pages.team');
+    }
+
+    public function teamDetails($id)
+    {
+        return view('frontend.pages.team_details', ['memberId' => (int) $id]);
+    }
 }

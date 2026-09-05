@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             RealProductsSeeder::class,   // products assigned to non-demo stores
             ReviewsSeeder::class,         // reviews for seeded products
             BagItemSeeder::class,
+            SiteContentSeeder::class,    // About page stats + Team members
         ]);
     }
 }

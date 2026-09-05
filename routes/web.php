@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\Admin\SiteContentController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\CategoryController;
@@ -45,6 +46,10 @@ Route::group(['prefix' => '', 'as' => 'frontend.'], function () {
 
     Route::get('contact', [MainController::class, 'contact'])->name('contact');
     Route::post('send-mail', [MainController::class, 'sendMail'])->name('send_mail');
+
+    Route::get('about', [MainController::class, 'about'])->name('about');
+    Route::get('team', [MainController::class, 'team'])->name('team');
+    Route::get('team-details/{id}', [MainController::class, 'teamDetails'])->name('team_details');
 
     Route::get('search', [MainController::class, 'search'])->name('search');
     Route::get('search-vendor', [MainController::class, 'searchVendor'])->name('search_vendor');
@@ -219,6 +224,21 @@ Route::middleware(['auth', RoleMiddleware::class . ':admin'])->group(function ()
 
         Route::get('reports', [AdminController::class, 'reports'])->name('reports');
         Route::get('reports/export/{type}', [AdminController::class, 'exportCsv'])->name('export_csv');
+
+        // Site content management
+        Route::get('site-info', [SiteContentController::class, 'siteInfoIndex'])->name('site_info');
+        Route::get('site-info/create', [SiteContentController::class, 'siteInfoCreate'])->name('site_info.create');
+        Route::post('site-info/store', [SiteContentController::class, 'siteInfoStore'])->name('site_info.store');
+        Route::get('site-info/{id}/edit', [SiteContentController::class, 'siteInfoEdit'])->name('site_info.edit');
+        Route::put('site-info/{id}', [SiteContentController::class, 'siteInfoUpdate'])->name('site_info.update');
+        Route::delete('site-info/{id}', [SiteContentController::class, 'siteInfoDestroy'])->name('site_info.destroy');
+
+        Route::get('team-members', [SiteContentController::class, 'teamIndex'])->name('team_members');
+        Route::get('team-members/create', [SiteContentController::class, 'teamCreate'])->name('team_members.create');
+        Route::post('team-members/store', [SiteContentController::class, 'teamStore'])->name('team_members.store');
+        Route::get('team-members/{id}/edit', [SiteContentController::class, 'teamEdit'])->name('team_members.edit');
+        Route::put('team-members/{id}', [SiteContentController::class, 'teamUpdate'])->name('team_members.update');
+        Route::delete('team-members/{id}', [SiteContentController::class, 'teamDestroy'])->name('team_members.destroy');
     });
 });
 
