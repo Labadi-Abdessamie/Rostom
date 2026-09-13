@@ -14,8 +14,18 @@ class Banner extends Model
         'link',
         'page',
         'position',
+        'priority',
+        'show_title',
+        'show_description',
         'status',
         'type',
+        'design_data',
+    ];
+
+    protected $casts = [
+        'design_data' => 'array',
+        'show_title' => 'boolean',
+        'show_description' => 'boolean',
     ];
 
     /**

@@ -18,8 +18,9 @@ return new class extends Migration
             $table->string('image');
             $table->string('link')->nullable();
             $table->string('page');
-            $table->unsignedInteger('position');
-            $table->enum('status', ['active', 'inactive'])->default('inactive'); //? active more better
+            $table->string('position');
+            $table->unsignedInteger('priority')->default(1);
+            $table->enum('status', ['active', 'inactive'])->default('inactive');
             $table->enum('type', ['normal', 'cooldown'])->default('normal');
             $table->date('cooldown')->nullable();
             $table->timestamps();

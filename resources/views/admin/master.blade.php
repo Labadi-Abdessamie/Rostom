@@ -19,6 +19,8 @@
     <link href="{{ asset('frontend/css/all.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet" type="text/css" />
 
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <style>
         /* ===== ADMIN DESIGN SYSTEM ===== */
         :root {

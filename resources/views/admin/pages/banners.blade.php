@@ -33,36 +33,33 @@
                         <div class="card banner-box shadow-sm">
                             <div class="card-body position-relative">
 
-                                <!-- Actions Dropdown -->
-                                <div class="dropdown position-absolute top-0 end-0 mt-2 me-2">
-                                    <a href="#" class="dropdown-toggle text-muted" data-bs-toggle="dropdown"
-                                        aria-expanded="false">
-                                        <i class="mdi mdi-dots-horizontal h4"></i>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-end">
-                                        <a class="dropdown-item"
-                                            href="{{ route('admin.edit_banner', $banner->id) }}">Edit</a>
-                                        <form action="{{ route('admin.delete_banner', $banner->id) }}" method="POST"
-                                            onsubmit="return confirm('Are you sure you want to delete this banner?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="dropdown-item text-danger">Delete</button>
-                                        </form>
-                                    </div>
+                                <!-- Direct Edit / Delete Buttons -->
+                                <div class="position-absolute top-0 end-0 mt-2 me-2 d-flex gap-1">
+                                    <a href="{{ route('admin.edit_banner', $banner->id) }}" class="btn btn-xs btn-warning text-white" title="Edit" style="border-radius:8px;"><i class="mdi mdi-pencil"></i></a>
+                                    <form action="{{ route('admin.delete_banner', $banner->id) }}" method="POST" onsubmit="return confirm('Delete this banner?');" class="m-0" style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-xs btn-danger" title="Delete" style="border-radius:8px;"><i class="mdi mdi-trash-can"></i></button>
+                                    </form>
                                 </div>
 
                                 <!-- Banner Image -->
                                 @if ($banner->image)
-                                    <img src="{{ asset('storage/banners/' . $banner->image) }}" alt="Banner Image"
+                                    <img src="{{ asset('storage/' . $banner->image) }}" alt="Banner Image"
                                         class="img-fluid mb-3 rounded shadow-sm">
                                 @endif
 
                                 <!-- Banner Details -->
                                 <h5 class="mt-2">
-                                    <a href="{{ $banner->link_url }}" class="text-dark fw-bold"
-                                        target="_blank">{{ $banner->title }}</a>
+                                    @if($banner->title)
+                                        <a href="{{ $banner->link_url }}" class="text-dark fw-bold" target="_blank">{{ $banner->title }}</a>
+                                    @else
+                                        <span class="text-muted fst-italic">No title</span>
+                                    @endif
                                 </h5>
-                                <p class="text-muted small">{{ $banner->description }}</p>
+                                @if($banner->description)
+                                    <p class="text-muted small">{{ Str::limit($banner->description, 60) }}</p>
+                                @endif
 
                                 <ul class="list-group list-group-flush">
                                     <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -72,7 +69,13 @@
                                         <strong>Position:</strong> <span>{{ $banner->position }}</span>
                                     </li>
                                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        <strong>Type:</strong> <span>{{ $banner->type }}</span>
+                                        <strong>Priority:</strong>
+                                        <span class="badge bg-info">P{{ $banner->priority }}</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <strong>Visibility:</strong>
+                                        <span class="badge bg-{{ $banner->show_title ? 'success' : 'secondary' }}">Title {{ $banner->show_title ? 'ON' : 'OFF' }}</span>
+                                        <span class="badge bg-{{ $banner->show_description ? 'success' : 'secondary' }}">Desc {{ $banner->show_description ? 'ON' : 'OFF' }}</span>
                                     </li>
                                     <li class="list-group-item d-flex justify-content-between align-items-center">
                                         <strong>Status:</strong>

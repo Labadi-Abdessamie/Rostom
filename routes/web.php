@@ -213,6 +213,8 @@ Route::middleware(['auth', RoleMiddleware::class . ':admin'])->group(function ()
         Route::delete('banner/{id}/delete', [BannerController::class, 'destroy'])->name('delete_banner');
         Route::get('banner/{id}/edit', [BannerController::class, 'edit'])->name('edit_banner');
         Route::put('banner/{id}/update', [BannerController::class, 'update'])->name('update_banner');
+        Route::post('banner/upload-asset', [BannerController::class, 'uploadAsset'])->name('banner_upload_asset');
+        Route::get('banner/{id}/preview', [BannerController::class, 'preview'])->name('banner_preview');
 
         Route::get('orders', [AdminController::class, 'orders'])->name('orders');
         Route::get('order-details/{id}', [AdminController::class, 'orderDetails'])->name('order_details');

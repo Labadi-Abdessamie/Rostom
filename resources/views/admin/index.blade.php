@@ -252,6 +252,52 @@
         </div>
 
         {{-- ===== RECENT ORDERS ===== --}}
+        <div class="row g-3 mb-4">
+            <div class="col-12">
+                <div class="card adm-section-card shadow-sm">
+                    <div class="card-header">
+                        <span><i class="mdi mdi-image-text me-1 text-primary"></i>Banners <span class="badge bg-info ms-1">{{ $totalBanners }}</span></span>
+                        <a href="{{ route('admin.banners') }}" class="btn btn-xs btn-outline-primary">Manage All</a>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table adm-table mb-0">
+                                <thead><tr><th>#</th><th>Image</th><th>Title</th><th>Page / Position</th><th>Priority</th><th>Status</th><th>Actions</th></tr></thead>
+                                <tbody>
+                                    @forelse ($activeBanners as $b)
+                                    <tr>
+                                        <td class="text-muted">{{ $loop->iteration }}</td>
+                                        <td>
+                                            @if ($b->image)
+                                            <img src="{{ asset('storage/' . $b->image) }}" width="60" height="40" class="rounded shadow-sm" style="object-fit:cover;" alt="{{ $b->title }}">
+                                            @else
+                                            <span class="badge bg-light text-muted">No img</span>
+                                            @endif
+                                        </td>
+                                        <td style="font-weight:600;">{{ $b->title }}</td>
+                                        <td><span class="badge bg-secondary">{{ $b->page }}</span> <span class="badge bg-dark">{{ $b->position }}</span></td>
+                                        <td><span class="badge bg-info">P{{ $b->priority }}</span></td>
+                                        <td><span class="badge bg-{{ $b->status === 'active' ? 'success' : 'danger' }}">{{ ucfirst($b->status) }}</span></td>
+                                        <td class="text-nowrap">
+                                            <a href="{{ route('admin.edit_banner', $b->id) }}" class="btn btn-xs btn-warning" title="Edit"><i class="mdi mdi-pencil"></i></a>
+                                            <form action="{{ route('admin.delete_banner', $b->id) }}" method="POST" onsubmit="return confirm('Delete this banner?');" class="d-inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-xs btn-danger" title="Delete"><i class="mdi mdi-trash-can"></i></button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    @empty
+                                    <tr><td colspan="7" class="text-center text-muted py-3">No banners yet. <a href="{{ route('admin.add_banner') }}">Add one</a></td></tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row g-3">
             <div class="col-12">
                 <div class="card adm-section-card">

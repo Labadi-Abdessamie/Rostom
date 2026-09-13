@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Banner;
 use App\Models\Magasin;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -36,6 +37,9 @@ class AdminController extends Controller
             ->take(5)
             ->get();
 
+        $activeBanners       = Banner::where('status', 'active')->orderBy('page')->orderBy('position')->orderBy('priority')->take(6)->get();
+        $totalBanners        = Banner::count();
+
         // --- Chart: last 6 months revenue ---
         $chartLabels   = [];
         $revenueByMonth = [];
@@ -61,7 +65,8 @@ class AdminController extends Controller
             'totalActiveMagasins', 'totalMagasins', 'totalAdmins',
             'avgRating', 'totalReviews', 'topMagasinsRating', 'bestSellingProducts',
             'totalOrders', 'pendingOrders', 'newVendorRequests',
-            'chartLabels', 'revenueByMonth', 'orderStatusBreakdown'
+            'chartLabels', 'revenueByMonth', 'orderStatusBreakdown',
+            'activeBanners', 'totalBanners'
         ));
     }
 

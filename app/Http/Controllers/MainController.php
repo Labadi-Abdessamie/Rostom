@@ -87,22 +87,43 @@ class MainController extends Controller
             }
         } while ($categoryProducts->isEmpty());
 
-        //! Banners Selection
+        //! Banners Selection - fetch by page and position, ordered by priority
         $banners = Cache::remember('banners', 43200, function () {
-            $collection = Banner::where('status', 'active')->limit(3)->get();
-            if ($collection->count() > 0) {
-                return $collection;
-            } else {
-                $collect = collect();
+            $collection = Banner::where('status', 'active')
+                ->where('page', 'home')
+                ->orderBy('priority', 'asc')
+                ->get();
+            if ($collection->count() === 0) {
                 $defaultbanner = new Banner();
-                $defaultbanner->title = 'New Arrivale';
-                $defaultbanner->description = 'men\'s fashion';
-                $defaultbanner->image = 'defaultbanner.jpg';
+                $defaultbanner->title = 'New Arrival';
+                $defaultbanner->description = "men's fashion";
+                $defaultbanner->image = 'frontend/images/slider_1.jpg';
                 $defaultbanner->link = 'frontend.products';
-                $collect->add($defaultbanner);
-                return $collect;
+                $collection = collect([$defaultbanner]);
             }
+            return $collection;
         });
+
+        // Hero banner (position 1, priority 1) - first banner section
+        $heroBanners = Banner::where('status', 'active')
+            ->where('page', 'home')
+            ->where('position', 'hero')
+            ->orderBy('priority', 'asc')
+            ->get();
+
+        // Single banners (position single)
+        $singleBanners = Banner::where('status', 'active')
+            ->where('page', 'home')
+            ->where('position', 'single')
+            ->orderBy('priority', 'asc')
+            ->get();
+
+        // Large banner (position large, priority 1 first)
+        $largeBanners = Banner::where('status', 'active')
+            ->where('page', 'home')
+            ->where('position', 'large')
+            ->orderBy('priority', 'asc')
+            ->get();
 
 
         return view('frontend.index', compact(
@@ -112,7 +133,10 @@ class MainController extends Controller
             'regularProducts',
             'randomProducts',
             'categoryProducts',
-            'banners'
+            'banners',
+            'heroBanners',
+            'singleBanners',
+            'largeBanners'
         ));
     }
 
