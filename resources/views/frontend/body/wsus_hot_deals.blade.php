@@ -1,3 +1,8 @@
+<style>
+.wsus__hot_deals .wsus__hot_title:hover,.wsus__product_item .wsus__pro_name:hover{color:#e67e22!important;}
+.wsus__product_item:hover .img_2{opacity:1!important;transform:translateY(0);transition:.3s;}
+.wsus__product_details .wsus__price{color:#c0392b;font-weight:700;}
+</style>
     <!--============================
         HOT DEALS START
     ==============================-->
@@ -19,7 +24,7 @@
                                     alt="mobile" class="img-fluid w-100">
                             </div>
                             <div class="wsus__hot_deals_text">
-                                <a class="wsus__hot_title"
+                                <a class="wsus__hot_title" style="color:#111;font-weight:600;"
                                     href="{{ route('frontend.product_details', ['id' => $secondSliderProduct->id]) }}">{{ $secondSliderProduct->name }}</a>
                                 <p class="wsus__rating">
                                     @if ($secondSliderProduct->rate_average != 0)
@@ -143,9 +148,9 @@
                                         @endif
                                         <span>({{ $regularProduct->reviews->count() }} Review)</span>
                                     </p>
-                                    <a class="wsus__pro_name"
+                                    <a class="wsus__pro_name" style="color:#111;font-weight:600;"
                                         href="{{ route('frontend.product_details', ['id' => $regularProduct->id]) }}">{{ $regularProduct->name }}</a>
-                                    <p class="wsus__price">DZ {{ $regularProduct->price }}
+                                    <p class="wsus__price" style="color:#c0392b;font-weight:700;">DZ {{ $regularProduct->price }}
                                         @if (false)
                                             <del>$ 50</del>
                                         @endif

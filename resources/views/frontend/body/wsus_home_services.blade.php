@@ -3,7 +3,7 @@
     ==============================-->
     <style>
         #wsus__home_services.home_service_2 {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            background: #1e3a8a;
             padding: 48px 0;
             margin-top: 40px;
         }
@@ -20,20 +20,20 @@
         }
         .service-card:hover {
             transform: translateY(-4px);
-            background: rgba(245,158,11,.1);
-            border-color: rgba(245,158,11,.3);
-            box-shadow: 0 8px 30px rgba(245,158,11,.15);
+            background: rgba(37,99,235,.1);
+            border-color: rgba(37,99,235,.3);
+            box-shadow: 0 8px 30px rgba(37,99,235,.35);
         }
         .service-icon-wrap {
             width: 58px;
             height: 58px;
             border-radius: 14px;
-            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            background: #2563eb;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            box-shadow: 0 4px 16px rgba(245,158,11,.35);
+            box-shadow: 0 4px 16px rgba(37,99,235,.35);
         }
         .service-icon-wrap i { font-size: 1.4rem; color: #fff; }
         .service-text h5 {
@@ -54,7 +54,7 @@
             <div class="row g-3">
                 <div class="col-xl-3 col-sm-6">
                     <div class="service-card">
-                        <div class="service-icon-wrap"><i class="fal fa-truck"></i></div>
+                        <div class="service-icon-wrap"><i class="fas fa-truck"></i></div>
                         <div class="service-text">
                             <h5>Low-Cost Shipping</h5>
                             <p>Low-cost shipping just for our clients</p>
@@ -63,7 +63,7 @@
                 </div>
                 <div class="col-xl-3 col-sm-6">
                     <div class="service-card">
-                        <div class="service-icon-wrap"><i class="fal fa-headset"></i></div>
+                        <div class="service-icon-wrap"><i class="fas fa-headset"></i></div>
                         <div class="service-text">
                             <h5>24/7 Customer Support</h5>
                             <p>Friendly 24/7 customer support</p>

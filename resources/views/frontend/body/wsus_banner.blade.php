@@ -12,7 +12,7 @@
                                 <div class="col-xl-12">
                                     @if(!empty($banner->image))
                                         @php $link = $banner->link_url; @endphp
-                                        <div class="wsus__design_banner" style="position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;border-radius:6px;">
+                                        <div class="wsus__design_banner" style="position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;border-radius:16px;box-shadow:0 24px 60px rgba(15,23,42,0.12);">
                                             @if(!empty($link) && $link !== '#')
                                                 <a href="{{ $link }}" style="display:block;width:100%;height:100%;">
                                                     <img src="{{ asset('storage/' . $banner->image) }}" alt="{{ $banner->title }}" style="width:100%;height:100%;object-fit:cover;display:block;">

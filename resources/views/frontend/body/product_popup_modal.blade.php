@@ -130,7 +130,7 @@
                                             </li>
                                             <li><a class="whatsapp" href="#"><i
                                                         class="fab fa-whatsapp"></i></a></li>
-                                            <li><a class="instagram" href="#"><i
+                                            <li><a class="instagram" href="https://www.instagram.com/tiarshop__14/" target="_blank"><i
                                                         class="fab fa-instagram"></i></a></li>
                                         </ul>
                                     </div>

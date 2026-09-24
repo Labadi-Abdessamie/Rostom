@@ -12,10 +12,6 @@
     {{--
     @include('frontend.body.product_popup_modal')
     --}}
-    <!-- ========== FLASH SELL Start ========== -->
-    @include('frontend.body.wsus_flash_sell')
-    <!-- FLASH SELL End -->
-
     <!-- ========== MONTHLY TOP PRODUCT Start ========== -->
     @include('frontend.body.wsus_monthly_top')
     <!-- MONTHLY TOP PRODUCT End -->
@@ -26,20 +22,12 @@
     <!-- BRAND SLIDER End -->
     --}}
 
-    <!-- ========== SINGLE BANNER Start ========== -->
-    @include('frontend.body.wsus_single_banner')
-    <!-- SINGLE BANNER End -->
-
     <!-- ========== HOT DEALS Start ========== -->
     @include('frontend.body.wsus_hot_deals')
     <!-- HOT DEALS End -->
 
     <!-- ========== categorie Start ========== -->
     @include('frontend.body.wsus_categorie')
-    <!-- categorie End -->
-
-    <!-- ========== categorie Start ========== -->
-    @include('frontend.body.wsus_large_banner')
     <!-- categorie End -->
 
     {{--

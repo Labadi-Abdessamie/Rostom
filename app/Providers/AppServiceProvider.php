@@ -40,7 +40,7 @@ class AppServiceProvider extends ServiceProvider
             'contact_phone' => '798841989',
             'social_media_links' => '{
                 "facebook" : "facebook.com",
-                "instagram" : "instagram.com"
+                "instagram" : "https://www.instagram.com/tiarshop__14/"
                 }
             ',
             'customers_number' => 0,
