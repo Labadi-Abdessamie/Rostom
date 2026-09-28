@@ -2,7 +2,6 @@
 
 namespace App\Mail;
 
-use App\Models\Website;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -18,45 +17,46 @@ class contactMail extends Mailable implements ShouldQueue
     public $email;
     public $phone;
     public $subject;
-    public $userMessage;
-    /**
-     * Create a new message instance.
-     */
+    public $message;
+
     public function __construct($data)
     {
         $this->name = $data['name'];
         $this->email = $data['email'];
         $this->phone = $data['phone'];
         $this->subject = $data['subject'];
-        $this->userMessage = $data['message'];
+        $this->message = $data['message'];
     }
 
-    /**
-     * Get the message envelope.
-     */
     public function envelope(): Envelope
     {
         return new Envelope(
             from: $this->email,
-            subject: $this->subject,
+            to: ['support@tiarshop.com'],
+            replyTo: $this->email,
+            subject: "[Contact Form] {$this->subject}",
+            tags: ['contact-form'],
+            metadata: [
+                'source' => 'website-contact-form',
+                'user_email' => $this->email,
+            ],
         );
     }
 
-    /**
-     * Get the message content definition.
-     */
     public function content(): Content
     {
         return new Content(
             view: 'emails.contact',
+            with: [
+                'name' => $this->name,
+                'email' => $this->email,
+                'phone' => $this->phone,
+                'subject' => $this->subject,
+                'message' => $this->message,
+            ],
         );
     }
 
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
-     */
     public function attachments(): array
     {
         return [];

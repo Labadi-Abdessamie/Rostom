@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\contactMail;
+use App\Mail\ContactMail;
 use App\Models\Address;
 use App\Models\Banner;
 use App\Models\Category;
@@ -196,13 +196,11 @@ class MainController extends Controller
             'subject' => 'required|string|max:50',
             'message' => 'required|string|max:1024'
         ]);
-        if (Website::first()) {
-            if (Website::first()->contact_email != null) {
-                Mail::to(Website::first()->contact_email)->queue(new contactMail($validated));
-                return redirect()->back()->with('message', 'Message sent successfully.')->with('alert-type', 'suceess');
-            }
-        } else {
-            return redirect()->back()->with('message', 'Can\'t send message.')->with('alert-type', 'error');
+        try {
+            Mail::to('support@tiarshop.com')->queue(new contactMail($validated));
+            return redirect()->back()->with('message', 'Message sent successfully.')->with('alert-type', 'success');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('message', 'Message sent, but there was a notification issue.')->with('alert-type', 'warning');
         }
     }
     public function search(Request $request)
