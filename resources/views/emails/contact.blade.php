@@ -4,7 +4,7 @@
 <p class="col-4"><strong>Email:</strong> {{ $email }}</p>
 <p class="col-4"><strong>Phone:</strong> {{ $phone }}</p>
 <p><strong>Subject:</strong> {{ $subject }}</p>
-<p><strong>Message:</strong> {{ $message }}</p>
+<p><strong>Message:</strong> {{ $userMessage }}</p>
 </div>
 
 <hr>
@@ -15,7 +15,7 @@
 <p><strong>Phone:</strong> {{ $phone }}</p>
 
 <h3>Message:</h3>
-<p>{{ $message }}</p>
+<p>{{ $userMessage }}</p>
 </div>
 </body>
 </html>

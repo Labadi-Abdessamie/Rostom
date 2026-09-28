@@ -17,7 +17,7 @@ class ContactMail extends Mailable implements ShouldQueue
     public $email;
     public $phone;
     public $subject;
-    public $message;
+    public $userMessage;
 
     public function __construct($data)
     {
@@ -25,7 +25,7 @@ class ContactMail extends Mailable implements ShouldQueue
         $this->email = $data['email'];
         $this->phone = $data['phone'];
         $this->subject = $data['subject'];
-        $this->message = $data['message'];
+        $this->userMessage = $data["message"];
     }
 
     public function envelope(): Envelope
@@ -52,7 +52,7 @@ class ContactMail extends Mailable implements ShouldQueue
                 'email' => $this->email,
                 'phone' => $this->phone,
                 'subject' => $this->subject,
-                'message' => $this->message,
+                'userMessage' => $this->userMessage,
             ],
         );
     }
