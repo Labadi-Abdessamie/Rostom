@@ -197,7 +197,7 @@ class MainController extends Controller
             'message' => 'required|string|max:1024'
         ]);
         try {
-            Mail::to('support@tiarshop.com')->queue(new contactMail($validated));
+            Mail::to('support@tiarshop.com')->queue(new ContactMail($validated));
             return redirect()->back()->with('message', 'Message sent successfully.')->with('alert-type', 'success');
         } catch (\Exception $e) {
             return redirect()->back()->with('message', 'Message sent, but there was a notification issue.')->with('alert-type', 'warning');
